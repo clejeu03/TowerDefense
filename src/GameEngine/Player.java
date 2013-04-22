@@ -43,7 +43,7 @@ public class Player {
   }
   /**
    * Getter that returns the amount of money owned by the player.
-   * @return money - amount of money owned by the player
+   * @return money
    */
   public int getMoney() {
 	  return this.money;

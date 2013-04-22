@@ -67,7 +67,7 @@ public class Base {
   }
   /**
    * Return the proximity map into an int tab.
-   * @return proximityTab - int table that store the proximityMap
+   * @return proximityTab (that store the proximityMap)
    */
   public int[] getProximitytab() {
 	  return proximityTab;
