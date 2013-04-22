@@ -1,5 +1,7 @@
 package View;
 
+import javax.swing.JFrame;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - MainMenusView</b></br>
@@ -34,13 +36,13 @@ public abstract class MainMenusView extends JFrame {
    * Setter that can changes the size of the selected menu
    * @param size - the new size to apply
    */
-  public void setSize() {
+  public void setMenuSize() {
   }
   /**
    * Getter thet return the current size of the selected Menu
    * @return size
    */
-  public void getSize() {
+  public void getMenuSize() {
   }
 
 }

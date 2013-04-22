@@ -1,5 +1,7 @@
 package View;
 
+import javax.swing.JPanel;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - GameToolbar</b></br>
@@ -40,13 +42,13 @@ public class GameToolbar extends JPanel {
    * Setter that changes the size of the selected GameToolbar
    * @param size - the new size to apply
    */
-  public void setSize() {
+  public void setToolbarSize() {
   }
   /**
    * Getter that returns the current size of the GameToolbar
    * @return size
    */
-  public void getSize() {
+  public void getToolbarSize() {
   }
 
 }

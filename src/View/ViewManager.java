@@ -1,5 +1,7 @@
 package View;
 
+import javax.swing.JFrame;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - ViewManager</b></br>
