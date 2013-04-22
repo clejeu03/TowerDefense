@@ -74,7 +74,7 @@ public class Base {
   }
   /**
    * Setter that changes the current amount of soldier into the Base
-   * @param amount - number of soldier into the Base
+   * @param amount - new number of soldier into the Base
    */
   public void setAmount(int amount) {
 	  this.amount = amount;
