@@ -13,7 +13,7 @@ package View;
  * @see ViewManager
  * 
  */
-public class EndGameMenu extends MainMenusView {
+public class EndGameMenu extends MainMenusView{
   /**
   * Define each items to use into the AccueilMenu
   */
@@ -30,7 +30,7 @@ public class EndGameMenu extends MainMenusView {
   }
   /**
    * Lead the player back to the AccueilMenu
-   * @see AccueilMenu
+   * @see HomeMenu
    */
   public void goMenu() {
   }

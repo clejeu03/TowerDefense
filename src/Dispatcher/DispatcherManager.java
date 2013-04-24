@@ -16,13 +16,13 @@ import View.*;
 /**
  * Project - TowerDefense</br>
  * <b>Class - DispatcherManager</b></br>
- * <p>The DispatcherManager make the link beetween the ViewManager (interface) and the GameManager (Engine)</p>
+ * <p>The DispatcherManager make the link between the ViewManager (GUI) and the GameManager (Engine)</p>
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see TowerDefense.TowerDefense#main(String[]) 
  */
 public class DispatcherManager {
-
+	
 	private GameManager engine;
 	private ViewManager view;
 	private Thread threadEngine;
@@ -30,33 +30,35 @@ public class DispatcherManager {
 	
 	/**
 	 * Constructor of the DisptacherManger class
+	 * @param engine - GameManager
+	 * @param view - ViewManager
 	 */
-	public DispatcherManager(GameManager e,ViewManager v) {
-		// TODO Auto-generated constructor stub
+	public DispatcherManager(GameManager engine,ViewManager view) {
 		super();
-		engine =e;
-		view = v;
+		this.engine =engine;
+		this.view = view;
 	}
 	
 	/**
-	 * Prévient le moteur qu'il faut initialiser le jeu (selon les paramètres choisi par le joueur)
-	 * @see PlayerInterface.play()(appelant)
+	 * Tell the engine that the game objects have to be created and initialized (according to the player choices).
+	 * @see View.ViewManager#play()
 	 */	
 	public void initiateGame(){
 		engine.initiateGame();	
 	}
 	
 	/**
-	 * Prévient l'interface qu'il faut initialiser ses composants (selon les paramètres calculés par le moteur)
-	 * @see Engine.initiateGame()(appelant)
+	 * Tell the View that the SceneView components have to be created and initialized (according the game objects initialized by the engine). 
+	 * @param towerList - ArrayList of towers created by the engine
+	 * @see GameEngine.GameManager#initiateGame()
 	 */	
-	public void initiateGameInterface(ArrayList<Tower> t){
-		view.initiateGameInterface(t);	
+	public void initiateGameInterface(ArrayList<Tower> towerList){
+		view.initiateGameInterface(towerList);	
 	}
 
 	/**
-	 * Lance les threads du jeu
-	 * @see PlayerInterface.initiateGameInterface(Point p)(appelant)
+	 * Launch the game threads.
+	 * @see View.ViewManager#initiateGameInterface(ArrayList)
 	 */	
 	public void start(){
 		view.setRunning(true);
@@ -65,25 +67,36 @@ public class DispatcherManager {
 		threadEngine = new Thread(this.engine);
 		threadView.start();
 		threadEngine.start();
-		System.out.println("Dispatcher say: " + Thread.activeCount());
+		System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	
 	/**
-	 * Stop les threads du jeu
-	 * @see PlayerInterface.mainMenu() (appelant)
+	 * Stop the game threads.
+	 * @see View.ViewManager#mainMenu()
 	 */	
 	public void stop(){
 		view.setRunning(false);
 		engine.setRunning(false);
 		threadView.interrupt();
 		threadEngine.interrupt();
-		System.out.println("Dispatcher say: " + Thread.activeCount());
+		System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	
-	public void addOrderToEngine(Order o){
-		engine.addOrder(o);
+	/**
+	 * Add an Order to the engine ConcurrentLinkedQueue.
+	 * @param order - Order
+	 * @see  View.ViewManager#towerSuppressed(java.awt.Point, int)
+	 */
+	public void addOrderToEngine(Order order){
+		engine.addOrder(order);
 	}
-	public void addOrderToInterface(Order o){
-		view.addOrder(o);
+	
+	/**
+	 * Add an Order to the view ConcurrentLinkedQueue.
+	 * @param order - Order
+	 * @see GameEngine.GameManager#execute()
+	 */
+	public void addOrderToView(Order order){
+		view.addOrder(order);
 	}
 }

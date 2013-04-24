@@ -5,21 +5,19 @@
  *
  * File created on 24 avr. 2013
  */
-package View;
+package Dispatcher;
 
-import javax.swing.JPanel;
+import java.awt.Point;
 
 /**
  * @author aurelie
  *
  */
-public abstract class MainMenusView extends JPanel {
+public class SuppressTowerOrder extends TowerOrder{
 
-	/**
-	 * 
-	 */
-	public MainMenusView() {
-		// TODO Auto-generated constructor stub
+	public SuppressTowerOrder(int id, Point p) {
+		super(id,p);
+		
 	}
 
 }

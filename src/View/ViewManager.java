@@ -46,9 +46,9 @@ public class ViewManager extends JFrame implements Runnable{
     private Image icon;
     
     /*Panneaux*/	
-    private MainMenuInterface jPanelMainMenu;
-    private MapInterface jPanelMap;
-    private GameToolsInterface jPanelTools;
+    private HomeMenu jPanelMainMenu;
+    private SceneView jPanelMap;
+    private GameToolbar jPanelTools;
 	
     public ViewManager() {
 		super("TowerDefense");	
@@ -56,9 +56,9 @@ public class ViewManager extends JFrame implements Runnable{
 		q = new ConcurrentLinkedQueue<Order>();
 		running = false;
 		
-		jPanelMainMenu = new MainMenuInterface(this);	
-		jPanelMap = new MapInterface(this);
-		jPanelTools = new GameToolsInterface(this);
+		jPanelMainMenu = new HomeMenu(this);	
+		jPanelMap = new SceneView(this);
+		jPanelTools = new GameToolbar(this);
   
 		/*Chargement de l'icone du jeu*/
 		try {
@@ -160,7 +160,7 @@ public class ViewManager extends JFrame implements Runnable{
 	
 	/**
 	 * Lance une partie depuis le Main menu
-	 * @see MainMenuInterface.jButtonPlayPerformed(ActionEvent evt) (appelant)
+	 * @see HomeMenu.jButtonPlayPerformed(ActionEvent evt) (appelant)
 	 */	
     public void play(){
     	/*Demande au moteur via le dispatcher d'initaliser le jeu*/

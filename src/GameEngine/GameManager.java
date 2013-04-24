@@ -63,8 +63,8 @@ public class GameManager implements Runnable{
 		System.out.println("Engine say : Initating the game...");
 		
 		/*Ajout de tour*/
-		towers.add(new Tower(new Point(50,50), 1, 1, 70));
-		towers.add(new Tower(new Point(125,50), 0, 0, 70));
+		towers.add(new MedicalTower(new Point(50,50), 1, 70));
+		towers.add(new MedicalTower(new Point(125,50), 0, 70));
 		
 		/*Envois des informations à l'interface*/
 		d.initiateGameInterface(towers);
@@ -92,7 +92,7 @@ public class GameManager implements Runnable{
 							it.remove();
 						}
 					/*Suppression de la tour dans l'interface*/
-					d.addOrderToInterface(new SuppressTowerOrder(o.getIdOwner(), ((TowerOrder) o).getPosition()));
+					d.addOrderToView(new SuppressTowerOrder(o.getIdOwner(), ((TowerOrder) o).getPosition()));
 				}
 				
 			}

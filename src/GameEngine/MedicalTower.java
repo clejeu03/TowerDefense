@@ -1,4 +1,7 @@
 package GameEngine;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - MedicalTower</b></br>
@@ -30,7 +33,8 @@ public class MedicalTower extends Tower {
   /**
    * Constructor of the MedicalTower class
    */
-  public MedicalTower() {
+  public MedicalTower(Point p, int id,int r) {
+	  super(p,id,r);
   }
   /**
    * Setter that changes the percentage of effect applied

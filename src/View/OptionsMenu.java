@@ -11,7 +11,7 @@ package View;
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MainMenusView
  * @see ViewManager
- * @see AccueilMenu
+ * @see HomeMenu
  * 
  */
 

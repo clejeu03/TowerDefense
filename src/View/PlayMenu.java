@@ -10,10 +10,10 @@ package View;
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MainMenusView
  * @see ViewManager
- * @see AccueilMenu
+ * @see HomeMenu
  * 
  */
-public class PlayMenu extends MainMenusView {
+public class PlayMenu extends MainMenusView{
   /**
   * Define each items to use into the AccueilMenu
   */

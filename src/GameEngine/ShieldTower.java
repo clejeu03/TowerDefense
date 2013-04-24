@@ -1,4 +1,7 @@
 package GameEngine;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - ShieldTower</b></br>
@@ -14,4 +17,8 @@ package GameEngine;
  * 
  */
 public class ShieldTower extends MedicalTower {
+	  
+	public ShieldTower(Point p, int id,int r) {
+		  super(p,id,r);
+	} 
 }

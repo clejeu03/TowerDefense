@@ -1,4 +1,7 @@
 package GameEngine;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - RotativeGunTower</b></br>
@@ -13,4 +16,7 @@ package GameEngine;
  */
 
 public class RotativeGunTower extends GunTower {
+	public RotativeGunTower(Point p, int id,int r) {
+		  super(p,id,r);
+	} 
 }

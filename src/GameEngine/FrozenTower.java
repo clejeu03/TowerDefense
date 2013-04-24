@@ -1,4 +1,7 @@
 package GameEngine;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - FrozenTower</b></br>
@@ -14,4 +17,7 @@ package GameEngine;
  */
 
 public class FrozenTower extends GunTower {
+	public FrozenTower(Point p, int id,int r) {
+		  super(p,id,r);
+	} 
 }

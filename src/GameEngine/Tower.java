@@ -1,4 +1,7 @@
 package GameEngine;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - Tower</b></br>
@@ -17,22 +20,9 @@ package GameEngine;
  * 
  */
 public abstract class Tower {
-  /**
-   * Holds the x position of the center of the Tower
-   */
-  public float position_x;
-  /**
-   * Holds the y position of the center of the Tower
-   */
-  public float position_y;
-  /**
-   * Contains the circle size of action of the Tower, if a Unit pass trough, the Tower
-   * become active.
-   */
-  public int range;
-  /**
-   * Define the strength of damages, that can be negative or positive
-   */
+	protected Point position;//Position du centre du Sprite !!
+	protected int idOwner;
+	private int range;
   public int damage;
   /**
    * Define the time between each action of the Tower
@@ -46,28 +36,28 @@ public abstract class Tower {
   /**
    * Constructor of the Tower class
    */
-  public Tower() {
-  }
+	public Tower(Point p, int id,int r) {
+		// TODO Auto-generated constructor stub
+		position = p;
+		idOwner = id;
+		range = r;
+	}
+	
+	public int getIdOwner() {
+		return idOwner;
+	}
 
-  /**
-   * Getter that returns the range of action of the selected Tower
-   * @return range
-   */
-  public int getRange() {
-	  return this.range;
-  }
-  /**
-   * Setter that changes the current circle of activation of the selected Tower
-   * @param range - new radius of the circle of activation of the Tower
-   */
-  public void setRange(int range) {
-	  this.range = range;
-  }
-  /**
-   * Action to send a missile
-   * @see Missile
-   */
-  public void shoot() {
-  }
+	public int getRange() {
+		return range;
+	}
+   /**
+    * Getter position
+    * @return Point : position du Sprite
+    * @see SceneView (appelant)
+    */	
+	public Point getPosition(){
+		return position;
+	}
+
 
 }

@@ -1,5 +1,10 @@
 package View;
 
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
@@ -16,39 +21,60 @@ import javax.swing.JPanel;
  * 
  */
 
-public class GameToolbar extends JPanel {
+public class GameToolbar extends JPanel{
+    private ViewManager player;
+    
+    private JButton jButtonBack;
+    /*private TowerInfoInterface jPanelTowerInfo;
+    private boolean infoVisible;*/
+	
+	public GameToolbar(ViewManager p) {
+		super();
+		player = p; 
+		//infoVisible = false;
+		
+		/*Création des composants*/
+		jButtonBack = new javax.swing.JButton();
+		 
+		/*Paramètrage des composants et de leur listeners*/	        
+		jButtonBack.setText("Back");
+		jButtonBack.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent evt) {
+		        jButtonBackPerformed(evt);
+		    }
+		});
+		
+		/*Disposition des composants sur le panneau*/
+		setLayout(null);
+		setBackground(Color.gray); 
+		jButtonBack.setBounds(350, 50, 100,25);
+		add(jButtonBack);
+	}
+	
+	/**
+	 * Gestionnaire des évènements concernant le bouton Back
+	 * @param evt : ActionEvent
+	 */
+    private void jButtonBackPerformed(ActionEvent evt) {
+    	System.out.println("Back");
+    	
+        /*Rafraichit la fenêtre*/
+    	/*if(infoVisible){
+	    	remove(jPanelTowerInfo);
+	    	revalidate();
+	    	repaint();	  	
+    	}*/
+    	player.mainMenu();
 
-  /**
-  * Contains the x size of the Menu
-  */
-  public int size_x;
-  /**
-  * Contains the y size of the Menu
-  */
-  public int size_y;
-
-  /**
-   * Define on wich state the player is so we can display correct buttons and informations.
-   * ====> WARNING : how to use in reality ?
-   */
-  public int state;
-
-  /**
-   * Constructor of the GameToolbar class
-   */
-  public GameToolbar() {
-  }
-  /**
-   * Setter that changes the size of the selected GameToolbar
-   * @param size - the new size to apply
-   */
-  public void setToolbarSize() {
-  }
-  /**
-   * Getter that returns the current size of the GameToolbar
-   * @return size
-   */
-  public void getToolbarSize() {
-  }
-
+    }
+    
+    /*public void towerClicked(Point position, int idOwner){
+    	jPanelTowerInfo = new TowerInfoInterface(position, idOwner, player);
+    	jPanelTowerInfo.setBounds(350, 100, 100,100);
+    	add(jPanelTowerInfo);
+    	
+    	infoVisible = true;
+    	revalidate();
+    	repaint();	  	
+    }*/
 }

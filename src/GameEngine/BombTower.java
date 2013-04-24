@@ -1,4 +1,7 @@
 package GameEngine;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - BombTower</b></br>
@@ -15,12 +18,12 @@ public class BombTower extends GunTower{
   /**
    * Define the time of inactivity a shoot involve
    */
-  public int latency;
+	public int latency;
   /**
    * Constructor of the BombTower class
    */
-  public BombTower(){
-	  
-  }
+	public BombTower(Point p, int id,int r) {
+		  super(p,id,r);
+	} 
 
 }
