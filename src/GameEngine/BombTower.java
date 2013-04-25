@@ -22,8 +22,8 @@ public class BombTower extends GunTower{
   /**
    * Constructor of the BombTower class
    */
-	public BombTower(Point p, int id,int r) {
-		  super(p,id,r);
+	public BombTower(Point position, int playerId,int range) {
+		  super(position,playerId,range);
 	} 
 
 }

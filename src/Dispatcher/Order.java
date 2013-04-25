@@ -8,25 +8,32 @@
 package Dispatcher;
 
 /**
- * @author aurelie
- *
+ * Project - TowerDefense</br>
+ * <b>Class - Order</b></br>
+ * <p>The Order class represents the tasks adding to the engine and view queues by the dispatcher</p>
+ * <b>Creation :</b> 24/04/2013</br>
+ * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
 public abstract class Order {
 	
-	protected int idOwner;
+	protected int playerId;
 	
-	public Order(int id) {
+	/**
+	 * Constructor of the Order class
+	 * @param playerId - player id
+	 */
+	public Order(int playerId) {
 		super();
-		idOwner = id;
+		this.playerId = playerId;
 	}
 	
     /**
      * Getter idOwner
-     * @see PlayerInterface.refresh()(appelant)
-     * @see Engine.execute() (appelant)
+     * @see View.ViewManager#refresh()
+     * @see GameEngine.GameManager#execute()
      */	
-	public int getIdOwner(){
-		return idOwner;
+	public int getPlayerId(){
+		return playerId;
 	}
 
 }

@@ -24,20 +24,17 @@ import javax.imageio.ImageIO;
  */
 public class TowerSprite extends Sprite{
 	private int towerType;
-	private SceneView map;
 	private int range;
 	
-	public TowerSprite(Point p, boolean c, int id,int w, int h, int type, int r, SceneView m) {
-		// TODO Auto-generated constructor stub
-		super(p,c,id,w, h);
+	public TowerSprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height, int type, int range) {
+		super(scene, position,clickable,playerId,width,height);
 		
 		towerType = type;
-		map = m;
-		range = r;
+		this.range = range;
 				
 		/*Chargement de l'image : différent suivant le propriétaire de l'élement et le type*/
 		try {
-		      img = ImageIO.read(new File("img/bear.png"));
+		      image = ImageIO.read(new File("img/bear.png"));
 		  
 		} catch (IOException e) {
 		      e.printStackTrace();
@@ -77,9 +74,9 @@ public class TowerSprite extends Sprite{
 		/*Récupère la source de l'évènement etvérifie qu'il s'agit bien d'un Sprite "cliquable"*/
 		//if(me.getComponent() instanceof Sprite){
 			//Sprite source = (Sprite) me.getComponent();
-			System.out.println("TowerOwner number : "+ idOwner+" !");
+			System.out.println("TowerOwner number : "+ playerId+" !");
 			System.out.println("Position on the Sprite ("+ me.getPoint().x+","+ me.getPoint().y+")");
-			map.towerClicked(position, idOwner);
+			scene.towerClicked(position, playerId);
 			
 		//}
 	}

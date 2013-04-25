@@ -16,7 +16,7 @@ import java.awt.Point;
  */
 
 public class RotativeGunTower extends GunTower {
-	public RotativeGunTower(Point p, int id,int r) {
-		  super(p,id,r);
+	public RotativeGunTower(Point position, int playerId,int range) {
+		  super(position,playerId,range);
 	} 
 }

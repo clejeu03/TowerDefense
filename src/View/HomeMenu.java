@@ -1,44 +1,42 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JPanel;
 
 /**
  * Project - TowerDefense</br>
- * <b>Class - AccueilMenu</b></br>
- * <p>The AccueilMenu is the that lead the player trought the differents steps of the creation 
+ * <b>Class - HomeMenu</b></br>
+ * <p>The HomeMenu is the that lead the player trought the differents steps of the creation 
  * of a new game. The informations that came out after the player selection are directly sent
  * to the GameEngine for him to start the game.</br>
- * The AccueilMenu inherit from the MainMenusView ans is controlled by the ViewManager.
+ * The HomeMenu inherit from the MainMenusView and is controlled by the ViewManager.
  * </p> 
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see Base
  * @see Unit
- * @see MainMenusView
+ * @see MainViews
  * @see ViewManager
  * 
  */
-public class HomeMenu extends MainMenusView{
-    private ViewManager player;
-    
-    /*TO DO : Mettre des Sprites avec nos propres images à la place des bouttons*/
+@SuppressWarnings("serial")
+public class HomeMenu extends MainViews{
+	
     private JButton jButtonPlay;
     private JButton jButtonQuit;
     
-	public HomeMenu(ViewManager p) {
-		super();
-		player = p;
+	public HomeMenu(ViewManager view, Point position, int width, int height){
+		super(view, position, width,height);
 		
-		/*Création des composants*/
-		 jButtonPlay = new javax.swing.JButton();
-		 jButtonQuit = new javax.swing.JButton();
+		//Creating the components
+		jButtonPlay = new javax.swing.JButton();
+		jButtonQuit = new javax.swing.JButton();
 
-		/*Paramètrage des composants et de leur listeners*/	        
+		//Setting the components parameters and theirs listeners            
 		jButtonPlay.setText("Play");
 		jButtonQuit.setText("Quit");		
 		
@@ -53,7 +51,7 @@ public class HomeMenu extends MainMenusView{
 		    }
 		});
 		
-		/*Disposition des composants sur le panneau*/
+		//Laying the components on the Panel
 		setLayout(null);
 		setBackground(Color.gray); 
 		jButtonPlay.setBounds(350, 100, 100,25);
@@ -63,16 +61,16 @@ public class HomeMenu extends MainMenusView{
 	}
 	
 	/**
-	 * Gestionnaire des évènements concernant le bouton Play
-	 * @param evt : ActionEvent
+	 * jButtonPlay Event handler - Time to launch the game!
+	 * @param evt - ActionEvent performed by the player
 	 */
     private void jButtonPlayPerformed(ActionEvent evt) {
-    	player.play();
+    	view.play();
     }
     
 	/**
-	 * Gestionnaire de l'évènement concernant le bouton Quit
-	 * @param evt : ActionEvent
+	 * jButtonQuit Event handler - Quit the program
+	 * @param evt - ActionEvent performed by the player
 	 */
     private void jButtonQuitPerformed(ActionEvent evt) {
     	System.exit(0);

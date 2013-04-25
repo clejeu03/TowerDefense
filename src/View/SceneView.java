@@ -20,6 +20,7 @@ import GameEngine.*;
 /**
  * Project - TowerDefense</br>
  * <b>Class - SceneView</b></br> 
+ * <p>The SceneView class displays the map and its Sprites</p>
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see Sprite
@@ -27,9 +28,7 @@ import GameEngine.*;
  * 
  */
 
-public class SceneView extends JPanel{
-    private ViewManager player;
-    
+public class SceneView extends MainViews{   
     private Image map;
     private ArrayList<Sprite> sprites;
     
@@ -39,11 +38,10 @@ public class SceneView extends JPanel{
    /* private TowerSprite bear;
     private TowerSprite bear2;*/
 
-	public SceneView(ViewManager p) {
-		super();
+	public SceneView(ViewManager view, Point position, int width, int height){
+		super(view, position, width,height);
 	
 		sprites = new ArrayList<Sprite>();
-		player = p; 
 		towerClicked = false;
 		indexTowerClicked = 0;
 		
@@ -66,7 +64,7 @@ public class SceneView extends JPanel{
          });
 		
         /*Paramètres principaux du panneau*/
-		setPreferredSize(new Dimension(player.WIDTH,player.HEIGHT-200));
+		setPreferredSize(new Dimension(view.WIDTH,view.HEIGHT-200));
 	    setBackground(Color.WHITE);
 	}
 	
@@ -75,14 +73,14 @@ public class SceneView extends JPanel{
 		boolean c = false;
 		int type =0;
 		
-		if(t.getIdOwner()==0){
+		if(t.getPlayerId()==0){
 			c = true;
 		}
 		//Choisir le type en fonction dutype de la tour...
 		if(t instanceof MedicalTower){
 			
 		}
-		TowerSprite ts = new TowerSprite(t.getPosition(),c, t.getIdOwner(), 32, 32, type, t.getRange(), this);
+		TowerSprite ts = new TowerSprite(this, t.getPosition(),c, t.getPlayerId(), 32, 32, type, t.getRange());
 		sprites.add(ts);
 		
 		//ajoute l'élement sur la map
@@ -140,7 +138,8 @@ public class SceneView extends JPanel{
 		System.out.println("Position Tower "+position.x);
 		System.out.println("Position Delete "+positionSprite.x);
 		/*Ajout à la fin de la queue*/
-		sprites.add(new InfoSprite(positionSprite, true, idOwner, 16,16, 0, position, this));	
+		sprites.add(new TowerInfoSprite(this, positionSprite, true, idOwner, 16,16, 0, position));	
+		
 		
 		/*TO DO A Améliorer  => récupérer la fin de la queue...!*/	
 		Iterator<Sprite> it = sprites.iterator();
@@ -162,7 +161,7 @@ public class SceneView extends JPanel{
 	}
 	
 	 public void towerSuppressed(Point position, int idOwner){
-		   player.towerSuppressed(position, idOwner);
+		   view.towerSuppressed(position, idOwner);
 	   }
 	 
 	public void suppressTower(Point position, int idOwner){

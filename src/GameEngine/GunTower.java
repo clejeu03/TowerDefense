@@ -25,7 +25,7 @@ public class GunTower extends Tower {
 	/**
 	 * Constructor of the GunTower class
 	 */
-	  public GunTower(Point p, int id,int r) {
-		  super(p,id,r);
-	  }
+	  public GunTower(Point position, int playerId,int range) {
+		  super(position,playerId,range);
+	} 
 }

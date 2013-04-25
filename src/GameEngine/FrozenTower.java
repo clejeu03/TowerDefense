@@ -17,7 +17,7 @@ import java.awt.Point;
  */
 
 public class FrozenTower extends GunTower {
-	public FrozenTower(Point p, int id,int r) {
-		  super(p,id,r);
+	public FrozenTower(Point position, int playerId,int range) {
+		  super(position,playerId,range);
 	} 
 }

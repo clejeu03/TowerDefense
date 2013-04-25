@@ -33,9 +33,9 @@ public class MedicalTower extends Tower {
   /**
    * Constructor of the MedicalTower class
    */
-  public MedicalTower(Point p, int id,int r) {
-	  super(p,id,r);
-  }
+  public MedicalTower(Point position, int playerId,int range) {
+	  super(position,playerId,range);
+  } 
   /**
    * Setter that changes the percentage of effect applied
    * @param strenght - new strenght to apply between 0 and 1;

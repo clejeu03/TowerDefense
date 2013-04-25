@@ -15,7 +15,7 @@ import java.awt.Point;
  * 
  */
 public class LaserTower extends GunTower {
-	public LaserTower(Point p, int id,int r) {
-		  super(p,id,r);
+	public LaserTower(Point position, int playerId,int range) {
+		  super(position,playerId,range);
 	} 
 }

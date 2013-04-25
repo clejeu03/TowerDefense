@@ -27,11 +27,10 @@ import javax.swing.JFrame;
  * </p> 
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
- * @see MainMenusView
- * @see GameToolbar
+ * @see MainViews
+ * @see GameMenuBar
  * @see SceneView
  * @see GameManager
- * 
  */
 
 public class ViewManager extends JFrame implements Runnable{
@@ -48,7 +47,7 @@ public class ViewManager extends JFrame implements Runnable{
     /*Panneaux*/	
     private HomeMenu jPanelMainMenu;
     private SceneView jPanelMap;
-    private GameToolbar jPanelTools;
+    private GameMenuBar jPanelTools;
 	
     public ViewManager() {
 		super("TowerDefense");	
@@ -56,10 +55,11 @@ public class ViewManager extends JFrame implements Runnable{
 		q = new ConcurrentLinkedQueue<Order>();
 		running = false;
 		
-		jPanelMainMenu = new HomeMenu(this);	
-		jPanelMap = new SceneView(this);
-		jPanelTools = new GameToolbar(this);
-  
+		jPanelMainMenu = new HomeMenu(this, new Point(0,0), WIDTH, HEIGHT);	
+		
+		jPanelMap = new SceneView(this,new Point(0,25), 800,400);
+		jPanelTools = new GameMenuBar(this,new Point(0,0),800, 25);
+
 		/*Chargement de l'icone du jeu*/
 		try {
 		      icon = ImageIO.read(new File("img/bear.png"));
@@ -86,9 +86,9 @@ public class ViewManager extends JFrame implements Runnable{
      * @see PlayerInterface.PlayerInterface() (appelant)
      */	
     public void  initComponents(){
-		jPanelMainMenu.setPreferredSize(new Dimension(800, 600));	
-        jPanelMap.setPreferredSize(new Dimension(800, 400));
-        jPanelTools.setPreferredSize(new Dimension(800, 200));
+		jPanelMainMenu.setPreferredSize(new Dimension(jPanelMainMenu.getWidth(), jPanelMainMenu.getHeight()));	
+        jPanelMap.setPreferredSize(new Dimension(jPanelMap.getWidth(), jPanelMap.getHeight()));
+        jPanelTools.setPreferredSize(new Dimension(jPanelTools.getWidth(), jPanelTools.getHeight()));
     }
 
     /**
@@ -101,9 +101,9 @@ public class ViewManager extends JFrame implements Runnable{
     	setLayout(null);
     	
         /*Dispose et dimensionne les composants*/
-		jPanelMainMenu.setBounds(0, 0, 800, 600);	   	
-    	jPanelMap.setBounds(0, 0, 800, 400);
-        jPanelTools.setBounds(0, 400, 800, 200);
+		jPanelMainMenu.setBounds(jPanelMainMenu.getPosition().x, jPanelMainMenu.getPosition().y,jPanelMainMenu.getWidth(), jPanelMainMenu.getHeight());	   	
+    	jPanelMap.setBounds(jPanelMap.getPosition().x, jPanelMap.getPosition().y,jPanelMap.getWidth(), jPanelMap.getHeight());	
+        jPanelTools.setBounds(jPanelTools.getPosition().x, jPanelTools.getPosition().y,jPanelTools.getWidth(), jPanelTools.getHeight());	
         
         /*ajoute sur la fenêtre le Main Menu Panel*/
         add(jPanelMainMenu);
@@ -144,7 +144,7 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @param p: coordonnées initiales du Sprite test 
 	 * @see MyDispatcher.initiateGameInterface(Point p) (appelant)
 	 */	
-    public void initiateGameInterface(ArrayList<Tower> t){
+    public void initiateGameView(ArrayList<Tower> t){
 		System.out.println("Engine say : Initating the game. interface..");
 		//jPanelMap.moveSprite(p);
 		Iterator<Tower> it = t.iterator();
@@ -182,7 +182,7 @@ public class ViewManager extends JFrame implements Runnable{
 	 * Retourne au Main menu une fois dans le jeu
 	 * @see GameToolsInterface.jButtonBackPerformed(ActionEvent evt) (appelant)
 	 */	
-    public void mainMenu(){
+    public void homeMenu(){
     	/*Prévient le dispatcher qu'il faut stopper les threads de jeu*/
     	d.stop();
     	
@@ -228,8 +228,8 @@ public class ViewManager extends JFrame implements Runnable{
 				/*Récupère et supprime la tête de la queue le premier ordre*/
 				Order o = q.poll();
 				if(o instanceof SuppressTowerOrder) {
-					System.out.println("Interface say : I have to suppress the tower : OwnerID "+o.getIdOwner()+" Position "+((TowerOrder) o).getPosition().x + " "+((TowerOrder) o).getPosition().y);
-					jPanelMap.suppressTower(((TowerOrder) o).getPosition(), o.getIdOwner());
+					System.out.println("Interface say : I have to suppress the tower : OwnerID "+o.getPlayerId()+" Position "+((TowerOrder) o).getPosition().x + " "+((TowerOrder) o).getPosition().y);
+					jPanelMap.suppressTower(((TowerOrder) o).getPosition(), o.getPlayerId());
 				}
 			}
 		}

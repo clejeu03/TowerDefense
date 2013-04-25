@@ -10,14 +10,21 @@ package Dispatcher;
 import java.awt.Point;
 
 /**
- * @author aurelie
- *
+ * Project - TowerDefense</br>
+ * <b>Class - SuppressTowerOrder</b></br>
+ * <p>The SuppressTowerOrder class represents the "suppress tower" tasks adding to the engine and view queues by the dispatcher</p>
+ * <b>Creation :</b> 24/04/2013</br>
+ * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
 public class SuppressTowerOrder extends TowerOrder{
 
-	public SuppressTowerOrder(int id, Point p) {
-		super(id,p);
-		
+	/**
+	 * Constructor of the SuppressTowerOrder class
+	 * @param idPlayer - player id
+	 * @param position - position of the tower to suppress
+	 */
+	public SuppressTowerOrder(int playerId, Point position) {
+		super(playerId,position);
 	}
 
 }

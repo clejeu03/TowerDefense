@@ -1,5 +1,7 @@
 package View;
 
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - OptionsMenu</b></br>
@@ -9,13 +11,13 @@ package View;
  * </p> 
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
- * @see MainMenusView
+ * @see MainViews
  * @see ViewManager
  * @see HomeMenu
  * 
  */
 
-public class OptionsMenu extends MainMenusView {
+public class OptionsMenu extends MainViews {
   /**
    * Define each items to use into the AccueilMenu
    */
@@ -23,7 +25,7 @@ public class OptionsMenu extends MainMenusView {
   /**
    * Constructor of the OptionsMenu class
    */
-  public OptionsMenu() {
+  public OptionsMenu(ViewManager view, Point position, int width, int height){
+	  super(view, position, width,height);
   }
-
 }

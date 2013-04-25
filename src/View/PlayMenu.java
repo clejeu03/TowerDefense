@@ -1,4 +1,7 @@
 package View;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - PlayMenu</b></br>
@@ -8,12 +11,12 @@ package View;
  * </p> 
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
- * @see MainMenusView
+ * @see MainViews
  * @see ViewManager
  * @see HomeMenu
  * 
  */
-public class PlayMenu extends MainMenusView{
+public class PlayMenu extends MainViews{
   /**
   * Define each items to use into the AccueilMenu
   */
@@ -21,7 +24,8 @@ public class PlayMenu extends MainMenusView{
   /**
    * constructor of the PlayMenu class
    */
-  public PlayMenu() {
+  public PlayMenu(ViewManager view, Point position, int width, int height){
+	  super(view, position, width,height);
   }
   /**
    * Function to be called after all the choices are made

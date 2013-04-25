@@ -10,25 +10,30 @@ package Dispatcher;
 import java.awt.Point;
 
 /**
- * @author aurelie
- *
+ * Project - TowerDefense</br>
+ * <b>Class - TowerOrder</b></br>
+ * <p>The TowerOrder class represents the "tower tasks" adding to the engine and view queues by the dispatcher</p>
+ * <b>Creation :</b> 24/04/2013</br>
+ * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
 public abstract class TowerOrder extends Order{
 
 	protected Point position;
 	
 	/**
-	 * 
+	 * Constructor of the TowerOrder class
+	 * @param playerId - player id
+	 * @param position - position of the Tower
 	 */
-	public TowerOrder(int id, Point p) {
-		super(id);
-		position = new Point(p);
+	public TowerOrder(int playerId, Point position) {
+		super(playerId);
+		this.position = new Point(position);
 	}
 	
     /**
      * Getter position
-     * @see PlayerInterface.refresh()(appelant)
-     * @see Engine.execute() (appelant)
+     * @see View.ViewManager#refresh()
+     * @see GameEngine.GameManager#execute()
      */	
 	public Point getPosition(){
 		return position;

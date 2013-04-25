@@ -18,7 +18,7 @@ import java.awt.Point;
  */
 public class ShieldTower extends MedicalTower {
 	  
-	public ShieldTower(Point p, int id,int r) {
-		  super(p,id,r);
+	public ShieldTower(Point position, int playerId,int range) {
+		  super(position,playerId,range);
 	} 
 }

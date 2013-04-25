@@ -18,99 +18,106 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see Player
  * @see WarManager
- * 
  */
 
 public class GameManager implements Runnable{
-	/*Thread managers*/
+	//Thread managers
 	private boolean running;
-	private DispatcherManager d;
-	private ConcurrentLinkedQueue<Order> q;
+	private DispatcherManager dispatcher;
+	private ConcurrentLinkedQueue<Order> queue;
 	
-	/*Position de l'objet (correspondant au Sprite dans l'interface)*/
+	//temporary !!
     private ArrayList<Tower> towers;
 	
+    /**
+     * Constructor of the GameManger class
+     */
 	public GameManager() {
 		super();
 		running = false;
-		q = new ConcurrentLinkedQueue<Order>();
+		queue = new ConcurrentLinkedQueue<Order>();
 		towers = new ArrayList<Tower>();
 	}
 	
 	/**
-	 * Initialise l'attribut d (myDispatcher)
-	 * @see TowerDefense.main(String[] args) (appelant)
+	 * Setter. Initiate the dispatcher attribute.
+	 * @see TowerDefense.TowerDefense#main(String[]) 
 	 */
-	public void setDispatcher(DispatcherManager d){
-		this.d = d;
+	public void setDispatcher(DispatcherManager dispatcher){
+		this.dispatcher = dispatcher;
 	}
 
 	/**
-	 * Initialise l'attribut running
-	 * @param r boolean
-	 * @see MyDispatcher.start()(appelant)
-	 * @see MyDispatcher.stop()(appelant)
+	 * Setter. Initiate the running attribute.
+	 * @param running - tells if the engine threads is running
+	 * @see Dispatcher.DispatcherManager#start()
+	 * @see Dispatcher.DispatcherManager#stop()
 	 */
-    public void setRunning(boolean r){
-    	running = r;
+    public void setRunning(boolean running){
+    	this.running = running;
     }
 			
 	/**
-	 * Initialise le jeu (On aura besoin des paramètres choisi par l'utilisateur...)
-	 * @see MyDispatcher.initiateGame() (appelant)
+	 * Initiate the game according to the player choices
+	 * @see Dispatcher.DispatcherManager#initiateGame()
 	 */
 	public void initiateGame(){
 		System.out.println("Engine say : Initating the game...");
 		
-		/*Ajout de tour*/
+		//Adding towers (temporary !)
 		towers.add(new MedicalTower(new Point(50,50), 1, 70));
 		towers.add(new MedicalTower(new Point(125,50), 0, 70));
 		
-		/*Envois des informations à l'interface*/
-		d.initiateGameInterface(towers);
+		//Tells the dispatcher that the View need to be initialized
+		dispatcher.initiateGameView(towers);
 	}
 	
 	/**
-	 * Exécution des actions souhaitées par le joueur
-	 * @seeE Engine.run() (appelant)
+	 * Execute the player actions
+	 * @see GameManager#run()
 	 */	
 	public void execute(){
-		/*Récupère la taille actuelle de la queue q*/
-		int nb = q.size();
-		/*Effectue et supprime les nb premières tâches de la queue q*/
-		if(nb>0){
-			for(int i = 0;i<nb; i++){
-				/*Récupère et supprime la tête de la queue le premier ordre*/
-				Order o = q.poll();
-				if(o instanceof SuppressTowerOrder) {
-					System.out.println("Engine say : I have to suppress the tower : OwnerID "+o.getIdOwner()+" Position "+((TowerOrder) o).getPosition().x + " "+((TowerOrder) o).getPosition().y);
-					/*Suppresion de la tour dans le model*/
+		//Retrieve the current size of the queue
+		int size = queue.size();
+		
+		//Execute and remove the "size" first orders of the queue
+		if(size>0){
+			for(int i = 0;i<size; i++){
+				//Retrieve and remove the head of the queue
+				Order order = queue.poll();
+				
+				//If the order is a SuppressTowerOrder one
+				if(order instanceof SuppressTowerOrder) {
+					System.out.println("Engine say : I have to suppress the tower : OwnerID "+order.getPlayerId()+" Position "+((TowerOrder) order).getPosition().x + " "+((TowerOrder) order).getPosition().y);
+					
+					//Remove the tower from the engine list
 					Iterator<Tower> it = towers.iterator();
 					while (it.hasNext()) {
 						Tower element = it.next();
-						if(element.getPosition().equals(((TowerOrder) o).getPosition())){
+						if(element.getPosition().equals(((TowerOrder) order).getPosition())){
 							it.remove();
 						}
-					/*Suppression de la tour dans l'interface*/
-					d.addOrderToView(new SuppressTowerOrder(o.getIdOwner(), ((TowerOrder) o).getPosition()));
-				}
+						//Tell the dispatcher that the tower need to be remove from the view
+						dispatcher.addOrderToView(new SuppressTowerOrder(order.getPlayerId(), ((TowerOrder) order).getPosition()));
+					}
 				
+				}
 			}
 		}
-		}
 	}
 	
+	
 	/**
-	 * Ajoute une tâche à la ConcurrentLinkedQueue q
-	 * @see MyDispatcher.moveSprite(Point p) (appelant)
+	 * Add an order to the engine ConcurrentLinkedQueue queue
+	 * @see Dispatcher.DispatcherManager#addOrderToEngine(Order)
 	 */	
-	public void addOrder(Order o){
-		/*Ajoute l'ordre o à la queue q*/
-		q.add(o);
+	public void addOrder(Order order){
+		//Add the order to the queue
+		queue.add(order);
 	}
 	
 	/**
-	 * Méthode run() du thread du moteur
+	 * run() method of the engine thread
 	 */	
 	@Override
 	public void run() {		

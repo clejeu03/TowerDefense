@@ -16,7 +16,7 @@ import java.awt.Point;
  * 
  */
 public class SpeedTower extends MedicalTower {
-	public SpeedTower(Point p, int id,int r) {
-		  super(p,id,r);
+	public SpeedTower(Point position, int playerId,int range) {
+		  super(position,playerId,range);
 	} 
 }

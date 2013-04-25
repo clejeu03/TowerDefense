@@ -52,8 +52,8 @@ public class DispatcherManager {
 	 * @param towerList - ArrayList of towers created by the engine
 	 * @see GameEngine.GameManager#initiateGame()
 	 */	
-	public void initiateGameInterface(ArrayList<Tower> towerList){
-		view.initiateGameInterface(towerList);	
+	public void initiateGameView(ArrayList<Tower> towerList){
+		view.initiateGameView(towerList);	
 	}
 
 	/**

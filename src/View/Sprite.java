@@ -9,6 +9,7 @@ import javax.swing.JComponent;
 /**
  * Project - TowerDefense</br>
  * <b>Class - Sprite</b></br> 
+ * <p>The Sprite class represents the images displayed on the SceneView</p
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see Sprite
@@ -16,63 +17,82 @@ import javax.swing.JComponent;
  * 
  */
 
-public abstract class Sprite extends JComponent{    
-	protected Point position;//Position du centre du Sprite !!
+public abstract class Sprite extends JComponent{
+	//Position of the center of the Sprite
+	protected Point position;
 	protected int width;
 	protected int height;
-	protected Image img;
+	protected Image image;
 	protected boolean clickable;
-	protected int idOwner;
+	protected int playerId;
+	protected SceneView scene;
 	
-	public Sprite(Point p, boolean c, int id, int w, int h ){ 
+	/**
+	 * Constructor of the Sprite class
+	 * @param position - position of the center of the Sprite
+	 * @param clickable - is the Sprite clickable ?
+	 * @param idPlayer - the id of the owner of the game object represented by the Sprite
+	 * @param width - Sprite width
+	 * @param height - Sprite height
+	 */
+	public Sprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height){ 
 		super();
 		
-		position = new Point(p);
-		clickable = c;
-		idOwner = id;
-		width = w;
-		height = h;
+		this.scene = scene;
+		this.position = new Point(position);
+		this.clickable = clickable;
+		this.playerId = playerId;
+		this.width = width;
+		this.height = height;
 	}
 
     /**
-     * Getter idOwner
-     * @return int : idOwner  du Sprite
-     * @see MapInterface.myMousePressed(MouseEvent me) (appelant)
-     */	
-	public int getIdOwner() {
-		return idOwner;
+     * Getter - retrieve the Sprite playerId
+     * @return int - the id of the owner of the game object represented by the Sprite
+     */
+	public int getPlayerId() {
+		return playerId;
 	}
+	
+	/**
+	 * Getter - retrieve the Sprite width
+	 * @return int 
+	 */
 	public int getWidth() {
 		return width;
 	}
+	
+	/**
+	 * Getter - retrieve the Sprite height
+	 * @return int
+	 */
 	public int getHeight() {
 		return height;
 	}
+	
     /**
-     * Getter position
-     * @return Point : position du Sprite
-     * @see MapInterface (appelant)
+     * Getter - retrieve the position of the center of the Sprite
+     * @return Point - position of the Sprite
      */	
 	public Point getPosition(){
 		return position;
 	}
 	
     /**
-     * Setter position
-     * @param newP : Point
-     * @see MapInterface.moveSprite(Point newPosition) (appelant)
+     * Setter - set the position of the center of the Sprite
+     * @param newPosition - Point
      */	
-	public void setPosition(Point newP){
-		position.setLocation(newP);
+	public void setPosition(Point newPosition){
+		position.setLocation(newPosition);
 	}
 	
     /**
-     * Dessin du Sprite
+     * Draw the Sprite
      */
     @Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-	    g.drawImage(img, 0, 0,this);
+	    g.drawImage(image, 0, 0,this);
 
 	  }  
 }
