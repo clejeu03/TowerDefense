@@ -26,9 +26,13 @@ public abstract class MainViews extends JPanel {
     protected int width;
     protected int height;
 
-	/**
-	 * 
-	 */
+    /**
+     * Constructor of the MainViews class
+     * @param view
+     * @param position - position of the top left corner of the panel
+     * @param width 
+     * @param height
+     */
 	public MainViews(ViewManager view, Point position, int width, int height) {
 		super();
 		this.view = view;
@@ -37,14 +41,25 @@ public abstract class MainViews extends JPanel {
 		this.height = height;
 	}
 	
+	/**
+	 * Getter - Retrieve the panel width
+	 */
 	public int getWidth() {
 		return width;
 	}
 	
+	/**
+	 * Getter - Retrieve the panel height 
+	 * @return int
+	 */
 	public int getHeight() {
 		return height;
 	}
 	
+	/**
+	 * Getter - Retrieve the panel top-left corner position
+	 * @return Point
+	 */
 	public Point getPosition() {
 		return position;
 	}

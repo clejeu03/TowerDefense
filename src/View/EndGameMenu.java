@@ -17,25 +17,28 @@ import java.awt.Point;
  * 
  */
 public class EndGameMenu extends MainViews{
-  /**
-  * Define each items to use into the AccueilMenu
-  */
-
-  /**
-   * Constructor of the EndGameMenu class
-   */
-  public EndGameMenu(ViewManager view, Point position, int width, int height){
-	  super(view, position, width,height);
-  }
-  /**
-   * Allow the player to quit the game
-   */
-  public void quit() {
-  }
-  /**
-   * Lead the player back to the AccueilMenu
-   * @see HomeMenu
-   */
-  public void goMenu() {
-  }
+	
+	/**
+	 * Constructor of the EndGameMenu class
+	 * @param view
+	 * @param position
+	 * @param width
+	 * @param height
+	 */
+	public EndGameMenu(ViewManager view, Point position, int width, int height){
+		super(view, position, width,height);
+	}
+	
+	/**
+	 * Allow the player to quit the game
+   	*/
+	public void quit() {
+	}
+	
+	/**
+	 * Lead the player back to the AccueilMenu
+	 * @see HomeMenu
+	 */
+	public void goMenu() {
+	}
 }

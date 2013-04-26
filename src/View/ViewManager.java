@@ -23,7 +23,7 @@ import javax.swing.JFrame;
  * concerns the game and the user interface but also the display of menus at the beginning and
  * the end of a game.</br>
  * The ViewManager is also responsible for the updating of the scene.</br>
- * The ViewManager communicates with the GameEngine trought the Dispatcher.
+ * The ViewManager communicates with the GameEngine trough the Dispatcher.
  * </p> 
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
@@ -34,33 +34,36 @@ import javax.swing.JFrame;
  */
 
 public class ViewManager extends JFrame implements Runnable{
-	/*Thread managers*/
+	//Thread managers
 	private boolean running;
-	private DispatcherManager d;
-	private ConcurrentLinkedQueue<Order> q;
+	private DispatcherManager dispatcher;
+	private ConcurrentLinkedQueue<Order> queue;
 	
-	/*Paramètes de la fenêtre*/
+	//Windows setting
     public static final int WIDTH = 800 ;
     public static final int HEIGHT = 600 ;
     private Image icon;
     
-    /*Panneaux*/	
-    private HomeMenu jPanelMainMenu;
-    private SceneView jPanelMap;
-    private GameMenuBar jPanelTools;
+    //Panels	
+    private HomeMenu homeMenu;
+    private SceneView sceneView;
+    private GameMenuBar gameMenuBar;
 	
+    /**
+     * Constructor of the ViewManager class
+     */
     public ViewManager() {
 		super("TowerDefense");	
 		
-		q = new ConcurrentLinkedQueue<Order>();
+		queue = new ConcurrentLinkedQueue<Order>();
 		running = false;
 		
-		jPanelMainMenu = new HomeMenu(this, new Point(0,0), WIDTH, HEIGHT);	
+		homeMenu = new HomeMenu(this, new Point(0,0), WIDTH, HEIGHT);	
 		
-		jPanelMap = new SceneView(this,new Point(0,25), 800,400);
-		jPanelTools = new GameMenuBar(this,new Point(0,0),800, 25);
+		sceneView = new SceneView(this,new Point(0,25), 800,400);
+		gameMenuBar = new GameMenuBar(this,new Point(0,0),800, 25);
 
-		/*Chargement de l'icone du jeu*/
+		//Loading the map icon
 		try {
 		      icon = ImageIO.read(new File("img/bear.png"));
 		  
@@ -68,11 +71,11 @@ public class ViewManager extends JFrame implements Runnable{
 		      e.printStackTrace();
 		}
 		
-        /*Création et disposition des composants sur la fenêtre*/
+        //Create and lay the component on the windows
 		initComponents();
 		layComponents();
 
-        /*Paramètres principaux de la  fenêtre*/
+        //Main settings of the window
 		centralization();
 		setIconImage(icon);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -82,137 +85,124 @@ public class ViewManager extends JFrame implements Runnable{
 	}
     
     /**
-     * Initialise les composants de la fenêtre
-     * @see PlayerInterface.PlayerInterface() (appelant)
+     * Initiate the window components
+     * @see 
      */	
     public void  initComponents(){
-		jPanelMainMenu.setPreferredSize(new Dimension(jPanelMainMenu.getWidth(), jPanelMainMenu.getHeight()));	
-        jPanelMap.setPreferredSize(new Dimension(jPanelMap.getWidth(), jPanelMap.getHeight()));
-        jPanelTools.setPreferredSize(new Dimension(jPanelTools.getWidth(), jPanelTools.getHeight()));
+		homeMenu.setPreferredSize(new Dimension(homeMenu.getWidth(), homeMenu.getHeight()));	
+        sceneView.setPreferredSize(new Dimension(sceneView.getWidth(), sceneView.getHeight()));
+        gameMenuBar.setPreferredSize(new Dimension(gameMenuBar.getWidth(), gameMenuBar.getHeight()));
     }
 
     /**
-     * Dispose les composants sur la fenêtre
-     * @see PlayerInterface.PlayerInterface() (appelant)
+     * Lay the component on the window
+     * @see
      */	
     public void layComponents(){
-    	/*Supprime le layout manager de la fenêtre nstauré par défaut
-    	 * Cela nous permet ensuite de disposer les composants à la main (en coordonnées absolues)*/
+    	//Remove the default layout manager of the windows
+    	//Allow us to lay the components according to absolute coordinates on the windows
     	setLayout(null);
     	
-        /*Dispose et dimensionne les composants*/
-		jPanelMainMenu.setBounds(jPanelMainMenu.getPosition().x, jPanelMainMenu.getPosition().y,jPanelMainMenu.getWidth(), jPanelMainMenu.getHeight());	   	
-    	jPanelMap.setBounds(jPanelMap.getPosition().x, jPanelMap.getPosition().y,jPanelMap.getWidth(), jPanelMap.getHeight());	
-        jPanelTools.setBounds(jPanelTools.getPosition().x, jPanelTools.getPosition().y,jPanelTools.getWidth(), jPanelTools.getHeight());	
+        //Move and Resize the components
+		homeMenu.setBounds(homeMenu.getPosition().x, homeMenu.getPosition().y,homeMenu.getWidth(), homeMenu.getHeight());	   	
+    	sceneView.setBounds(sceneView.getPosition().x, sceneView.getPosition().y,sceneView.getWidth(), sceneView.getHeight());	
+        gameMenuBar.setBounds(gameMenuBar.getPosition().x, gameMenuBar.getPosition().y,gameMenuBar.getWidth(), gameMenuBar.getHeight());	
         
-        /*ajoute sur la fenêtre le Main Menu Panel*/
-        add(jPanelMainMenu);
+        //add the homeMenu panel on the window
+        add(homeMenu);
     }
     
 	/**
-	 * Dispose la fenêtre au centre de l'écran
-	 * @see PlayerInterface.PlayerInterface() (appelant)
+	 * Lay the window at the center of the screen
+	 * @see 
 	 */
 	public void centralization(){
-		/*Récupère la taille de l'écran*/
+		//Retrieve the screen size
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		pack();
-	    /*Dispose la fenêtre au centre de l'écran*/
 		setLocation((screenSize.width-WIDTH)/2,(screenSize.height-HEIGHT)/2);	
 	}
 
 	/**
-	 * Initialise l'attribut d (myDispatcher)
-	 * @see TowerDefense.main(String[] args) (appelant)
+	 * Initiate the dispatcher attribute
+	 * @see
 	 */
-	public void setDispatcher(DispatcherManager d){
-		this.d = d;
+	public void setDispatcher(DispatcherManager dispatcher){
+		this.dispatcher = dispatcher;
 	}
 	
 	/**
-	 * Initialise l'attribut running
+	 * Initialize the running attribute
 	 * @param r boolean
-	 * @see MyDispatcher.start()(appelant)
-	 * @see MyDispatcher.stop()(appelant)
+	 * @see 
+	 * @see
 	 */
-    public void setRunning(boolean r){
-    	running = r;
+    public void setRunning(boolean running){
+    	this.running = running;
     }
 	
 	/**
-	 * Initialise les paramètres de l'interface au lancement du jeu
-	 * @param p: coordonnées initiales du Sprite test 
-	 * @see MyDispatcher.initiateGameInterface(Point p) (appelant)
+	 * Initialize the view when the game is launched
+	 * @param towers - ArrayList of towers created by the engine during the game initialization
+	 * @see
 	 */	
-    public void initiateGameView(ArrayList<Tower> t){
+    public void initiateGameView(ArrayList<Tower> towers){
 		System.out.println("Engine say : Initating the game. interface..");
-		//jPanelMap.moveSprite(p);
-		Iterator<Tower> it = t.iterator();
+
+		Iterator<Tower> it = towers.iterator();
 		while (it.hasNext()) {
-			//Récupération de la tour
+			//Retrieve the tower
 			Tower element = it.next();
-			//Ajout dans la liste de la Map
-			jPanelMap.addSprite(element);
+			//Add the tower in the sceneView list of Sprites
+			sceneView.addSprite(element);
 		}	
-		/*Les initialisation de l'interface par le moteur sont finies. Le jeu peut commencer !*/
-		d.start();	
+		//The view and engine initializations are done ! The game can start !
+		dispatcher.start();	
     }
 	
 	/**
-	 * Lance une partie depuis le Main menu
-	 * @see HomeMenu.jButtonPlayPerformed(ActionEvent evt) (appelant)
+	 * Launch the game
+	 * @see 
 	 */	
     public void play(){
-    	/*Demande au moteur via le dispatcher d'initaliser le jeu*/
-    	d.initiateGame();
+    	//Tell the engine (via the dispatcher) to initiate the game
+    	dispatcher.initiateGame();
     	
-    	/*Supprime le Main Menu Panel de la fenêtre*/
-    	remove(jPanelMainMenu);
+    	//Remove the homeMenu panel from the window
+    	remove(homeMenu);
     	
-    	/*Ajoute les game Panels sur la fenêtre*/
-    	add(jPanelMap);
-        add(jPanelTools);
+    	//Add the game panels on the window
+    	add(sceneView);
+        add(gameMenuBar);
         
-        /*Rafraichit la fenêtre*/
+        //Repaint the window
     	revalidate();
     	repaint();	  	
     }
   
 	/**
-	 * Retourne au Main menu une fois dans le jeu
+	 * Stop the game and display the homeMenu
 	 * @see GameToolsInterface.jButtonBackPerformed(ActionEvent evt) (appelant)
 	 */	
     public void homeMenu(){
-    	/*Prévient le dispatcher qu'il faut stopper les threads de jeu*/
-    	d.stop();
+    	//Tell the dispatcher to stop the game threads
+    	dispatcher.stop();
     	
-    	/*Supprime les game Panels de la fenêtre*/
-    	remove(jPanelMap);
-    	remove(jPanelTools);
+    	//Remove the game panels from the window
+    	remove(sceneView);
+    	remove(gameMenuBar);
     	
-    	/*Ajoute le Main Menu Panel sur la fenêtre*/
-    	add(jPanelMainMenu);
+    	//Add the homeMenu panel on the window
+    	add(homeMenu);
         
-        /*Rafraichit la fenêtre*/
+    	//Repaint the window
     	revalidate();
     	repaint();	  	
     }
-    
-	/**
-	 * Prévient le moteur via le Dispatcher que le joueur veut bouger le Sprite
-	 * @see GameToolsInterface.jButtonMovePerformed(ActionEvent evt) (appelant)
-	 */	
-    /*public void moveSprite(){
-    	d.moveSprite(new Point(10,10));
-    }*/
-    
-    /*public void towerClicked(Point position, int idOwner){
-		/*Affiche les infos de la Tour dans le panel GameToolsInterface*/
-		/*jPanelTools.towerClicked(position,idOwner);
-	}*/
+ 
     
    public void towerSuppressed(Point position, int idOwner){
-	   d.addOrderToEngine(new SuppressTowerOrder(idOwner, position));
+	   dispatcher.addOrderToEngine(new SuppressTowerOrder(idOwner, position));
    }
     
 	/**
@@ -221,31 +211,31 @@ public class ViewManager extends JFrame implements Runnable{
 	 */	
 	public void refresh(){
 		/*Récupère la taille actuelle de la queue q*/
-		int nb = q.size();
+		int nb = queue.size();
 		/*Effectue et supprime les nb premières tâches de la queue q*/
 		if(nb>0){
 			for(int i = 0;i<nb; i++){
 				/*Récupère et supprime la tête de la queue le premier ordre*/
-				Order o = q.poll();
+				Order o = queue.poll();
 				if(o instanceof SuppressTowerOrder) {
 					System.out.println("Interface say : I have to suppress the tower : OwnerID "+o.getPlayerId()+" Position "+((TowerOrder) o).getPosition().x + " "+((TowerOrder) o).getPosition().y);
-					jPanelMap.suppressTower(((TowerOrder) o).getPosition(), o.getPlayerId());
+					sceneView.suppressTower(((TowerOrder) o).getPosition(), o.getPlayerId());
 				}
 			}
 		}
 	}
 	
 	/**
-	 * Ajoute une tâche à la ConcurrentLinkedQueue q
-	 * @see MyDispatcher.refresh(Point p) (appelant)
+	 * Add an order to the engine ConcurrentLinkedQueue queue
+	 * @see Dispatcher.DispatcherManager#addOrderToView(Order)
 	 */	
-	public void addOrder(Order o){
-		/*Ajoute l'ordre o à la queue q*/
-		q.add(o);
+	public void addOrder(Order order){
+		//Add the order to the queue
+		queue.add(order);
 	}
 
 	/**
-	 * Méthode run() du thread de l'interface
+	 * run() method of the view thread
 	 */	
 	@Override
 	public void run() {

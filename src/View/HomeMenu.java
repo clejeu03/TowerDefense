@@ -10,7 +10,7 @@ import javax.swing.JButton;
 /**
  * Project - TowerDefense</br>
  * <b>Class - HomeMenu</b></br>
- * <p>The HomeMenu is the that lead the player trought the differents steps of the creation 
+ * <p>The HomeMenu is the that lead the player through the different steps of the creation 
  * of a new game. The informations that came out after the player selection are directly sent
  * to the GameEngine for him to start the game.</br>
  * The HomeMenu inherit from the MainMenusView and is controlled by the ViewManager.
@@ -29,6 +29,13 @@ public class HomeMenu extends MainViews{
     private JButton jButtonPlay;
     private JButton jButtonQuit;
     
+    /**
+     * Constructor of the HomeMenu class
+     * @param view
+     * @param position
+     * @param width
+     * @param height
+     */
 	public HomeMenu(ViewManager view, Point position, int width, int height){
 		super(view, position, width,height);
 		

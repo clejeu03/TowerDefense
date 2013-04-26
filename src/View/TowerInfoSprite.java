@@ -36,6 +36,17 @@ public class TowerInfoSprite extends Sprite{
 	private  int type;
 	private Point positionElt;
 	
+	/**
+	 * Constructor of the TowerInfoSprite class
+	 * @param scene
+	 * @param position
+	 * @param clickable
+	 * @param playerId
+	 * @param width
+	 * @param height
+	 * @param type
+	 * @param positionElt
+	 */
 	public TowerInfoSprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height, int type, Point positionElt) {
 		super(scene, position,clickable,playerId,width,height);
 		this.type = type;
