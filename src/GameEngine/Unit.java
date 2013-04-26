@@ -1,4 +1,7 @@
 package GameEngine;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - Unit</b></br>
@@ -27,37 +30,63 @@ public class Unit {
    * Contains the speed of the Unit.
    * =========> WARNING : All the Unit have the same speed no ?
    */
-  public float speed;
+  public double speed;
   /**
-   * Store the current x position of the Unit
+   * Store the current position of the Unit
    */
-  public float position_x;
-  /**
-   * Store the current y position of the Unit
-   */
-  public float position_y;
-  
+  public Point position;
   /**
    * Constructor of the Unit class
    */
-  public Unit() {
+  public Unit(Base origin, int amount) {
+	  super();
+	  setAmount(amount);
+	  setPosition(origin.getPosition());
+	  //Temporary !
+	  setSpeed(0.5);
   }
   
   /**
    * Getter that returns the speed of the Unit
    * @return speed
    */
-  public float getSpeed() {
+  public double getSpeed() {
 	  return speed;
+  }
+  /**
+   * Set the speed of the unit
+   * @param speed
+   */
+  public void setSpeed(double speed){
+	  this.speed = speed;
+  }
+  /**
+   * Return the amount of the unit 
+   * @return amount
+   */
+  public int getAmount(){
+	  return this.amount;
+  }
+  /**
+   * Change the amount of the unit
+   * @param amount
+   */
+  public void setAmount(int amount){
+	  this.amount = amount;
   }
   /**
    * Changes current position of the unit
    * @param position_x - x position
    * @param position_y - y position
    */
-  public void setPosition(float position_x, float position_y) {
-	  this.position_x = position_x;
-	  this.position_y = position_y;
+  public void setPosition(Point pos) {
+	  this.position = pos;
   }
-
+  /**
+   * Return the position of the unit 
+   * @return position
+   */
+  public Point getPosition(){
+	  return this.position;
+  }
 }

@@ -1,6 +1,6 @@
 package GameEngine;
 import java.awt.Point;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 
 /**
  * Project - TowerDefense</br>
@@ -27,7 +27,7 @@ public class ArmyManager {
    * @see Base
    * @see Player
    */
-  public ConcurrentHashMap<Base, Player> whomBaseList;
+  public HashMap<Base, Player> whomBaseList;
 
   /**
    * Associates in a HashMap thread safe the Units
@@ -35,7 +35,7 @@ public class ArmyManager {
    * @see Units
    * @see Player
    */
-  public ConcurrentHashMap<Unit, Player> unitList;
+  public HashMap<Unit, Player> unitList;
   /**
    * List all the sizes the Bases can take. The size of a base affects 
    * the visual size of the Base and the speed of producing units into itself. 
@@ -56,7 +56,6 @@ public class ArmyManager {
    */
   public ArmyManager() {
 	  super();
-	  
 	  }
   /**
    * Initialize the attributes whomBaseList and unitList at the creation of the game.
@@ -66,12 +65,32 @@ public class ArmyManager {
   /**
    * Create a new group, called Unit, from the selected Base with an amount equal 50% from the 
    * Base amount
-   * 
    * @param origin - Base from where the unit is sent
    * @see Base
    */
   public void launchUnit(Base origin) {
+	  //Calculates the agents number
+	  int baseAmount = origin.getAmount();
+	  int unitAmount = baseAmount%2;
+	  //Creates the new Unit
+	  Unit unit = createUnit(origin, unitAmount);
+	  //Changing the base amount
+	  origin.setAmount(baseAmount-unitAmount);
+	  //Adding the unit to the hashMap by finding the owner of the base
+	  unitList.put(unit, whomBaseList.get(origin));
+	  
   }
+  /**
+   * Create a new unit from the base
+   * @param origin - base from where the unit is launch
+   * @param amount
+   * @return unit
+   */
+  public Unit createUnit(Base origin, int amount){
+	  Unit unit = new Unit(origin, amount);
+	  return unit;
+  }
+  
   /**
    * Create a new base, neutral or active.
    * =========> WARNING : And attributes it to a player ?
@@ -98,12 +117,28 @@ public class ArmyManager {
 	return base;
   }
   /**
+   * Change the owner of the base, or add one if the base was neutral
+   * @param base
+   * @param player - the new player that own the base
+   */
+  public void attributeBase(Base base, Player player){
+	  if(base.getNeutral()){
+		  //Si la base est neutre alors on lui attribue un possesseur pour la première fois
+		  whomBaseList.put(base, player);
+	  }else{
+		  //Sinon on enlève le dernier possesseur et lui attribue le nouveau
+		  whomBaseList.remove(base);
+		  whomBaseList.put(base, player);
+	  }
+  }
+  
+  /**
    * Move a Unit, from its position to a new position, in the path to the Unit's destination.
-   * 
    * @param destination - Base to where the unit must go
    * @see Base
    */
   public void moveUnit(Base destination) {
+	  	
   }
  
 
