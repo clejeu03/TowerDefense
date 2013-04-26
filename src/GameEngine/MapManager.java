@@ -114,7 +114,7 @@ public class MapManager {
 				}
 			}
 		}	
-		createImageFromMap(heightMap, "src/Maps/hm.png");
+		createImageFromMap(heightMap, "map/hm.png");
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class MapManager {
 			
 		}
 		
-		createImageFromMap(territoryMap,"src/Maps/tm.png");
+		createImageFromMap(territoryMap,"map/tm.png");
 	}
 	
 	/**
@@ -362,7 +362,7 @@ public class MapManager {
 	}
 	
 	public static void main(String[] args){
-		MapManager myMap = new MapManager("src/Maps/Map.jpg");
+		MapManager myMap = new MapManager("map/Map.jpg");
 	}
 
 }

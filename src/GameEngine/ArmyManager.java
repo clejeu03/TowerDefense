@@ -1,4 +1,5 @@
 package GameEngine;
+import java.awt.Point;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -54,7 +55,9 @@ public class ArmyManager {
    * Constructor of the ArmyManager class
    */
   public ArmyManager() {
-  }
+	  super();
+	  
+	  }
   /**
    * Initialize the attributes whomBaseList and unitList at the creation of the game.
    */
@@ -70,10 +73,29 @@ public class ArmyManager {
   public void launchUnit(Base origin) {
   }
   /**
-   * Creates a Base at the given position.
-   *  =========> WARNING : And attributes it to a player ?
+   * Create a new base, neutral or active.
+   * =========> WARNING : And attributes it to a player ?
+   * @param pos - position
+   * @param neutral - is neutral or not ?
+   * @param type - BaseType (small, medium or large)
+   * @param proxMap - proximityMap
+   * @return base
    */
-  public void createBase() {
+  public Base createBase(Point pos, Boolean neutral, BaseType type, Map proxMap) {
+	Base base = new Base(pos, neutral, type, proxMap);
+	return base;
+  }
+  /**
+   * Create especially an active base.
+   * =========> WARNING : And attributes it to a player ?
+   * @param pos position
+   * @param neutral is it neutral or not ?
+   * @param proxMap the proximityMap
+   * @return base
+   */
+  public Base createBase(Point pos, Boolean neutral, Map proxMap) {
+	Base base = new Base(pos, neutral, proxMap);
+	return base;
   }
   /**
    * Move a Unit, from its position to a new position, in the path to the Unit's destination.
@@ -83,7 +105,6 @@ public class ArmyManager {
    */
   public void moveUnit(Base destination) {
   }
-
-  
+ 
 
 }

@@ -31,31 +31,113 @@ public class Base {
   /**
    * Store the proximityMap deduced from the all Bases positions.
    */
-  protected int[] proximityTab;
+  private Map proximityTab;
   /**
    * Store the position of the center of the Base.
    */
-  protected Point position;
+  public Point position;
   /**
    * Store the amount maximum the Base can produce. When the amount reach sizeMax, the Base 
    * stop the production.
    */
-  public int sizeMax;
+  private int sizeMax;
   /**
    * Defined in a enum in the ArmyManager. Determine the speed of unit production and the visual
    * size of the Base.
    * @see ArmyManager
    */
   public BaseType type;
+  /**
+   * Define if the Base is a neutral one or not. It affects his amount all the time the neutral
+   * base remain neutral.
+   */
+  protected Boolean neutral;
 
   
   /**
-   * Constructor of the Base class.
+   * Constructor of the Base class case the type is given. If the base a neutral you must specify 
+   * his type (small, medium or large). If the base is active, it will be a medium one.
+   * @see ArmyManager.createBase(Point pos, Boolean neutral, BaseType type, Map proxMap);
    */
-  public Base() {
+  public Base(Point position, Boolean neutral, BaseType type, Map proximityTab ) {
 	  super();
-	  
+	  if(position != null){
+	 	setPosition(position);
+	  }else{
+		  //TODO 
+	  }
+	  if(proximityTab != null){
+		  setProximityTab(proximityTab);
+	  }else{
+		  //TODO
+	  }
+	  if(neutral){
+		  //Specifications if the base is an neutral one
+		  createNeutralBase(type);
+	  }else{
+		  //Create by default a medium sized base if it is not neutral
+		   createActiveBase();
+	  }
   }
+  /**Constructor of the active base only called from the ArmyManager
+   * @see ArmyManager.createBase(Point pos, Boolean neutral, Map proxMap)*/
+  public Base(Point position, Boolean neutral, Map proximityTab) {
+	  super();
+	  setPosition(position);
+	  setProximityTab(proximityTab);
+	  createActiveBase();
+  }
+ /**
+  * Create a neutral base following the given type
+  * @param type
+  */
+  protected void createNeutralBase(BaseType type){
+	  setBaseType(type);
+	  setNeutral(true);
+	  switch(type){
+	  case SMALL :
+		  createSmallBase();
+		  break;
+	  case MEDIUM :
+		  createMediumBase();
+		  break;
+	  case LARGE :
+		  createLargeBase();
+		  break;
+	  default :
+		  break;
+	  }
+  }
+  /**
+   * Create an active base by default a medium sized one
+   */
+  protected void createActiveBase(){
+	  setBaseType(BaseType.MEDIUM);
+	  setNeutral(false);
+	  createMediumBase();
+  }
+  /**
+   * Creation of a small base
+   */
+  protected void createSmallBase(){
+	  setAmount(40);
+	  setSizeMax(120);
+  }
+  /**
+   * Creation of a medium sized base
+   */
+  protected void createMediumBase(){
+	  setAmount(60);
+	  setSizeMax(160);
+  }
+  /**
+   * Creation of a large base
+   */
+  protected void createLargeBase(){
+	  setAmount(80);
+	  setSizeMax(200);
+  }
+  
   /**
    * Return the current amount of soldier produced by Base.
    * @return amount - number of soldier into the Base
@@ -67,14 +149,14 @@ public class Base {
    * Return the proximity map into an int tab.
    * @return proximityTab (that store the proximityMap)
    */
-  public int[] getProximitytab() {
-	  return proximityTab;
+  public Map getProximitytab() {
+	  return this.proximityTab;
   }
   /**
    * Set the proximity map of the concerned base
    * @param proximityTab
    */
-  public void setProximityTab(int[] proximityTab){
+  public void setProximityTab(Map proximityTab){
 	  this.proximityTab = proximityTab;
   }
   /**
@@ -126,5 +208,19 @@ public class Base {
    */
   public BaseType getBaseType(){
 	  return this.type;
+  }
+  /**
+   * If false the Base is active, if true, the Base is neutral
+   * @return neutral
+   */
+  public Boolean getNeutral(){
+	  return this.neutral;
+  }
+  /**
+   * Set the neutral caracteristic of the Base : true or false.
+   * @param neutral
+   */
+  public void setNeutral(Boolean neutral){
+	  this.neutral = neutral;
   }
 }
