@@ -18,14 +18,11 @@ import java.awt.Point;
  */
 
 public class OptionsMenu extends MainViews {
-  /**
-   * Define each items to use into the AccueilMenu
-   */
-
-  /**
-   * Constructor of the OptionsMenu class
-   */
-  public OptionsMenu(ViewManager view, Point position, int width, int height){
-	  super(view, position, width,height);
-  }
+	
+	/**
+	 * Constructor of the OptionsMenu class
+	 */
+	public OptionsMenu(ViewManager view, Point position, int width, int height){
+		super(view, position, width,height);
+	}
 }

@@ -17,22 +17,16 @@ import java.awt.Point;
  * 
  */
 public class PlayMenu extends MainViews{
-  /**
-  * Define each items to use into the AccueilMenu
-  */
-	
-  /**
-   * constructor of the PlayMenu class
-   */
-  public PlayMenu(ViewManager view, Point position, int width, int height){
-	  super(view, position, width,height);
-  }
-  /**
-   * Function to be called after all the choices are made
-   */
-  public void startGame() {
-  }
-
-
+	/**
+	 * constructor of the PlayMenu class
+	 */
+	public PlayMenu(ViewManager view, Point position, int width, int height){
+		super(view, position, width,height);
+	}
+	/**
+	 * Function to be called after all the choices are made
+	 */
+	public void startGame() {
+	}
 
 }

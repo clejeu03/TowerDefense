@@ -18,14 +18,34 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import GameEngine.GameManager;
+
 /**
- * @author aurelie
- *
+ * Project - TowerDefense</br>
+ * <b>Class - TowerSprite</b></br>
+ * <p>The TowerSprite class represents the tower images displayed on the ScenView</p>
+ * <b>Creation :</b> 22/04/2013</br>
+ * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
+ * @see MainViews
+ * @see GameMenuBar
+ * @see SceneView
+ * @see GameManager
  */
 public class TowerSprite extends Sprite{
 	private int towerType;
 	private int range;
 	
+	/**
+	 * Constructor of the TowerSprite class
+	 * @param scene
+	 * @param position
+	 * @param clickable
+	 * @param playerId
+	 * @param width
+	 * @param height
+	 * @param type
+	 * @param range
+	 */
 	public TowerSprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height, int type, int range) {
 		super(scene, position,clickable,playerId,width,height);
 		

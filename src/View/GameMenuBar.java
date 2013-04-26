@@ -10,11 +10,11 @@ import javax.swing.JPanel;
 
 /**
  * Project - TowerDefense</br>
- * <b>Class - GameToolbar</b></br>
- * <p>The GameToolbar class is used to display a user friendly interface while playing the game.
+ * <b>Class - GameMenubar</b></br>
+ * <p>The GameMenubar class is used to display a user friendly interface while playing the game.
  * The player would be allowed to make actions thanks to buttons and informations hold in the
- * GameToolbar.
- * The GameToolbar is created and managed by the ViewManager.</br>
+ * GameMenuBar.
+ * The GameMenuBar is created and managed by the ViewManager.</br>
  * </p> 
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
@@ -27,8 +27,11 @@ public class GameMenuBar extends MainViews{
     private JButton jButtonBack;
 	
     /**
-     * Constructor of the GameToolbar class
-     * @param view - ViewManager
+     * Constructor of the GameMenuBar class
+     * @param view
+     * @param position
+     * @param width
+     * @param height
      */
 	public GameMenuBar(ViewManager view, Point position, int width, int height){
 		super(view, position, width,height);

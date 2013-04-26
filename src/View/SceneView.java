@@ -35,9 +35,13 @@ public class SceneView extends MainViews{
     private boolean towerClicked;
     private int indexTowerClicked;
     
-   /* private TowerSprite bear;
-    private TowerSprite bear2;*/
-
+    /**
+     * Constructor of the SceneView class
+     * @param view
+     * @param position
+     * @param width
+     * @param height
+     */
 	public SceneView(ViewManager view, Point position, int width, int height){
 		super(view, position, width,height);
 	
@@ -45,7 +49,7 @@ public class SceneView extends MainViews{
 		towerClicked = false;
 		indexTowerClicked = 0;
 		
-		/*Chargement de l'image de la map*/
+		//Loading the image map
 		try {
 		      map = ImageIO.read(new File("img/map.jpg"));
 		  
@@ -53,37 +57,39 @@ public class SceneView extends MainViews{
 		      e.printStackTrace();
 		}
 		
-		/*Dispose les composants sur le panneau*/
-		setLayout(null);
-	
-        /*Ajout d'un listener sur la map*/
+        //Add a listener on the map
     	addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) { 
 	             myMousePressed(me);
 	            } 
          });
 		
-        /*Paramètres principaux du panneau*/
-		setPreferredSize(new Dimension(view.WIDTH,view.HEIGHT-200));
+		//Suppress the layout manager of the SceneView
+		setLayout(null);
 	    setBackground(Color.WHITE);
 	}
 	
-	public void addSprite(Tower t){
-		//Si la tour appartient au joueur 0 => Le sprite correspondant doit être clickable
-		boolean c = false;
-		int type =0;
+	/**
+	 * Add a Sprite on the map
+	 * @param tower 
+	 */
+	public void addSprite(Tower tower){
+		boolean clickable = false;
+		int type = 0;
 		
-		if(t.getPlayerId()==0){
-			c = true;
+		//If the tower's owner is the human player (id = 0), the Sprite needs to be clickable
+		if(tower.getPlayerId()==0){
+			clickable = true;
 		}
-		//Choisir le type en fonction dutype de la tour...
-		if(t instanceof MedicalTower){
+		//TODO Choose the the type of the tower
+		if(tower instanceof MedicalTower){
 			
 		}
-		TowerSprite ts = new TowerSprite(this, t.getPosition(),c, t.getPlayerId(), 32, 32, type, t.getRange());
+		
+		//Add the Sprite on the map
+		TowerSprite ts = new TowerSprite(this, tower.getPosition(),clickable, tower.getPlayerId(), 32, 32, type, tower.getRange());
 		sprites.add(ts);
 		
-		//ajoute l'élement sur la map
 		Iterator<Sprite> it = sprites.iterator();
 		while (it.hasNext()) {
 			Sprite element = it.next();
@@ -91,57 +97,57 @@ public class SceneView extends MainViews{
 			add(element);
 		}
 		
-        /*Rafraichit la fenêtre*/
+        //Repaint the panel
     	revalidate();
     	repaint();	
 	}
 	
 	/**
-	 * Gestionnaire de l'évènement "souris pressée dans la zone"
-	 * @param me : MouseEvent
+	 * Event "the mouse has been pressed in the zone" handler
+	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-		/*Récupère la source de l'évènement etvérifie qu'il s'agit bien d'un Sprite "cliquable"*/
-		//if(me.getComponent() instanceof Sprite){
-			//Sprite source = (Sprite) me.getComponent();
-			System.out.println("Position on the Map ("+ me.getPoint().x+","+ me.getPoint().y+")");
-			//Click sur la map si une tour était déjà cliquée
-			if (towerClicked){
-				//Suppression de ses sprites d'info
-		    	Sprite s = sprites.get(indexTowerClicked);
-				Point positionInfo= new Point(s.getPosition());
-				positionInfo.translate((32/2) + (16/2),(32/2) + (16/2));
-				
-				Iterator<Sprite> it = sprites.iterator();
-				while (it.hasNext()) {
-					Sprite element = it.next();
-					if(element.getPosition().equals(positionInfo)){
-						it.remove();
-						remove(element);
-					}
-				}
-		    	towerClicked = false;
-			}
+		
+		System.out.println("Position on the Map ("+ me.getPoint().x+","+ me.getPoint().y+")");
+		
+		//Click on the map when a tower is selected
+		if (towerClicked){
+			//Removing from the view the towerInfoSprite
+			//TODO  Plus simple => chercher dans la liste de sprite les instance de TowerInfoSprite
+	    	Sprite s = sprites.get(indexTowerClicked);
+			Point positionInfo= new Point(s.getPosition());
+			positionInfo.translate((32/2) + (16/2),(32/2) + (16/2));
 			
-			/*Rafraichit la fenêtre*/
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				if(element.getPosition().equals(positionInfo)){
+					it.remove();
+					remove(element);
+				}
+			}
+	    	towerClicked = false;
+			
+	    	//Repaint the Panel
 	    	revalidate();
 	    	repaint();	
-		//}
+		}
 	}
 	
 	
 	public void towerClicked(Point position, int idOwner){
-		/*Affiche les infos de la Tour surla map*/ 
-		/*Ajout un Spirtede suppression de tour à côté de la Tour*/
+		//Display the  TowerInfoSprites of the clicked tower on the map
 		Point positionSprite = new Point(position);
 		positionSprite.translate((32/2) + (16/2),(32/2) + (16/2));
+		
 		System.out.println("Position Tower "+position.x);
 		System.out.println("Position Delete "+positionSprite.x);
-		/*Ajout à la fin de la queue*/
+		
+		//Add the TowerInfoSprite
 		sprites.add(new TowerInfoSprite(this, positionSprite, true, idOwner, 16,16, 0, position));	
 		
 		
-		/*TO DO A Améliorer  => récupérer la fin de la queue...!*/	
+		//TODO Retrieve the t améliorer	
 		Iterator<Sprite> it = sprites.iterator();
 		while (it.hasNext()) {
 			Sprite element = it.next();
@@ -191,7 +197,7 @@ public class SceneView extends MainViews{
 	}
 	
     /**
-     * Dessin de la map
+     * Draw the SceneView Panel
      */
     @Override
 	public void paintComponent(Graphics g){
