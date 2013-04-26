@@ -1,10 +1,10 @@
 package GameEngine;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -53,7 +53,7 @@ public class MapManager {
   /**
    * Store the map that calculate the distance between each Base
    */
-  //private Map proximityMap;
+  private Map proximityMap[];
   /**
    * Store the position of each base
    */
@@ -66,14 +66,17 @@ public class MapManager {
 		super();
 		imagepath = i_imagepath;
 		basePosition = new Point[numberOfPlayer];
+		proximityMap = new Map[numberOfPlayer];
 		generateHeightMap();
 		generateTerritoryMap();
+		generateAllProximityMap();
 	}
 	
 	/**
-	 * Algorithme de génération de la map de relief suivant une image locale
+	 * Generate the HeightMap using a local picture and save it as a png at /map
+	 * @see MapManager()
 	 */
-	void generateHeightMap(){
+	private void generateHeightMap(){
 		BufferedImage img = null;//Local image containment
 		
 		try {
@@ -114,14 +117,14 @@ public class MapManager {
 				}
 			}
 		}	
-		createImageFromMap(heightMap, "src/Maps/hm.png");
+		heightMap.saveAsPNG("hm.png");
 	}
 
 	/**
-	 * Algorithme de génération de la map de territoires
+	 * Generate the TerritoryMap and save it as a png at /map
 	 * @see MapManager() 
 	 */
-	void generateTerritoryMap(){
+	private void generateTerritoryMap(){
 		//Initiate TerritoryMap
 		territoryMap = new Map(heightMap.getWidth(),heightMap.getHeight());
 		
@@ -169,7 +172,7 @@ public class MapManager {
 			
 		}
 		
-		createImageFromMap(territoryMap,"src/Maps/tm.png");
+		territoryMap.saveAsPNG("tm.png");
 	}
 	
 	/**
@@ -186,13 +189,10 @@ public class MapManager {
 		
 		//Getting each pixels
 		for (Point i:pixels){
-			//A non-modified pixel returns a NullPointerException
-			try{
-				getTerritoryMapValue(i.x,i.y);
-			}
-			catch(NullPointerException e){
+			//A non-modified pixel value is -1
+			if(getTerritoryMapValue(i.x,i.y)==-1){
 				//Add the value to the TerritoryMap according to the heightMap
-				if (heightMap.getPixel(i.x,i.y).getValue()==0)
+				if (heightMap.getPixel(i.x,i.y)==0)
 					setTerritoryMap(i.x,i.y,player);
 				else
 					setTerritoryMap(i.x,i.y,0);
@@ -252,68 +252,76 @@ public class MapManager {
 	}
 	
 	/**
-	 * Create a color image with the information of a Map
-	 * @param m Map 
-	 * @param path path of the output image
-	 * @see MapManager.generateHeightMap()
-	 * @see MapManager.generateTerritoryMap()
+	 * Generate All the ProximityMap (one for each base)
+	 * @see MapManager()
 	 */
-	private void createImageFromMap(Map m, String path){
-		Color red = new Color(255,0,0);
-		Color blue = new Color(0,0,255);
-		Color green = new Color(0,255,0);
-		Color yellow = new Color(0,255,255);
-		Color white = new Color(255,255,255);
-		Color black = new Color(0,0,0);
-		
-		int rgb;
-		BufferedImage outImage = new BufferedImage(m.getWidth(),m.getHeight(),BufferedImage.TYPE_INT_RGB);
-		for (int y = 0; y < m.getHeight();y++){ 
-			for (int x = 0; x < m.getWidth();x++){
-				int value;
-				try
-				{
-					value = m.getPixel(x,y).getValue();
+	private void generateAllProximityMap(){
+		for (int i=0;i<numberOfPlayer;i++){
+			proximityMap[i]=new Map(heightMap.getWidth(),heightMap.getHeight());
+			generateProximityMap(i);
+			proximityMap[i].saveAsPNGProximity("pm"+i+".png");
+		}
+	}
+	
+	/**
+	 * Generate a ProximityMap for a base
+	 * @param player id of the base
+	 * @see MapManager().generateAllProximityMap()
+	 */
+	private void generateProximityMap(int player){
+		LinkedList<Point> nextPixels = new LinkedList<Point>();
+		nextPixels.add(new Point(basePosition[player].x,basePosition[player].y));
+		int value=0;
+		Point p;
+		while(!nextPixels.isEmpty()){
+			p = nextPixels.poll();
+			if (getProximityMapValue(player,p.x,p.y)==-1){
+				if (getHeightMapValue(p.x,p.y)!=0){
+					setProximityMapValue(player,p.x,p.y,value);
 				}
-				catch (NullPointerException e){
-					value = 5;
-				}
-				switch(value){
-				case 0:
-					rgb = black.getRGB();
-					break;
-				case 1:
-					rgb = blue.getRGB();
-					break;
-				case 2:
-					rgb = green.getRGB();
-					break;
-				case 3:
-					rgb = yellow.getRGB();
-					break;
-				case 4:
-					rgb = red.getRGB();
-					break;
-				case 5:
-					rgb = white.getRGB();
-					break;
-				default:
-					rgb=white.getRGB();
-					break;
+				else
+					setProximityMapValue(player,p.x,p.y,9999);
+				
+				//Right pixel
+				if (p.x<territoryMap.getWidth()-1)
+					nextPixels.add(new Point(p.x+1,p.y));
+				
+				
+				//Bottom pixel
+				if (p.y<territoryMap.getHeight()-1)
+					nextPixels.add(new Point(p.x,p.y+1));
+					
+				//Left pixel
+				if (p.y>0)
+					nextPixels.add(new Point(p.x,p.y-1));
+
+				
+				//Top pixel
+				if (p.x>0)
+					nextPixels.add(new Point(p.x-1,p.y));
+				
+				//Bottom-right pixel
+				if ((p.x<territoryMap.getWidth()-1)&&(p.y<territoryMap.getHeight()-1)){
+					nextPixels.add(new Point(p.x+1,p.y+1));
 				}
 				
-				outImage.setRGB(x, y, rgb);
+				//Bottom-left pixel
+				if (p.x>0&&(p.y<territoryMap.getHeight()-1)){
+					nextPixels.add(new Point(p.x-1,p.y+1));
+				}
+				
+				//Top-left pixel
+				if (p.x>0&&p.y>0){
+					nextPixels.add(new Point(p.x-1,p.y-1));
+				}
+				
+				//Top-right pixel
+				if ((p.x<territoryMap.getWidth()-1)&&p.y>0){
+					nextPixels.add(new Point(p.x+1,p.y-1));
+				}
+				
+				value++;
 			}
-		}
-		File outFile = new File(path);
-		try{
-			if (!ImageIO.write(outImage, "png", outFile)){
-				System.out.println("Format d'écriture non pris en charge");
-			}
-		}
-		catch(Exception e){
-			System.out.println("Erreur lors de l'enregistrement de l'image :");
-			e.printStackTrace();
 		}
 	}
 	
@@ -324,45 +332,69 @@ public class MapManager {
 	public Point getBasePosition(int player) {
 		return basePosition[player];
 	}
+	
 
 	public void setBasePosition(int player, int x, int y) {
 		this.basePosition[player] = new Point(x,y);
 	}
+	
 
 	public Map getHeightMap() {
 		return heightMap;
 	}
+	
 
 	public int getHeightMapValue(int index){
-		return heightMap.getPixel(index).getValue();
+		return heightMap.getPixel(index);
 	}
 	
 	public int getHeightMapValue(int x, int y){
-		return heightMap.getPixel(x,y).getValue();
+		return heightMap.getPixel(x,y);
 	}
 	
 	public void setHeightMapValue(int x, int y, int value){
-		this.heightMap.setData(y*heightMap.getWidth() + x, x, y, value);
+		this.heightMap.setPixel(y*heightMap.getWidth() + x, value);
 	}
 	
 	public Map getTerritoryMap() {
 		return territoryMap;
 	}
+	
 
 	public int getTerritoryMapValue(int index){
-		return territoryMap.getPixel(index).getValue();
+		return territoryMap.getPixel(index);
 	}
 	
 	public int getTerritoryMapValue(int x, int y){
-		return territoryMap.getPixel(x,y).getValue();
+		return territoryMap.getPixel(x,y);
 	}
 	
 	public void setTerritoryMap(int x, int y, int value){
-		this.territoryMap.setData(y*territoryMap.getWidth() + x, x, y, value);
+		this.territoryMap.setPixel(y*territoryMap.getWidth() + x, value);
+	}
+	
+	public Map[] getProximityMap(){
+		return proximityMap;
+	}
+	
+	public Map getProximityMap(int base){
+		return proximityMap[base];
+	}
+	
+	public int getProximityMapValue(int base, int index){
+		return proximityMap[base].getPixel(index);
+	}
+	
+	public int getProximityMapValue(int base, int x, int y){
+		return proximityMap[base].getPixel(x,y);
+	}
+	
+	public void setProximityMapValue(int player, int x, int y, int value){
+		this.proximityMap[player].setPixel(y*proximityMap[player].getWidth() + x, value);
 	}
 	
 	public static void main(String[] args){
-		MapManager myMap = new MapManager("src/Maps/Map.jpg");
+		MapManager myMap = new MapManager("img/map/Map.jpg");
 	}
 
 }

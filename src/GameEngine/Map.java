@@ -7,7 +7,12 @@
  */
 package GameEngine;
 
-import java.awt.Point;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.Arrays;
+
+import javax.imageio.ImageIO;
 
 /**
  * Project - TowerDefense</br>
@@ -19,7 +24,7 @@ import java.awt.Point;
  */
 public class Map {
 	
-	private Pixel[] data;
+	private int[] data;
 	private final int height;
 	private final int width;
 	
@@ -27,21 +32,21 @@ public class Map {
 		super();
 		this.height = height;
 		this.width = width;
-		data = new Pixel[height*width];
+		data = new int[height*width];
+		Arrays.fill(data,-1);
 	}
 	
-	public Pixel getPixel(int index){
+	public int getPixel(int index){
 		return data[index];
 	}
 	
-	public Pixel getPixel(int x, int y)
+	public int getPixel(int x, int y)
 	{
 		return getPixel(y*getWidth() + x);
 	}
 	
-	public void setData(int index, int x, int y, int value) {
-		Pixel p = new Pixel(x,y,value);
-		this.data[index] = p;
+	public void setPixel(int index, int value) {
+		this.data[index] = value;
 	}
 
 	public int getHeight() {
@@ -51,27 +56,107 @@ public class Map {
 	public int getWidth() {
 		return width;
 	}
-
-	class Pixel{
-		private final Point position;
-		private final int value;
+	
+	/**
+	 * Create a color image with the information of the Map
+	 * @param path of the output image
+	 * @see MapManager.generateHeightMap()
+	 * @see MapManager.generateTerritoryMap()
+	 */
+	public void saveAsPNG(String path){
+		Color red = new Color(255,0,0);
+		Color blue = new Color(0,0,255);
+		Color green = new Color(0,255,0);
+		Color yellow = new Color(0,255,255);
+		Color white = new Color(255,255,255);
+		Color black = new Color(0,0,0);
 		
-		Pixel(int x, int y, int value){
-			super();
-			this.position = new Point(x,y);
-			this.value = value;
+		int rgb;
+		BufferedImage outImage = new BufferedImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_RGB);
+		for (int y = 0; y < this.getHeight();y++){ 
+			for (int x = 0; x < this.getWidth();x++){
+				int value;
+				try
+				{
+					value = this.getPixel(x,y);
+				}
+				catch (NullPointerException e){
+					value = 5;
+				}
+				switch(value){
+				case 0:
+					rgb = black.getRGB();
+					break;
+				case 1:
+					rgb = blue.getRGB();
+					break;
+				case 2:
+					rgb = green.getRGB();
+					break;
+				case 3:
+					rgb = yellow.getRGB();
+					break;
+				case 4:
+					rgb = red.getRGB();
+					break;
+				case 5:
+					rgb = white.getRGB();
+					break;
+				default:
+					rgb=white.getRGB();
+					break;
+				}
+				
+				outImage.setRGB(x, y, rgb);
+			}
+		}
+		File outFile = new File("img/map/"+path);
+		try{
+			if (!ImageIO.write(outImage, "png", outFile)){
+				System.out.println("Format d'écriture non pris en charge");
+			}
+		}
+		catch(Exception e){
+			System.out.println("Erreur lors de l'enregistrement de l'image :");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create a color image with the information of a ProximityMap
+	 * @param path of the output image
+	 * @see MapManager.generateAllProximityMap()
+	 */
+	public void saveAsPNGProximity(String path){
+		BufferedImage outImage = new BufferedImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_RGB);
+		int value;
+		for (int y = 0; y < this.getHeight();y++){ 
+			for (int x = 0; x < this.getWidth();x++){
+				value = this.getPixel(x,y);
+				if (value==9999){
+					outImage.setRGB(x, y, new Color(0,0,0).getRGB());
+				}
+				else
+				{
+					int R=(255*value)/500000;
+					int G=(255*(500000-value))/500000; 
+					int B=0;
+					outImage.setRGB(x, y, new Color(R,G,B).getRGB());
+				}
+				
+				
+			}
 		}
 		
-		public int getX() {
-			return position.x;
+		File outFile = new File("img/map/"+path);
+		try{
+			if (!ImageIO.write(outImage, "png", outFile)){
+				System.out.println("Format d'écriture non pris en charge");
+			}
 		}
-
-		public int getY() {
-			return position.y;
-		}
-
-		public int getValue() {
-			return value;
+		catch(Exception e){
+			System.out.println("Erreur lors de l'enregistrement de l'image :");
+			e.printStackTrace();
 		}
 	}
 }
