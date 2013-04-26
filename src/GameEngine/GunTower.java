@@ -1,4 +1,7 @@
 package GameEngine;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - GunTower</b></br>
@@ -22,7 +25,7 @@ public class GunTower extends Tower {
 	/**
 	 * Constructor of the GunTower class
 	 */
-	public GunTower(){
-		
-	}
+	  public GunTower(Point position, int playerId,int range) {
+		  super(position,playerId,range);
+	} 
 }
