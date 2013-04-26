@@ -176,7 +176,7 @@ public class ViewManager extends JFrame implements Runnable{
         add(gameMenuBar);
         
         //Repaint the window
-    	revalidate();
+    	validate();
     	repaint();	  	
     }
   
@@ -196,7 +196,7 @@ public class ViewManager extends JFrame implements Runnable{
     	add(homeMenu);
         
     	//Repaint the window
-    	revalidate();
+    	validate();
     	repaint();	  	
     }
  
