@@ -31,6 +31,7 @@ import GameEngine.GameManager;
  * @see SceneView
  * @see GameManager
  */
+@SuppressWarnings("serial")
 public class TowerSprite extends Sprite{
 	private int towerType;
 	private int range;
@@ -52,7 +53,7 @@ public class TowerSprite extends Sprite{
 		towerType = type;
 		this.range = range;
 				
-		/*Chargement de l'image : différent suivant le propriétaire de l'élement et le type*/
+		//Loading the tower image (different one according the tower type and player)
 		try {
 		      image = ImageIO.read(new File("img/bear.png"));
 		  
@@ -60,7 +61,7 @@ public class TowerSprite extends Sprite{
 		      e.printStackTrace();
 		}
 		
-		/*Si la tour est clickable, on ajoute les listeners*/
+		//Add listeners if the tower is clickable
 		if(clickable){
 			addMouseListener(new MouseAdapter() {
 				public void mousePressed(MouseEvent me) { 
@@ -79,43 +80,38 @@ public class TowerSprite extends Sprite{
 	
     /**
      * Getter range
-     * @return Point : position du Sprite
-     * @see SceneView (appelant)
+     * @return
+     * @see 
      */	
 	public int getRange(){
 		return range;
 	}
 	
 	/**
-	 * Gestionnaire de l'évènement "souris pressée dans la zone"
-	 * @param me : MouseEvent
+	 *  Event "the mouse has been pressed in the zone" handler
+	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-		/*Récupère la source de l'évènement etvérifie qu'il s'agit bien d'un Sprite "cliquable"*/
-		//if(me.getComponent() instanceof Sprite){
-			//Sprite source = (Sprite) me.getComponent();
 			System.out.println("TowerOwner number : "+ playerId+" !");
 			System.out.println("Position on the Sprite ("+ me.getPoint().x+","+ me.getPoint().y+")");
 			scene.towerClicked(position, playerId);
-			
-		//}
 	}
 	
 	/**
-	 * Gestionnaire de l'évènement "souris entrée dans la zone"
+	 * Event "the mouse has entered the zone" handler
 	 * @param me : MouseEvent
 	 */
 	private void myMouseEntered(MouseEvent me) {
-		/*Change l'aspect du pointeur de la souris*/
+		//Change the cursor aspect
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 	
 	/**
-	 * Gestionnaire de l'évènement "souris sortie dans la zone"
+	 * Event "the mouse has quit the zone" handler
 	 * @param me : MouseEvent
 	 */
 	private void myMouseExited(MouseEvent me) {
-		/*Change l'aspect du pointeur de la souris*/
+		//Change the cursor aspect
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 

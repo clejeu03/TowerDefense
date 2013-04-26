@@ -1,7 +1,6 @@
 package View;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 
 import GameEngine.*;
 
@@ -28,6 +26,7 @@ import GameEngine.*;
  * 
  */
 
+@SuppressWarnings("serial")
 public class SceneView extends MainViews{   
     private Image map;
     private ArrayList<Sprite> sprites;
@@ -72,6 +71,7 @@ public class SceneView extends MainViews{
 	/**
 	 * Add a Sprite on the map
 	 * @param tower 
+	 * @see ViewManager#initiateGameView(ArrayList)
 	 */
 	public void addSprite(Tower tower){
 		boolean clickable = false;
@@ -134,8 +134,13 @@ public class SceneView extends MainViews{
 		}
 	}
 	
-	
-	public void towerClicked(Point position, int idOwner){
+	/**
+	 * Display the TowerInfoSprites of a clicked tower
+	 * @param position
+	 * @param idOwner
+	 * @see TowerSprite#myMousePressed(MouseEvent)
+	 */
+	public void towerClicked(Point position, int playerId){
 		//Display the  TowerInfoSprites of the clicked tower on the map
 		Point positionSprite = new Point(position);
 		positionSprite.translate((32/2) + (16/2),(32/2) + (16/2));
@@ -144,14 +149,14 @@ public class SceneView extends MainViews{
 		System.out.println("Position Delete "+positionSprite.x);
 		
 		//Add the TowerInfoSprite
-		sprites.add(new TowerInfoSprite(this, positionSprite, true, idOwner, 16,16, 0, position));	
+		sprites.add(new TowerInfoSprite(this, positionSprite, true, playerId, 16,16, 0, position));	
 		
 		
-		//TODO Retrieve the t améliorer	
+		//TODO Retrieve the the clicked tower
 		Iterator<Sprite> it = sprites.iterator();
 		while (it.hasNext()) {
 			Sprite element = it.next();
-			/*Récupération del'index de la tour cliquée*/
+			//Retrieve the index of the clicked tower
 			if(element.getPosition().equals(position)){
 				indexTowerClicked = sprites.indexOf(element);
 				System.out.println(indexTowerClicked);
@@ -160,40 +165,52 @@ public class SceneView extends MainViews{
 			add(element);
 		}		
 		towerClicked = true;
-		/*Rafraichit la fenêtre*/
+		
+		//Repaint the panel
     	revalidate();
     	repaint();	
 		
 	}
 	
-	 public void towerSuppressed(Point position, int idOwner){
-		   view.towerSuppressed(position, idOwner);
+	/**
+	 * Tell the view that a tower need to be suppressed
+	 * @param position
+	 * @param playerId
+	 * @see TowerInfoSprite#myMousePressed(MouseEvent)
+	 */
+	 public void towerToSupress(Point position, int playerId){
+		   view.towerToSupress(position, playerId);
 	   }
 	 
-	public void suppressTower(Point position, int idOwner){
-		/*On supprime la Tour et ses sprites d'info*/
+	/**
+	 * Suppress a tower and its Sprite info
+	 * @param position
+	 * @param playerId
+	 * @see ViewManager#refresh()
+	 */
+	public void suppressTower(Point position, int playerId){
 		Iterator<Sprite> it = sprites.iterator();
 		Point positionSuppress = new Point(position);
 		positionSuppress.translate((32/2) + (16/2),(32/2) + (16/2));
-		//boolean find = false;
+
 		while (it.hasNext()) {
 			Sprite element = it.next();
 			if(element.getPosition().equals(position)){
 				it.remove();
 				remove(element);
-				//find = true;
+
 			}
 			//Sprite suppress
 			if(element.getPosition().equals(positionSuppress)){
 				it.remove();
 				remove(element);
-				//find = true;
 			}
 		}	
 		towerClicked =  false;
-        /*Rafraichit la fenêtre*/
+		
+		//Repaint the panel
     	revalidate();
-    	repaint();	
+    	repaint();		
 	}
 	
     /**
@@ -204,7 +221,7 @@ public class SceneView extends MainViews{
 		super.paintComponent(g);
 	    g.drawImage(map, 0, 0, this.getWidth(), this.getHeight(), this);
 	    if(towerClicked){
-	    	//Récupère la tour cliquée
+	    	//Retrieve the clicked tower
 	    	Sprite s = sprites.get(indexTowerClicked);
 	    	if(s instanceof TowerSprite){
 	    		g.setColor(Color.blue);

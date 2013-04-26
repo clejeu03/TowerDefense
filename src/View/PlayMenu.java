@@ -16,9 +16,14 @@ import java.awt.Point;
  * @see HomeMenu
  * 
  */
+@SuppressWarnings("serial")
 public class PlayMenu extends MainViews{
 	/**
-	 * constructor of the PlayMenu class
+	 * Constructor of the PlayMenu class
+	 * @param view
+     * @param position
+     * @param width
+     * @param height
 	 */
 	public PlayMenu(ViewManager view, Point position, int width, int height){
 		super(view, position, width,height);

@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import javax.swing.JFrame;
  * @see GameManager
  */
 
+@SuppressWarnings("serial")
 public class ViewManager extends JFrame implements Runnable{
 	//Thread managers
 	private boolean running;
@@ -86,7 +88,7 @@ public class ViewManager extends JFrame implements Runnable{
     
     /**
      * Initiate the window components
-     * @see 
+     * @see #ViewManager()
      */	
     public void  initComponents(){
 		homeMenu.setPreferredSize(new Dimension(homeMenu.getWidth(), homeMenu.getHeight()));	
@@ -96,7 +98,7 @@ public class ViewManager extends JFrame implements Runnable{
 
     /**
      * Lay the component on the window
-     * @see
+     * @see #ViewManager()
      */	
     public void layComponents(){
     	//Remove the default layout manager of the windows
@@ -114,7 +116,7 @@ public class ViewManager extends JFrame implements Runnable{
     
 	/**
 	 * Lay the window at the center of the screen
-	 * @see 
+	 * @see #ViewManager()
 	 */
 	public void centralization(){
 		//Retrieve the screen size
@@ -125,7 +127,7 @@ public class ViewManager extends JFrame implements Runnable{
 
 	/**
 	 * Initiate the dispatcher attribute
-	 * @see
+	 * @see TowerDefense.TowerDefense#main(String[])
 	 */
 	public void setDispatcher(DispatcherManager dispatcher){
 		this.dispatcher = dispatcher;
@@ -134,8 +136,8 @@ public class ViewManager extends JFrame implements Runnable{
 	/**
 	 * Initialize the running attribute
 	 * @param r boolean
-	 * @see 
-	 * @see
+	 * @see Dispatcher.DispatcherManager#start()
+	 * @see Dispatcher.DispatcherManager#stop()
 	 */
     public void setRunning(boolean running){
     	this.running = running;
@@ -144,7 +146,7 @@ public class ViewManager extends JFrame implements Runnable{
 	/**
 	 * Initialize the view when the game is launched
 	 * @param towers - ArrayList of towers created by the engine during the game initialization
-	 * @see
+	 * @see Dispatcher.DispatcherManager#initiateGameView(ArrayList)
 	 */	
     public void initiateGameView(ArrayList<Tower> towers){
 		System.out.println("Engine say : Initating the game. interface..");
@@ -162,7 +164,7 @@ public class ViewManager extends JFrame implements Runnable{
 	
 	/**
 	 * Launch the game
-	 * @see 
+	 * @see HomeMenu#jButtonPlayPerformed(ActionEvent)
 	 */	
     public void play(){
     	//Tell the engine (via the dispatcher) to initiate the game
@@ -182,7 +184,7 @@ public class ViewManager extends JFrame implements Runnable{
   
 	/**
 	 * Stop the game and display the homeMenu
-	 * @see GameToolsInterface.jButtonBackPerformed(ActionEvent evt) (appelant)
+	 * @see GameMenuBar#jButtonBackPerformed(ActionEvent) 
 	 */	
     public void homeMenu(){
     	//Tell the dispatcher to stop the game threads
@@ -200,23 +202,31 @@ public class ViewManager extends JFrame implements Runnable{
     	repaint();	  	
     }
  
-    
-   public void towerSuppressed(Point position, int idOwner){
-	   dispatcher.addOrderToEngine(new SuppressTowerOrder(idOwner, position));
+   /**
+    * Tell the dispatcher a tower need to be suppress
+    * @param position
+    * @param playerId
+    * @see SceneView#towerToSupress(Point, int)
+    */
+   public void towerToSupress(Point position, int playerId){
+	   dispatcher.addOrderToEngine(new SuppressTowerOrder(playerId, position));
    }
     
 	/**
-	 * Rafraîchissement des paramètres des composants de l'interface du jeu
-	 * @see PlayerInterface.run() (appelant)
+	 * Refresh the graphic component of the view
+	 * @see #run()
 	 */	
 	public void refresh(){
-		/*Récupère la taille actuelle de la queue q*/
+		//Retrieve the current size of the queue
 		int nb = queue.size();
-		/*Effectue et supprime les nb premières tâches de la queue q*/
+		
+		//Execute and remove the "size" first orders of the queue
 		if(nb>0){
 			for(int i = 0;i<nb; i++){
-				/*Récupère et supprime la tête de la queue le premier ordre*/
+				//Retrieve and remove the head of the queue
 				Order o = queue.poll();
+				
+				//If the order is a SuppressTowerOrder one
 				if(o instanceof SuppressTowerOrder) {
 					System.out.println("Interface say : I have to suppress the tower : OwnerID "+o.getPlayerId()+" Position "+((TowerOrder) o).getPosition().x + " "+((TowerOrder) o).getPosition().y);
 					sceneView.suppressTower(((TowerOrder) o).getPosition(), o.getPlayerId());

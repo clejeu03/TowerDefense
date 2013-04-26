@@ -17,6 +17,7 @@ import javax.swing.JComponent;
  * 
  */
 
+@SuppressWarnings("serial")
 public abstract class Sprite extends JComponent{
 	//Position of the center of the Sprite
 	protected Point position;
