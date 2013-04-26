@@ -1,5 +1,5 @@
 package GameEngine;
-
+import java.awt.Point;
 import GameEngine.ArmyManager.BaseType;
 
 /**
@@ -31,15 +31,11 @@ public class Base {
   /**
    * Store the proximityMap deduced from the all Bases positions.
    */
-  public int[] proximityTab;
+  protected int[] proximityTab;
   /**
-   * Store the x position of the center of the Base.
+   * Store the position of the center of the Base.
    */
-  public float position_x;
-  /**
-   * Store the y position of the center of the Base.
-   */
-  public float position_y;
+  protected Point position;
   /**
    * Store the amount maximum the Base can produce. When the amount reach sizeMax, the Base 
    * stop the production.
@@ -57,6 +53,8 @@ public class Base {
    * Constructor of the Base class.
    */
   public Base() {
+	  super();
+	  
   }
   /**
    * Return the current amount of soldier produced by Base.
@@ -73,12 +71,60 @@ public class Base {
 	  return proximityTab;
   }
   /**
+   * Set the proximity map of the concerned base
+   * @param proximityTab
+   */
+  public void setProximityTab(int[] proximityTab){
+	  this.proximityTab = proximityTab;
+  }
+  /**
    * Setter that changes the current amount of soldier into the Base
    * @param amount - new number of soldier into the Base
    */
   public void setAmount(int amount) {
 	  this.amount = amount;
   }
-
-
+  /**
+   * Return the current position of the Base's center
+   * @return position
+   */
+  public Point getPosition(){
+	  return this.position;
+  }
+  /**
+   * Set the Base's center position
+   * @param pos
+   */
+  public void setPosition(Point pos){
+	  this.position = pos;
+  }
+  /**
+   * Return the max size of the base
+   * @return sizeMax
+   */
+  public int getSizeMax(){
+	  return this.sizeMax;
+  }
+  /**
+   * Set the max size of the base
+   * @param sizeMax - the new sizeMax
+   */
+  public void setSizeMax(int sizeMax){
+	  this.sizeMax = sizeMax;
+  }
+  /**
+   * Set the type of the Base following the enum declared in GameManager
+   * @param type
+   * @see GameManager
+   */
+  public void setBaseType(BaseType type){
+	  this.type = type;
+  }
+  /**
+   * Get the type of the Base following the enum declaration in GameManager
+   * @return type
+   */
+  public BaseType getBaseType(){
+	  return this.type;
+  }
 }
