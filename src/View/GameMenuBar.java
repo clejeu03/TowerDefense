@@ -39,7 +39,7 @@ public class GameMenuBar extends MainViews{
 		jButtonBack = new javax.swing.JButton();
 		 
 		//Setting the components parameters and theirs listeners        
-		jButtonBack.setText("Back");
+		jButtonBack.setText("Surrender");
 		jButtonBack.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent evt) {
 		        jButtonBackPerformed(evt);
@@ -49,7 +49,7 @@ public class GameMenuBar extends MainViews{
 		//Laying the components on the Panel
 		setLayout(null);
 		setBackground(Color.gray); 
-		jButtonBack.setBounds(0, 0, 100,25);
+		jButtonBack.setBounds(0, 0, 125,25);
 		add(jButtonBack);
 	}
 	

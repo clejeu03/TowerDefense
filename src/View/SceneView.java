@@ -3,6 +3,7 @@ package View;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -34,6 +35,10 @@ public class SceneView extends MainViews{
     private boolean towerClicked;
     private int indexTowerClicked;
     
+    private boolean baseClicked;
+    private Point basePosition;
+    private Point mousePosition ;
+    
     /**
      * Constructor of the SceneView class
      * @param view
@@ -46,26 +51,39 @@ public class SceneView extends MainViews{
 	
 		sprites = new ArrayList<Sprite>();
 		towerClicked = false;
-		indexTowerClicked = 0;
+		baseClicked = false;
+		indexTowerClicked = 0;		
+		mousePosition = new Point(0,0);
 		
 		//Loading the image map
 		try {
-		      map = ImageIO.read(new File("img/map.jpg"));
+		      map = ImageIO.read(new File("map/Map.jpg"));
 		  
 		} catch (IOException e) {
 		      e.printStackTrace();
 		}
 		
-        //Add a listener on the map
+        //Add a mouse listener on the map
     	addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) { 
 	             myMousePressed(me);
-	            } 
+	            }
          });
+    	
+    	//Add a mouse motion listener on the map
+    	addMouseMotionListener(new MouseAdapter() {
+			public void mouseMoved(MouseEvent e) {
+				myMouseMoved(e);
+			}
+			//TODO : 
+			public void mouseDragged(MouseEvent e) {
+				System.out.println("Hey !");
+			}
+    	 });
 		
 		//Suppress the layout manager of the SceneView
 		setLayout(null);
-	    setBackground(Color.WHITE);
+	    setBackground(Color.gray);
 	}
 	
 	/**
@@ -73,23 +91,10 @@ public class SceneView extends MainViews{
 	 * @param tower 
 	 * @see ViewManager#initiateGameView(ArrayList)
 	 */
-	public void addSprite(Tower tower){
-		boolean clickable = false;
-		int type = 0;
+	public void addSprite(Sprite sprite){
+		sprites.add(sprite);
 		
-		//If the tower's owner is the human player (id = 0), the Sprite needs to be clickable
-		if(tower.getPlayerId()==0){
-			clickable = true;
-		}
-		//TODO Choose the the type of the tower
-		if(tower instanceof MedicalTower){
-			
-		}
-		
-		//Add the Sprite on the map
-		TowerSprite ts = new TowerSprite(this, tower.getPosition(),clickable, tower.getPlayerId(), 32, 32, type, tower.getRange());
-		sprites.add(ts);
-		
+		//TO DO : retrieve the last element added...
 		Iterator<Sprite> it = sprites.iterator();
 		while (it.hasNext()) {
 			Sprite element = it.next();
@@ -112,22 +117,38 @@ public class SceneView extends MainViews{
 		
 		//Click on the map when a tower is selected
 		if (towerClicked){
-			//Removing from the view the towerInfoSprite
-			//TODO  Plus simple => chercher dans la liste de sprite les instance de TowerInfoSprite
-	    	Sprite s = sprites.get(indexTowerClicked);
-			Point positionInfo= new Point(s.getPosition());
-			positionInfo.translate((32/2) + (16/2),(32/2) + (16/2));
-			
+			//Removing from the view the towerInfoSprite			
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
 				Sprite element = it.next();
-				if(element.getPosition().equals(positionInfo)){
+				if(element instanceof TowerInfoSprite){
 					it.remove();
 					remove(element);
 				}
 			}
 	    	towerClicked = false;
 			
+	    	//Repaint the Panel
+	    	revalidate();
+	    	repaint();	
+		}
+		if (baseClicked){
+	    	baseClicked = false;
+			
+	    	//Repaint the Panel
+	    	revalidate();
+	    	repaint();	
+		}
+	}
+	
+	/**
+	 * Event "the mouse has moved in the zone" handler
+	 * @param e - MouseEvent
+	 */
+	private void myMouseMoved(MouseEvent e) {
+		if (baseClicked){
+			//Retrieve the current mouse position
+			mousePosition = new Point(e.getPoint());
 	    	//Repaint the Panel
 	    	revalidate();
 	    	repaint();	
@@ -165,6 +186,29 @@ public class SceneView extends MainViews{
 			add(element);
 		}		
 		towerClicked = true;
+		
+		//Repaint the panel
+    	revalidate();
+    	repaint();	
+		
+	}
+	
+	/**
+	 * Display the line between the clicked base and the mouse cursor
+	 * @param position
+	 * @param playerId
+	 * @see BaseSprite#myMousePressed(MouseEvent)
+	 */
+	public void baseClicked(Point position, int playerId){
+		System.out.println("Position Base "+position.x);
+		
+		//TODO Verifier l'ID du joueru...pour seconde base clicked blablbla
+		if((!baseClicked)&&(playerId == 0)){
+			basePosition = new Point(position);
+			baseClicked = true;
+			mousePosition = new Point(position);
+		}
+		
 		
 		//Repaint the panel
     	revalidate();
@@ -228,6 +272,11 @@ public class SceneView extends MainViews{
 				System.out.println("Circle ! "+s.getPosition().x);
 	    		g.drawOval(s.getPosition().x-(((TowerSprite) s).getRange()/2), s.getPosition().y -(((TowerSprite) s).getRange()/2), ((TowerSprite) s).getRange(), ((TowerSprite) s).getRange());
 	    	}
+	    }
+	    if(baseClicked){
+	    	g.setColor(Color.blue);
+	    	System.out.println("Line ! "+basePosition.x);
+    		g.drawLine(basePosition.x, basePosition.y, mousePosition.x, mousePosition.y);
 	    }
 	  }              
 }

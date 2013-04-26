@@ -28,7 +28,8 @@ public class GameManager implements Runnable{
 	
 	//temporary !!
     private ArrayList<Tower> towers;
-	
+	private MapManager mapManager;
+    
     /**
      * Constructor of the GameManger class
      */
@@ -67,6 +68,9 @@ public class GameManager implements Runnable{
 		//Adding towers (temporary !)
 		towers.add(new MedicalTower(new Point(50,50), 1, 70));
 		towers.add(new MedicalTower(new Point(125,50), 0, 70));
+				
+		//Adding a mapManager
+		//mapManager = new MapManager("img/map/Map.jpg");
 		
 		//Tells the dispatcher that the View need to be initialized
 		dispatcher.initiateGameView(towers);

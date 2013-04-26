@@ -3,6 +3,7 @@ package View;
 import GameEngine.*;
 import Dispatcher.*; 
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
@@ -48,14 +49,17 @@ public class ViewManager extends JFrame implements Runnable{
     
     //Panels	
     private HomeMenu homeMenu;
+    
     private SceneView sceneView;
     private GameMenuBar gameMenuBar;
+    private GameInfoPlayer gameInfoPlayer;
+    private GameInfoMenu gameInfoMenu;
 	
     /**
      * Constructor of the ViewManager class
      */
     public ViewManager() {
-		super("TowerDefense");	
+		super("TowerDefense");
 		
 		queue = new ConcurrentLinkedQueue<Order>();
 		running = false;
@@ -64,10 +68,12 @@ public class ViewManager extends JFrame implements Runnable{
 		
 		sceneView = new SceneView(this,new Point(0,25), 800,400);
 		gameMenuBar = new GameMenuBar(this,new Point(0,0),800, 25);
+		gameInfoPlayer = new GameInfoPlayer(this, new Point(0,425), 185,175);
+		gameInfoMenu = new GameInfoMenu(this, new Point(195,425), 605 ,175);
 
 		//Loading the map icon
 		try {
-		      icon = ImageIO.read(new File("img/bear.png"));
+		      icon = ImageIO.read(new File("img/icon.png"));
 		  
 		} catch (IOException e) {
 		      e.printStackTrace();
@@ -82,6 +88,7 @@ public class ViewManager extends JFrame implements Runnable{
 		setIconImage(icon);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		setSize(WIDTH,HEIGHT);
+		setBackground(Color.gray);
 		setResizable(false);
         setVisible(true);
 	}
@@ -94,6 +101,8 @@ public class ViewManager extends JFrame implements Runnable{
 		homeMenu.setPreferredSize(new Dimension(homeMenu.getWidth(), homeMenu.getHeight()));	
         sceneView.setPreferredSize(new Dimension(sceneView.getWidth(), sceneView.getHeight()));
         gameMenuBar.setPreferredSize(new Dimension(gameMenuBar.getWidth(), gameMenuBar.getHeight()));
+        gameInfoPlayer.setPreferredSize(new Dimension(gameInfoPlayer.getWidth(), gameInfoPlayer.getHeight()));
+        gameInfoMenu.setPreferredSize(new Dimension(gameInfoMenu.getWidth(), gameInfoMenu.getHeight()));
     }
 
     /**
@@ -109,7 +118,9 @@ public class ViewManager extends JFrame implements Runnable{
 		homeMenu.setBounds(homeMenu.getPosition().x, homeMenu.getPosition().y,homeMenu.getWidth(), homeMenu.getHeight());	   	
     	sceneView.setBounds(sceneView.getPosition().x, sceneView.getPosition().y,sceneView.getWidth(), sceneView.getHeight());	
         gameMenuBar.setBounds(gameMenuBar.getPosition().x, gameMenuBar.getPosition().y,gameMenuBar.getWidth(), gameMenuBar.getHeight());	
-        
+        gameInfoPlayer.setBounds(gameInfoPlayer.getPosition().x, gameInfoPlayer.getPosition().y,gameInfoPlayer.getWidth(), gameInfoPlayer.getHeight());	
+        gameInfoMenu.setBounds(gameInfoMenu.getPosition().x, gameInfoMenu.getPosition().y,gameInfoMenu.getWidth(), gameInfoMenu.getHeight());	
+
         //add the homeMenu panel on the window
         add(homeMenu);
     }
@@ -154,10 +165,32 @@ public class ViewManager extends JFrame implements Runnable{
 		Iterator<Tower> it = towers.iterator();
 		while (it.hasNext()) {
 			//Retrieve the tower
-			Tower element = it.next();
-			//Add the tower in the sceneView list of Sprites
-			sceneView.addSprite(element);
-		}	
+			Tower tower = it.next();
+			
+			//Create the corresponding TowerSprite
+			boolean clickable = false;
+			int towerType = 0;
+			
+			//If the tower's owner is the human player (id = 0), the Sprite needs to be clickable
+			if(tower.getPlayerId()==0){
+				clickable = true;
+			}
+			//TODO Choose the the type of the tower
+			if(tower instanceof MedicalTower){
+				
+			}
+			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerId(), 32, 32, towerType, tower.getRange());
+
+			//Add the towerSprite in the sceneView list of Sprites
+			sceneView.addSprite(ts);
+		}
+		
+		//Adding two Bases (temporary !)
+		BaseSprite bs1 = new BaseSprite(sceneView, new Point(200,200), true, 0, 32, 32);
+		sceneView.addSprite(bs1);
+		BaseSprite bs2 = new BaseSprite(sceneView, new Point(400,300), true, 1, 32, 32);
+		sceneView.addSprite(bs2);
+		
 		//The view and engine initializations are done ! The game can start !
 		dispatcher.start();	
     }
@@ -176,6 +209,8 @@ public class ViewManager extends JFrame implements Runnable{
     	//Add the game panels on the window
     	add(sceneView);
         add(gameMenuBar);
+        add(gameInfoPlayer);
+        add(gameInfoMenu);
         
         //Repaint the window
     	revalidate();
@@ -193,6 +228,8 @@ public class ViewManager extends JFrame implements Runnable{
     	//Remove the game panels from the window
     	remove(sceneView);
     	remove(gameMenuBar);
+    	remove(gameInfoPlayer);
+    	remove(gameInfoMenu);
     	
     	//Add the homeMenu panel on the window
     	add(homeMenu);
