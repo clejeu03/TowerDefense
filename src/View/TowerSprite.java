@@ -60,16 +60,17 @@ public class TowerSprite extends Sprite{
 			fileName +="Electric/";
 		}
 		else if(playerId == 1){
-			fileName +="Fire/";
+			fileName +="Water/";
 		}
 		else if(playerId == 2){
 			fileName +="Grass/";
 		}
 		else if(playerId == 3){
-			fileName +="Water/";
+			fileName +="Fire/";
 		}
 		
-		fileName += "bear.png";
+		
+		fileName += "starter.png";
 		try {	
 		      image = ImageIO.read(new File(fileName));
 		  
@@ -110,7 +111,7 @@ public class TowerSprite extends Sprite{
 	private void myMousePressed(MouseEvent me) {
 			System.out.println("TowerOwner number : "+ playerId+" !");
 			System.out.println("Position on the Sprite ("+ me.getPoint().x+","+ me.getPoint().y+")");
-			scene.towerClicked(position, playerId);
+			((SceneView) view).towerClicked(position, playerId);
 	}
 	
 	/**

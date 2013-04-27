@@ -36,7 +36,7 @@ public class GameInfoMenu extends MainViews{
 		super(view, position, width,height);
 		//Laying the components on the Panel
 		setLayout(null);
-		setBackground(Color.green); 
+		setBackground(Color.gray); 
 	}
 
 }

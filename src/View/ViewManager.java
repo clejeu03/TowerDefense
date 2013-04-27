@@ -47,13 +47,17 @@ public class ViewManager extends JFrame implements Runnable{
     public static final int HEIGHT = 600 ;
     private Image icon;
     
-    //Panels	
+    //Main Panels	
     private HomeMenu homeMenu;
+    private PlayMenu playMenu;
+   // private OptionsMenu optionsMenu;
     
+    //Game Panels
     private SceneView sceneView;
     private GameMenuBar gameMenuBar;
     private GameInfoPlayer gameInfoPlayer;
     private GameInfoMenu gameInfoMenu;
+    
 	
     /**
      * Constructor of the ViewManager class
@@ -65,6 +69,8 @@ public class ViewManager extends JFrame implements Runnable{
 		running = false;
 		
 		homeMenu = new HomeMenu(this, new Point(0,0), WIDTH, HEIGHT);	
+		playMenu = new PlayMenu(this, new Point(0,0), WIDTH, HEIGHT);	
+
 		
 		sceneView = new SceneView(this,new Point(0,25), 800,400);
 		gameMenuBar = new GameMenuBar(this,new Point(0,0),800, 25);
@@ -98,7 +104,10 @@ public class ViewManager extends JFrame implements Runnable{
      * @see #ViewManager()
      */	
     public void  initComponents(){
-		homeMenu.setPreferredSize(new Dimension(homeMenu.getWidth(), homeMenu.getHeight()));	
+		homeMenu.setPreferredSize(new Dimension(homeMenu.getWidth(), homeMenu.getHeight()));
+		playMenu.setPreferredSize(new Dimension(playMenu.getWidth(), playMenu.getHeight()));
+
+		
         sceneView.setPreferredSize(new Dimension(sceneView.getWidth(), sceneView.getHeight()));
         gameMenuBar.setPreferredSize(new Dimension(gameMenuBar.getWidth(), gameMenuBar.getHeight()));
         gameInfoPlayer.setPreferredSize(new Dimension(gameInfoPlayer.getWidth(), gameInfoPlayer.getHeight()));
@@ -116,7 +125,10 @@ public class ViewManager extends JFrame implements Runnable{
     	
         //Move and Resize the components
 		homeMenu.setBounds(homeMenu.getPosition().x, homeMenu.getPosition().y,homeMenu.getWidth(), homeMenu.getHeight());	   	
-    	sceneView.setBounds(sceneView.getPosition().x, sceneView.getPosition().y,sceneView.getWidth(), sceneView.getHeight());	
+		playMenu.setBounds(playMenu.getPosition().x, playMenu.getPosition().y,playMenu.getWidth(), playMenu.getHeight());	   	
+
+		
+		sceneView.setBounds(sceneView.getPosition().x, sceneView.getPosition().y,sceneView.getWidth(), sceneView.getHeight());	
         gameMenuBar.setBounds(gameMenuBar.getPosition().x, gameMenuBar.getPosition().y,gameMenuBar.getWidth(), gameMenuBar.getHeight());	
         gameInfoPlayer.setBounds(gameInfoPlayer.getPosition().x, gameInfoPlayer.getPosition().y,gameInfoPlayer.getWidth(), gameInfoPlayer.getHeight());	
         gameInfoMenu.setBounds(gameInfoMenu.getPosition().x, gameInfoMenu.getPosition().y,gameInfoMenu.getWidth(), gameInfoMenu.getHeight());	
@@ -162,6 +174,9 @@ public class ViewManager extends JFrame implements Runnable{
     public void initiateGameView(ArrayList<Tower> towers){
 		System.out.println("Engine say : Initating the game. interface..");
 
+		//Clear the Sprites list of the scene
+		sceneView.initiate();
+			
 		Iterator<Tower> it = towers.iterator();
 		while (it.hasNext()) {
 			//Retrieve the tower
@@ -171,24 +186,24 @@ public class ViewManager extends JFrame implements Runnable{
 			boolean clickable = false;
 			int towerType = 0;
 			
-			//If the tower's owner is the human player (id = 0), the Sprite needs to be clickable
-			if(tower.getPlayerId()==0){
+			//If the tower's owner is the human player, the Sprite needs to be clickable
+			if(tower.getPlayerId() == sceneView.getHumanId()){
 				clickable = true;
 			}
 			//TODO Choose the the type of the tower
 			if(tower instanceof MedicalTower){
 				
 			}
-			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerId(), 32, 32, towerType, tower.getRange());
+			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerId(), 50, 50, towerType, tower.getRange());
 
 			//Add the towerSprite in the sceneView list of Sprites
 			sceneView.addSprite(ts);
 		}
 		
 		//Adding two Bases (temporary !)
-		BaseSprite bs1 = new BaseSprite(sceneView, new Point(200,200), true, 0, 32, 32);
+		BaseSprite bs1 = new BaseSprite(sceneView, new Point(200,200), true,  sceneView.getHumanId(), 36, 36);
 		sceneView.addSprite(bs1);
-		BaseSprite bs2 = new BaseSprite(sceneView, new Point(400,300), true, 1, 32, 32);
+		BaseSprite bs2 = new BaseSprite(sceneView, new Point(400,300), true, 1, 36, 36);
 		sceneView.addSprite(bs2);
 		
 		//The view and engine initializations are done ! The game can start !
@@ -196,15 +211,37 @@ public class ViewManager extends JFrame implements Runnable{
     }
 	
 	/**
-	 * Launch the game
+	 * Show the game settings panel
 	 * @see HomeMenu#jButtonPlayPerformed(ActionEvent)
 	 */	
-    public void play(){
-    	//Tell the engine (via the dispatcher) to initiate the game
-    	dispatcher.initiateGame();
+    public void createGame(){
+    	//Clear the Sprites list of the playMenu
+    	playMenu.initiate();
     	
     	//Remove the homeMenu panel from the window
     	remove(homeMenu);
+    	
+    	//Add the play panels on the window
+    	add(playMenu);
+        
+        //Repaint the window
+    	revalidate();
+    	repaint();	  	
+    }
+    
+	/**
+	 * Launch the game
+	 * @see HomeMenu#jButtonPlayPerformed(ActionEvent)
+	 */	
+    public void play(int humanId){
+		//tell the scene the id of the human player
+		sceneView.setHumanId(humanId);
+    	
+    	//Tell the engine (via the dispatcher) to initiate the game
+    	dispatcher.initiateGame(humanId);
+    	
+    	//Remove the homeMenu panel from the window
+    	remove(playMenu);
     	
     	//Add the game panels on the window
     	add(sceneView);
@@ -216,23 +253,27 @@ public class ViewManager extends JFrame implements Runnable{
     	revalidate();
     	repaint();	  	
     }
-  
 	/**
 	 * Stop the game and display the homeMenu
 	 * @see GameMenuBar#jButtonBackPerformed(ActionEvent) 
 	 */	
     public void homeMenu(){
     	//Tell the dispatcher to stop the game threads
-    	dispatcher.stop();
+    	if(running){
+    		dispatcher.stop();
     	
-    	//Remove the game panels from the window
-    	remove(sceneView);
-    	remove(gameMenuBar);
-    	remove(gameInfoPlayer);
-    	remove(gameInfoMenu);
+	    	//Remove the game panels from the window
+	    	remove(sceneView);
+	    	remove(gameMenuBar);
+	    	remove(gameInfoPlayer);
+	    	remove(gameInfoMenu);
+    	}
     	
-    	//Add the homeMenu panel on the window
-    	add(homeMenu);
+    	else {
+    		remove(playMenu);
+    	}
+	    	//Add the homeMenu panel on the window
+	    	add(homeMenu);
         
     	//Repaint the window
     	revalidate();

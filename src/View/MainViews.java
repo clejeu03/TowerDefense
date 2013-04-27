@@ -7,7 +7,6 @@
  */
 package View;
 
-import java.awt.Color;
 import java.awt.Point;
 
 import javax.swing.JPanel;

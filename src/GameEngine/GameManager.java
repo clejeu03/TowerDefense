@@ -62,12 +62,16 @@ public class GameManager implements Runnable{
 	 * Initiate the game according to the player choices
 	 * @see Dispatcher.DispatcherManager#initiateGame()
 	 */
-	public void initiateGame(){
+	public void initiateGame(int humanId){
 		System.out.println("Engine say : Initating the game...");
 		
+		//Clear the towers list
+		towers.clear();
+		
 		//Adding towers (temporary !)
-		towers.add(new MedicalTower(new Point(50,50), 1, 70));
-		towers.add(new MedicalTower(new Point(125,50), 0, 70));
+		towers.add(new MedicalTower(new Point(50,50), 1, 90));
+		//human player tower...
+		towers.add(new MedicalTower(new Point(125,50), humanId, 90));
 				
 		//Adding a mapManager
 		//mapManager = new MapManager("img/map/Map.jpg");

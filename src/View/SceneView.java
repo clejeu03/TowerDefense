@@ -3,7 +3,6 @@ package View;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
-
-import GameEngine.*;
 
 /**
  * Project - TowerDefense</br>
@@ -32,12 +29,14 @@ public class SceneView extends MainViews{
     private Image map;
     private ArrayList<Sprite> sprites;
     
+    private int humanId;
     private boolean towerClicked;
     private int indexTowerClicked;
     
     private boolean baseClicked;
+    private boolean attackBase;
     private Point basePosition;
-    private Point mousePosition ;
+    private Point mousePosition;
     
     /**
      * Constructor of the SceneView class
@@ -52,8 +51,10 @@ public class SceneView extends MainViews{
 		sprites = new ArrayList<Sprite>();
 		towerClicked = false;
 		baseClicked = false;
+		attackBase = false;
 		indexTowerClicked = 0;		
 		mousePosition = new Point(0,0);
+		humanId = 0;
 		
 		//Loading the image map
 		try {
@@ -77,7 +78,7 @@ public class SceneView extends MainViews{
 			}
 			//TODO : 
 			public void mouseDragged(MouseEvent e) {
-				System.out.println("Hey !");
+				//System.out.println("Hey !");
 			}
     	 });
 		
@@ -86,6 +87,25 @@ public class SceneView extends MainViews{
 	    setBackground(Color.gray);
 	}
 	
+	
+	/**
+	 * Setter - humanId
+	 * @param humanId - id of the human player
+	 * @see ViewManager#play(int)
+	 */
+	public void setHumanId(int humanId) {
+		this.humanId = humanId;
+	}
+	
+	/**
+	 * Getter - retrieve humanId
+	 * @return
+	 */
+	public int getHumanId() {
+		return humanId;
+	}
+
+
 	/**
 	 * Add a Sprite on the map
 	 * @param tower 
@@ -100,6 +120,24 @@ public class SceneView extends MainViews{
 			Sprite element = it.next();
 			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
 			add(element);
+		}
+		
+        //Repaint the panel
+    	revalidate();
+    	repaint();	
+	}
+	
+	/**
+	 * Clear the Sprites list
+	 * @see ViewManager#initiateGameView(ArrayList)
+	 */
+	public void initiate(){
+		//Removing all the Sprites		
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			it.remove();
+			remove(element);
 		}
 		
         //Repaint the panel
@@ -200,20 +238,46 @@ public class SceneView extends MainViews{
 	 * @see BaseSprite#myMousePressed(MouseEvent)
 	 */
 	public void baseClicked(Point position, int playerId){
-		System.out.println("Position Base "+position.x);
 		
-		//TODO Verifier l'ID du joueru...pour seconde base clicked blablbla
-		if((!baseClicked)&&(playerId == 0)){
+		//If the player has clicked on one of his base
+		if((!baseClicked)&&(playerId == humanId)){
 			basePosition = new Point(position);
 			baseClicked = true;
 			mousePosition = new Point(position);
 		}
 		
+		//If the player has first clicked on one of his base, then clicked on an enemy base 
+		if((baseClicked)&&(playerId != humanId)){
+			attackBase = true;
+		}
 		
 		//Repaint the panel
     	revalidate();
     	repaint();	
+	}
+	
+	/**
+	 * Tell the dispatcher that the player want to attack a base
+	 * @param position
+	 * @param playerId
+	 * @see BaseSprite#myMouseReleased(MouseEvent)
+	 */
+	public void attackBase(Point position, int playerId){
+		System.out.println("Position Base "+position.x);
 		
+		//If the player has first clicked on one of his base, then clicked on an enemy base 
+		if(attackBase&&(playerId != humanId)){
+			System.out.println("Attack !!");
+			//Remove the line between the two bases
+			baseClicked = false;
+			attackBase = false;
+			//TODO : attack !!! Number of unit increase according to the mouse 
+			//Will need basePosition (position of the first base) and position (position of the second base...)
+		}
+		
+		//Repaint the panel
+    	revalidate();
+    	repaint();		
 	}
 	
 	/**
@@ -275,7 +339,6 @@ public class SceneView extends MainViews{
 	    }
 	    if(baseClicked){
 	    	g.setColor(Color.blue);
-	    	System.out.println("Line ! "+basePosition.x);
     		g.drawLine(basePosition.x, basePosition.y, mousePosition.x, mousePosition.y);
 	    }
 	  }              
