@@ -17,6 +17,7 @@ import javax.swing.JComponent;
  * 
  */
 
+@SuppressWarnings("serial")
 public abstract class Sprite extends JComponent{
 	//Position of the center of the Sprite
 	protected Point position;
@@ -25,7 +26,7 @@ public abstract class Sprite extends JComponent{
 	protected Image image;
 	protected boolean clickable;
 	protected int playerId;
-	protected SceneView scene;
+	protected MainViews view;
 	
 	/**
 	 * Constructor of the Sprite class
@@ -35,10 +36,10 @@ public abstract class Sprite extends JComponent{
 	 * @param width - Sprite width
 	 * @param height - Sprite height
 	 */
-	public Sprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height){ 
+	public Sprite(MainViews view, Point position, boolean clickable, int playerId, int width, int height){ 
 		super();
 		
-		this.scene = scene;
+		this.view = view;
 		this.position = new Point(position);
 		this.clickable = clickable;
 		this.playerId = playerId;

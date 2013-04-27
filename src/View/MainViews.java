@@ -20,6 +20,7 @@ import javax.swing.JPanel;
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
+@SuppressWarnings("serial")
 public abstract class MainViews extends JPanel {
     protected ViewManager view;
     protected Point position;
@@ -50,7 +51,7 @@ public abstract class MainViews extends JPanel {
 	
 	/**
 	 * Getter - Retrieve the panel height 
-	 * @return int
+	 * @return int - height
 	 */
 	public int getHeight() {
 		return height;
@@ -58,7 +59,7 @@ public abstract class MainViews extends JPanel {
 	
 	/**
 	 * Getter - Retrieve the panel top-left corner position
-	 * @return Point
+	 * @return Point - position
 	 */
 	public Point getPosition() {
 		return position;

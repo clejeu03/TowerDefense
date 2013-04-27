@@ -43,8 +43,8 @@ public class DispatcherManager {
 	 * Tell the engine that the game objects have to be created and initialized (according to the player choices).
 	 * @see View.ViewManager#play()
 	 */	
-	public void initiateGame(){
-		engine.initiateGame();	
+	public void initiateGame(int humanId){
+		engine.initiateGame(humanId);	
 	}
 	
 	/**

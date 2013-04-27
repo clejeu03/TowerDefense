@@ -1,10 +1,15 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 
 /**
@@ -29,6 +34,8 @@ public class HomeMenu extends MainViews{
     private JButton jButtonPlay;
     private JButton jButtonQuit;
     
+    private Image background;
+    
     /**
      * Constructor of the HomeMenu class
      * @param view
@@ -44,8 +51,16 @@ public class HomeMenu extends MainViews{
 		jButtonQuit = new javax.swing.JButton();
 
 		//Setting the components parameters and theirs listeners            
-		jButtonPlay.setText("Play");
-		jButtonQuit.setText("Quit");		
+		jButtonPlay.setText("New game");
+		jButtonQuit.setText("Quit");	
+		
+		//Loading the home background
+		try {
+		      background = ImageIO.read(new File("img/home.jpg"));
+		  
+		} catch (IOException e) {
+		      e.printStackTrace();
+		}
 		
 		jButtonPlay.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent evt) {
@@ -61,8 +76,8 @@ public class HomeMenu extends MainViews{
 		//Laying the components on the Panel
 		setLayout(null);
 		setBackground(Color.gray); 
-		jButtonPlay.setBounds(350, 100, 100,25);
-		jButtonQuit.setBounds(350, 150, 100,25);
+		jButtonPlay.setBounds(340, 100, 120,25);
+		jButtonQuit.setBounds(340, 150, 120,25);
 		add(jButtonPlay);
 		add(jButtonQuit);
 	}
@@ -72,7 +87,7 @@ public class HomeMenu extends MainViews{
 	 * @param evt - ActionEvent performed by the player
 	 */
     private void jButtonPlayPerformed(ActionEvent evt) {
-    	view.play();
+    	view.createGame();
     }
     
 	/**
@@ -82,4 +97,9 @@ public class HomeMenu extends MainViews{
     private void jButtonQuitPerformed(ActionEvent evt) {
     	System.exit(0);
     }
+    
+    public void paintComponent(Graphics g){
+		super.paintComponent(g);
+	    g.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), this);
+    }              
 }

@@ -16,6 +16,7 @@ import java.awt.Point;
  * @see ViewManager
  * 
  */
+@SuppressWarnings("serial")
 public class EndGameMenu extends MainViews{
 	
 	/**
