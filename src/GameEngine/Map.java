@@ -48,6 +48,10 @@ public class Map {
 	public void setPixel(int index, int value) {
 		this.data[index] = value;
 	}
+	
+	public void setPixel(int x, int y, int value){
+		this.data[y*getWidth() + x]= value;
+	}
 
 	public int getHeight() {
 		return height;

@@ -33,31 +33,40 @@ public class MapManager {
   /**
    * Store the number maximum of Player 
    */
-  private static final int maxnumberOfPlayer = 4; 
+  private static final int maxnumberOfPlayer = 4;
+  
   /**
    * Store the number of players playing
    */
   private static final int numberOfPlayer = 4;
+  
   /**
    * Store the path of the image we'll use to create our maps
    */
   private String imagepath;
+  
   /**
    * Store the map that describes the plains and hills of the map
    */
   private Map heightMap;
+  
   /**
    * Store the map that determine player's territory with their possessions
    */
   private Map territoryMap;
+  
   /**
    * Store the map that calculate the distance between each Base
    */
   private Map proximityMap[];
+  
   /**
-   * Store the position of each base
+   * Store the position of each player's base
    */
-  private Point[] basePosition;
+  private Point[] playerBasePosition;
+  
+  private LinkedList<Point> neutralBasePosition;
+  
   /**
 	 * MapManager's constructor, initiate and create the heightMap and the territoryMap
 	 * @param i_imagepath path of the local image to analyse
@@ -65,7 +74,7 @@ public class MapManager {
 	MapManager(String i_imagepath){
 		super();
 		imagepath = i_imagepath;
-		basePosition = new Point[numberOfPlayer];
+		playerBasePosition = new Point[numberOfPlayer];
 		proximityMap = new Map[numberOfPlayer];
 		generateHeightMap();
 		generateTerritoryMap();
@@ -100,20 +109,23 @@ public class MapManager {
 					//Divide the value in order to get more lisible information
 					color = color/(255/(maxnumberOfPlayer+1)); 
 					if (color==0 || color==5)
-						setHeightMapValue(x,y,color); 
+						heightMap.setPixel(x,y, color);
 					else
-						setHeightMapValue(x,y,5);
+						heightMap.setPixel(x,y, 5);
 				}
 				//Else if the pixel color is grey => it refers to bases' position
 				else {
-					color = (int)Math.round((float)color/(255/(maxnumberOfPlayer+1)));
+					color = (int)Math.round((float)color/(255/(maxnumberOfPlayer+2)));
 					if (color <= numberOfPlayer)
 					{
 						//Store the position of the base according to its player
 						int player = color - 1;
-						setBasePosition(player,x,y);
+						if (player <4)
+							playerBasePosition[player]=new Point(x,y);
+						else
+							neutralBasePosition.add(new Point(x,y));
 					}
-					setHeightMapValue(x,y,0);
+					heightMap.setPixel(x,y, 5);
 				}
 			}
 		}	
@@ -138,14 +150,14 @@ public class MapManager {
 		 
 		switch (numberOfPlayer){
 		case 4:
-			pixelsJ4.add(basePosition[3]);// The first pixel is the player's base
+			pixelsJ4.add(playerBasePosition[3]);// The first pixel is the player's base
 			loopJ4 = true;
 		case 3:
-			pixelsJ3.add(basePosition[2]);
+			pixelsJ3.add(playerBasePosition[2]);
 			loopJ3=true;
 		case 2:
-			pixelsJ2.add(basePosition[1]);
-			pixelsJ1.add(basePosition[0]);
+			pixelsJ2.add(playerBasePosition[1]);
+			pixelsJ1.add(playerBasePosition[0]);
 			loopJ2=true;
 			loopJ1=true;
 			break;
@@ -190,12 +202,12 @@ public class MapManager {
 		//Getting each pixels
 		for (Point i:pixels){
 			//A non-modified pixel value is -1
-			if(getTerritoryMapValue(i.x,i.y)==-1){
+			if(territoryMap.getPixel(i.x,i.y)==-1){
 				//Add the value to the TerritoryMap according to the heightMap
 				if (heightMap.getPixel(i.x,i.y)==0)
-					setTerritoryMap(i.x,i.y,player);
+					territoryMap.setPixel(i.y*heightMap.getWidth() + i.x, player);
 				else
-					setTerritoryMap(i.x,i.y,0);
+					territoryMap.setPixel(i.y*heightMap.getWidth() + i.x, 0);
 				
 				//Then we store the 8 pixels around the modified pixel
 				
@@ -270,17 +282,17 @@ public class MapManager {
 	 */
 	private void generateProximityMap(int player){
 		LinkedList<Point> nextPixels = new LinkedList<Point>();
-		nextPixels.add(new Point(basePosition[player].x,basePosition[player].y));
+		nextPixels.add(new Point(playerBasePosition[player].x,playerBasePosition[player].y));
 		int value=0;
 		Point p;
 		while(!nextPixels.isEmpty()){
 			p = nextPixels.poll();
-			if (getProximityMapValue(player,p.x,p.y)==-1){
-				if (getHeightMapValue(p.x,p.y)!=0){
-					setProximityMapValue(player,p.x,p.y,value);
+			if (proximityMap[player].getPixel(p.x,p.y)==-1){
+				if (heightMap.getPixel(p.x,p.y)!=0){
+					proximityMap[player].setPixel(p.x,p.y,value);
 				}
 				else
-					setProximityMapValue(player,p.x,p.y,9999);
+					proximityMap[player].setPixel(p.x,p.y,9999);
 				
 				//Right pixel
 				if (p.x<territoryMap.getWidth()-1)
@@ -325,76 +337,8 @@ public class MapManager {
 		}
 	}
 	
-	public Point[] getBasePosition(){
-		return basePosition;
-	}
-	
-	public Point getBasePosition(int player) {
-		return basePosition[player];
-	}
-	
-
-	public void setBasePosition(int player, int x, int y) {
-		this.basePosition[player] = new Point(x,y);
-	}
-	
-
-	public Map getHeightMap() {
-		return heightMap;
-	}
-	
-
-	public int getHeightMapValue(int index){
-		return heightMap.getPixel(index);
-	}
-	
-	public int getHeightMapValue(int x, int y){
-		return heightMap.getPixel(x,y);
-	}
-	
-	public void setHeightMapValue(int x, int y, int value){
-		this.heightMap.setPixel(y*heightMap.getWidth() + x, value);
-	}
-	
-	public Map getTerritoryMap() {
-		return territoryMap;
-	}
-	
-
-	public int getTerritoryMapValue(int index){
-		return territoryMap.getPixel(index);
-	}
-	
-	public int getTerritoryMapValue(int x, int y){
-		return territoryMap.getPixel(x,y);
-	}
-	
-	public void setTerritoryMap(int x, int y, int value){
-		this.territoryMap.setPixel(y*territoryMap.getWidth() + x, value);
-	}
-	
-	public Map[] getProximityMap(){
-		return proximityMap;
-	}
-	
-	public Map getProximityMap(int base){
-		return proximityMap[base];
-	}
-	
-	public int getProximityMapValue(int base, int index){
-		return proximityMap[base].getPixel(index);
-	}
-	
-	public int getProximityMapValue(int base, int x, int y){
-		return proximityMap[base].getPixel(x,y);
-	}
-	
-	public void setProximityMapValue(int player, int x, int y, int value){
-		this.proximityMap[player].setPixel(y*proximityMap[player].getWidth() + x, value);
-	}
-	
 	public static void main(String[] args){
-		MapManager myMap = new MapManager("img/map/Map.jpg");
+		MapManager myMap = new MapManager("img/map/Map2.jpg");
 	}
 
 }
