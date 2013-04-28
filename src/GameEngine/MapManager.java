@@ -38,7 +38,7 @@ public class MapManager {
   /**
    * Store the number of players playing
    */
-  private static final int numberOfPlayer = 4;
+  private static final int numberOfPlayer = 3;
   
   /**
    * Store the path of the image we'll use to create our maps
@@ -56,16 +56,18 @@ public class MapManager {
   private Map territoryMap;
   
   /**
-   * Store the map that calculate the distance between each Base
-   */
-  private Map proximityMap[];
-  
-  /**
    * Store the position of each player's base
    */
   private Point[] playerBasePosition;
   
+  /**
+   * Store the map that calculate the distance between each player's Base
+   */
+  private Map playerProximityMap[];
+  
   private LinkedList<Point> neutralBasePosition;
+  
+  private LinkedList<Map> neutralProximityMap;
   
   /**
 	 * MapManager's constructor, initiate and create the heightMap and the territoryMap
@@ -75,7 +77,9 @@ public class MapManager {
 		super();
 		imagepath = i_imagepath;
 		playerBasePosition = new Point[numberOfPlayer];
-		proximityMap = new Map[numberOfPlayer];
+		playerProximityMap = new Map[numberOfPlayer];
+		neutralBasePosition = new LinkedList<Point>();
+		neutralProximityMap = new LinkedList<Map>();
 		generateHeightMap();
 		generateTerritoryMap();
 		generateAllProximityMap();
@@ -120,10 +124,10 @@ public class MapManager {
 					{
 						//Store the position of the base according to its player
 						int player = color - 1;
-						if (player <4)
-							playerBasePosition[player]=new Point(x,y);
-						else
-							neutralBasePosition.add(new Point(x,y));
+						playerBasePosition[player]=new Point(x,y);
+					}
+					else{
+						neutralBasePosition.add(new Point(x,y));
 					}
 					heightMap.setPixel(x,y, 5);
 				}
@@ -269,9 +273,18 @@ public class MapManager {
 	 */
 	private void generateAllProximityMap(){
 		for (int i=0;i<numberOfPlayer;i++){
-			proximityMap[i]=new Map(heightMap.getWidth(),heightMap.getHeight());
-			generateProximityMap(i);
-			proximityMap[i].saveAsPNGProximity("pm"+i+".png");
+			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+			generateProximityMap(proximityMap,playerBasePosition[i]);
+			playerProximityMap[i] = proximityMap;
+			playerProximityMap[i].saveAsPNGProximity("pm"+i+".png");
+		}
+		int cpt = 0;
+		while(!neutralBasePosition.isEmpty()){
+			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+			generateProximityMap(proximityMap,neutralBasePosition.poll());
+			neutralProximityMap.add(proximityMap);
+			neutralProximityMap.getLast().saveAsPNGProximity("npm"+cpt+".png");
+			cpt++;
 		}
 	}
 	
@@ -280,27 +293,28 @@ public class MapManager {
 	 * @param player id of the base
 	 * @see MapManager().generateAllProximityMap()
 	 */
-	private void generateProximityMap(int player){
+	private void generateProximityMap(Map proximityMap, Point base){
+		
 		LinkedList<Point> nextPixels = new LinkedList<Point>();
-		nextPixels.add(new Point(playerBasePosition[player].x,playerBasePosition[player].y));
+		nextPixels.add(base);
 		int value=0;
 		Point p;
 		while(!nextPixels.isEmpty()){
 			p = nextPixels.poll();
-			if (proximityMap[player].getPixel(p.x,p.y)==-1){
+			if (proximityMap.getPixel(p.x,p.y)==-1){
 				if (heightMap.getPixel(p.x,p.y)!=0){
-					proximityMap[player].setPixel(p.x,p.y,value);
+					proximityMap.setPixel(p.x,p.y,value);
 				}
 				else
-					proximityMap[player].setPixel(p.x,p.y,9999);
+					proximityMap.setPixel(p.x,p.y,9999);
 				
 				//Right pixel
-				if (p.x<territoryMap.getWidth()-1)
+				if (p.x<proximityMap.getWidth()-1)
 					nextPixels.add(new Point(p.x+1,p.y));
 				
 				
 				//Bottom pixel
-				if (p.y<territoryMap.getHeight()-1)
+				if (p.y<proximityMap.getHeight()-1)
 					nextPixels.add(new Point(p.x,p.y+1));
 					
 				//Left pixel
@@ -313,12 +327,12 @@ public class MapManager {
 					nextPixels.add(new Point(p.x-1,p.y));
 				
 				//Bottom-right pixel
-				if ((p.x<territoryMap.getWidth()-1)&&(p.y<territoryMap.getHeight()-1)){
+				if ((p.x<proximityMap.getWidth()-1)&&(p.y<proximityMap.getHeight()-1)){
 					nextPixels.add(new Point(p.x+1,p.y+1));
 				}
 				
 				//Bottom-left pixel
-				if (p.x>0&&(p.y<territoryMap.getHeight()-1)){
+				if (p.x>0&&(p.y<proximityMap.getHeight()-1)){
 					nextPixels.add(new Point(p.x-1,p.y+1));
 				}
 				
@@ -328,7 +342,7 @@ public class MapManager {
 				}
 				
 				//Top-right pixel
-				if ((p.x<territoryMap.getWidth()-1)&&p.y>0){
+				if ((p.x<proximityMap.getWidth()-1)&&p.y>0){
 					nextPixels.add(new Point(p.x+1,p.y-1));
 				}
 				
@@ -338,7 +352,7 @@ public class MapManager {
 	}
 	
 	public static void main(String[] args){
-		MapManager myMap = new MapManager("img/map/Map2.jpg");
+		MapManager myMap = new MapManager("img/map/Map.jpg");
 	}
 
 }
