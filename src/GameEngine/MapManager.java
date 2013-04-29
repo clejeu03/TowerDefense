@@ -61,12 +61,18 @@ public class MapManager {
   private Point[] playerBasePosition;
   
   /**
-   * Store the map that calculate the distance between each player's Base
+   * Store the map that calculate the distance to each player's Base
    */
   private Map playerProximityMap[];
   
+  /**
+   * Store the position of each neutral bases
+   */
   private LinkedList<Point> neutralBasePosition;
   
+  /**
+   * Store the map that calculate the distance to each neutral Base
+   */
   private LinkedList<Map> neutralProximityMap;
   
   /**
@@ -81,6 +87,7 @@ public class MapManager {
 		neutralBasePosition = new LinkedList<Point>();
 		neutralProximityMap = new LinkedList<Map>();
 		generateHeightMap();
+		generateRelief();
 		generateTerritoryMap();
 		generateAllProximityMap();
 	}
@@ -136,6 +143,43 @@ public class MapManager {
 		heightMap.saveAsPNG("hm.png");
 	}
 
+	/**
+	 * Generate relief for the HeightMap and save the image at img/map/hrm.png
+	 * @see MapManager()
+	 */
+	private void generateRelief(){
+		//Intensity of the relief
+		int reliefDown = 10;
+		int reliefLeft = 4;
+		
+		for (int y = 0; y < heightMap.getHeight();y++){ 
+			for (int x = 0; x < heightMap.getWidth();x++){
+				if (heightMap.getPixel(x,y)==0){
+					
+					if(y<heightMap.getHeight()-1){
+						if (heightMap.getPixel(x,y+1)==5)
+						{
+							for (int i=1;i<reliefDown;i++){
+								if(y+i<heightMap.getHeight())
+									heightMap.setPixel(x,y+i,6);
+							}
+						}
+					}
+					if (x>0){
+						if (heightMap.getPixel(x-1,y)==5)
+						{
+							for (int i=1;i<reliefLeft;i++)
+							{
+								if((x-i)>=0)
+									heightMap.setPixel(x-i,y,6);
+							}
+						}
+					}
+				}
+			}
+		}
+		heightMap.saveAsPNG("hrm.png");
+	}
 	/**
 	 * Generate the TerritoryMap and save it as a png at /map
 	 * @see MapManager() 
@@ -272,12 +316,15 @@ public class MapManager {
 	 * @see MapManager()
 	 */
 	private void generateAllProximityMap(){
+		//Generate the proximityMaps of the players' bases
 		for (int i=0;i<numberOfPlayer;i++){
 			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());
 			generateProximityMap(proximityMap,playerBasePosition[i]);
 			playerProximityMap[i] = proximityMap;
 			playerProximityMap[i].saveAsPNGProximity("pm"+i+".png");
 		}
+		
+		//Generate the neutral bases' proximityMaps
 		int cpt = 0;
 		while(!neutralBasePosition.isEmpty()){
 			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());

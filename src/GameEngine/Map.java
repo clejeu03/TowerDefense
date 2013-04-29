@@ -68,46 +68,36 @@ public class Map {
 	 * @see MapManager.generateTerritoryMap()
 	 */
 	public void saveAsPNG(String path){
-		Color red = new Color(255,0,0);
-		Color blue = new Color(0,0,255);
-		Color green = new Color(0,255,0);
-		Color yellow = new Color(0,255,255);
-		Color white = new Color(255,255,255);
-		Color black = new Color(0,0,0);
-		
 		int rgb;
 		BufferedImage outImage = new BufferedImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_RGB);
 		for (int y = 0; y < this.getHeight();y++){ 
 			for (int x = 0; x < this.getWidth();x++){
-				int value;
-				try
-				{
-					value = this.getPixel(x,y);
-				}
-				catch (NullPointerException e){
-					value = 5;
-				}
+				int value = this.getPixel(x,y);
+				
 				switch(value){
 				case 0:
-					rgb = black.getRGB();
+					rgb = Color.black.getRGB();
 					break;
 				case 1:
-					rgb = blue.getRGB();
+					rgb = Color.cyan.getRGB();
 					break;
 				case 2:
-					rgb = green.getRGB();
+					rgb = Color.green.getRGB();
 					break;
 				case 3:
-					rgb = yellow.getRGB();
+					rgb = Color.yellow.getRGB();
 					break;
 				case 4:
-					rgb = red.getRGB();
+					rgb = Color.red.getRGB();
 					break;
 				case 5:
-					rgb = white.getRGB();
+					rgb = Color.white.getRGB();
+					break;
+				case 6:
+					rgb = Color.darkGray.getRGB();
 					break;
 				default:
-					rgb=white.getRGB();
+					rgb=Color.pink.getRGB();
 					break;
 				}
 				
@@ -138,7 +128,7 @@ public class Map {
 			for (int x = 0; x < this.getWidth();x++){
 				value = this.getPixel(x,y);
 				if (value==9999){
-					outImage.setRGB(x, y, new Color(0,0,0).getRGB());
+					outImage.setRGB(x, y, Color.black.getRGB());
 				}
 				else
 				{
