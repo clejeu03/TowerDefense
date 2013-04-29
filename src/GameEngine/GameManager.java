@@ -84,7 +84,7 @@ public class GameManager implements Runnable{
 		towers.add(new MedicalTower(new Point(125,50), humanId, 90));
 				
 		//Adding a mapManager
-		//mapManager = new MapManager("img/map/Map.jpg");
+		MapManager myMap = new MapManager("img/map/Map.jpg", nbEnemies+1);
 		
 		//Tells the dispatcher that the View need to be initialized
 		dispatcher.initiateGameView(towers);

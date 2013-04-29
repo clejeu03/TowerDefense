@@ -59,7 +59,7 @@ public class SceneView extends MainViews{
 		
 		//Loading the image map
 		try {
-		      map = ImageIO.read(new File("map/Map.jpg"));
+		      map = ImageIO.read(new File("img/map/Map.jpg"));
 		  
 		} catch (IOException e) {
 		      e.printStackTrace();

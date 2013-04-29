@@ -33,12 +33,12 @@ public class MapManager {
   /**
    * Store the number maximum of Player 
    */
-  private static final int maxnumberOfPlayer = 4;
+  private final int maxnumberOfPlayer = 4;
   
   /**
    * Store the number of players playing
    */
-  private static final int numberOfPlayer = 3;
+  private final int numberOfPlayer;
   
   /**
    * Store the path of the image we'll use to create our maps
@@ -79,9 +79,10 @@ public class MapManager {
 	 * MapManager's constructor, initiate and create the heightMap and the territoryMap
 	 * @param i_imagepath path of the local image to analyse
 	 */
-	MapManager(String i_imagepath){
+	MapManager(String i_imagepath, int numberOfPlayer){
 		super();
 		imagepath = i_imagepath;
+		this.numberOfPlayer = numberOfPlayer;
 		playerBasePosition = new Point[numberOfPlayer];
 		playerProximityMap = new Map[numberOfPlayer];
 		neutralBasePosition = new LinkedList<Point>();
@@ -396,9 +397,4 @@ public class MapManager {
 			}
 		}
 	}
-	
-	public static void main(String[] args){
-		MapManager myMap = new MapManager("img/map/Map.jpg");
-	}
-
 }
