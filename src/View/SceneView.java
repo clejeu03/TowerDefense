@@ -33,6 +33,7 @@ public class SceneView extends MainViews{
     private boolean towerClicked;
     private int indexTowerClicked;
     
+    
     private boolean baseClicked;
     private boolean attackBase;
     private Point basePosition;

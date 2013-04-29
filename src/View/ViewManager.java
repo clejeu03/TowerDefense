@@ -195,7 +195,7 @@ public class ViewManager extends JFrame implements Runnable{
 				
 			}
 			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerId(), 50, 50, towerType, tower.getRange());
-
+				
 			//Add the towerSprite in the sceneView list of Sprites
 			sceneView.addSprite(ts);
 		}
@@ -231,14 +231,15 @@ public class ViewManager extends JFrame implements Runnable{
     
 	/**
 	 * Launch the game
-	 * @see HomeMenu#jButtonPlayPerformed(ActionEvent)
+	 * @see HomeMenu#jButtonPlayPesrformed(ActionEvent)
 	 */	
-    public void play(int humanId){
+    public void play(int humanId, int nbEnemies, ArrayList<Integer> enemiesId){
+    	
 		//tell the scene the id of the human player
 		sceneView.setHumanId(humanId);
     	
     	//Tell the engine (via the dispatcher) to initiate the game
-    	dispatcher.initiateGame(humanId);
+    	dispatcher.initiateGame(humanId,nbEnemies, enemiesId);
     	
     	//Remove the homeMenu panel from the window
     	remove(playMenu);
