@@ -1,10 +1,10 @@
 package GameEngine;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -33,31 +33,48 @@ public class MapManager {
   /**
    * Store the number maximum of Player 
    */
-  private static final int maxnumberOfPlayer = 4; 
+  private static final int maxnumberOfPlayer = 4;
+  
   /**
    * Store the number of players playing
    */
-  private static final int numberOfPlayer = 4;
+  private static final int numberOfPlayer = 3;
+  
   /**
    * Store the path of the image we'll use to create our maps
    */
   private String imagepath;
+  
   /**
    * Store the map that describes the plains and hills of the map
    */
   private Map heightMap;
+  
   /**
    * Store the map that determine player's territory with their possessions
    */
   private Map territoryMap;
+  
   /**
-   * Store the map that calculate the distance between each Base
+   * Store the position of each player's base
    */
-  //private Map proximityMap;
+  private Point[] playerBasePosition;
+  
   /**
-   * Store the position of each base
+   * Store the map that calculate the distance to each player's Base
    */
-  private Point[] basePosition;
+  private Map playerProximityMap[];
+  
+  /**
+   * Store the position of each neutral bases
+   */
+  private LinkedList<Point> neutralBasePosition;
+  
+  /**
+   * Store the map that calculate the distance to each neutral Base
+   */
+  private LinkedList<Map> neutralProximityMap;
+  
   /**
 	 * MapManager's constructor, initiate and create the heightMap and the territoryMap
 	 * @param i_imagepath path of the local image to analyse
@@ -65,15 +82,21 @@ public class MapManager {
 	MapManager(String i_imagepath){
 		super();
 		imagepath = i_imagepath;
-		basePosition = new Point[numberOfPlayer];
+		playerBasePosition = new Point[numberOfPlayer];
+		playerProximityMap = new Map[numberOfPlayer];
+		neutralBasePosition = new LinkedList<Point>();
+		neutralProximityMap = new LinkedList<Map>();
 		generateHeightMap();
+		generateRelief();
 		generateTerritoryMap();
+		generateAllProximityMap();
 	}
 	
 	/**
-	 * Algorithme de génération de la map de relief suivant une image locale
+	 * Generate the HeightMap using a local picture and save it as a png at /map
+	 * @see MapManager()
 	 */
-	void generateHeightMap(){
+	private void generateHeightMap(){
 		BufferedImage img = null;//Local image containment
 		
 		try {
@@ -97,31 +120,71 @@ public class MapManager {
 					//Divide the value in order to get more lisible information
 					color = color/(255/(maxnumberOfPlayer+1)); 
 					if (color==0 || color==5)
-						setHeightMapValue(x,y,color); 
+						heightMap.setPixel(x,y, color);
 					else
-						setHeightMapValue(x,y,5);
+						heightMap.setPixel(x,y, 5);
 				}
 				//Else if the pixel color is grey => it refers to bases' position
 				else {
-					color = (int)Math.round((float)color/(255/(maxnumberOfPlayer+1)));
+					color = (int)Math.round((float)color/(255/(maxnumberOfPlayer+2)));
 					if (color <= numberOfPlayer)
 					{
 						//Store the position of the base according to its player
 						int player = color - 1;
-						setBasePosition(player,x,y);
+						playerBasePosition[player]=new Point(x,y);
 					}
-					setHeightMapValue(x,y,0);
+					else{
+						neutralBasePosition.add(new Point(x,y));
+					}
+					heightMap.setPixel(x,y, 5);
 				}
 			}
 		}	
-		createImageFromMap(heightMap, "map/hm.png");
+		heightMap.saveAsPNG("hm.png");
 	}
 
 	/**
-	 * Algorithme de génération de la map de territoires
+	 * Generate relief for the HeightMap and save the image at img/map/hrm.png
+	 * @see MapManager()
+	 */
+	private void generateRelief(){
+		//Intensity of the relief
+		int reliefDown = 10;
+		int reliefLeft = 4;
+		
+		for (int y = 0; y < heightMap.getHeight();y++){ 
+			for (int x = 0; x < heightMap.getWidth();x++){
+				if (heightMap.getPixel(x,y)==0){
+					
+					if(y<heightMap.getHeight()-1){
+						if (heightMap.getPixel(x,y+1)==5)
+						{
+							for (int i=1;i<reliefDown;i++){
+								if(y+i<heightMap.getHeight())
+									heightMap.setPixel(x,y+i,6);
+							}
+						}
+					}
+					if (x>0){
+						if (heightMap.getPixel(x-1,y)==5)
+						{
+							for (int i=1;i<reliefLeft;i++)
+							{
+								if((x-i)>=0)
+									heightMap.setPixel(x-i,y,6);
+							}
+						}
+					}
+				}
+			}
+		}
+		heightMap.saveAsPNG("hrm.png");
+	}
+	/**
+	 * Generate the TerritoryMap and save it as a png at /map
 	 * @see MapManager() 
 	 */
-	void generateTerritoryMap(){
+	private void generateTerritoryMap(){
 		//Initiate TerritoryMap
 		territoryMap = new Map(heightMap.getWidth(),heightMap.getHeight());
 		
@@ -135,14 +198,14 @@ public class MapManager {
 		 
 		switch (numberOfPlayer){
 		case 4:
-			pixelsJ4.add(basePosition[3]);// The first pixel is the player's base
+			pixelsJ4.add(playerBasePosition[3]);// The first pixel is the player's base
 			loopJ4 = true;
 		case 3:
-			pixelsJ3.add(basePosition[2]);
+			pixelsJ3.add(playerBasePosition[2]);
 			loopJ3=true;
 		case 2:
-			pixelsJ2.add(basePosition[1]);
-			pixelsJ1.add(basePosition[0]);
+			pixelsJ2.add(playerBasePosition[1]);
+			pixelsJ1.add(playerBasePosition[0]);
 			loopJ2=true;
 			loopJ1=true;
 			break;
@@ -168,8 +231,7 @@ public class MapManager {
 
 			
 		}
-		
-		createImageFromMap(territoryMap,"map/tm.png");
+		territoryMap.saveAsPNG("tm.png");
 	}
 	
 	/**
@@ -186,16 +248,13 @@ public class MapManager {
 		
 		//Getting each pixels
 		for (Point i:pixels){
-			//A non-modified pixel returns a NullPointerException
-			try{
-				getTerritoryMapValue(i.x,i.y);
-			}
-			catch(NullPointerException e){
+			//A non-modified pixel value is -1
+			if(territoryMap.getPixel(i.x,i.y)==-1){
 				//Add the value to the TerritoryMap according to the heightMap
-				if (heightMap.getPixel(i.x,i.y).getValue()==0)
-					setTerritoryMap(i.x,i.y,player);
+				if (heightMap.getPixel(i.x,i.y)==0)
+					territoryMap.setPixel(i.y*heightMap.getWidth() + i.x, player);
 				else
-					setTerritoryMap(i.x,i.y,0);
+					territoryMap.setPixel(i.y*heightMap.getWidth() + i.x, 0);
 				
 				//Then we store the 8 pixels around the modified pixel
 				
@@ -252,117 +311,94 @@ public class MapManager {
 	}
 	
 	/**
-	 * Create a color image with the information of a Map
-	 * @param m Map 
-	 * @param path path of the output image
-	 * @see MapManager.generateHeightMap()
-	 * @see MapManager.generateTerritoryMap()
+	 * Generate All the ProximityMap (one for each base)
+	 * @see MapManager()
 	 */
-	private void createImageFromMap(Map m, String path){
-		Color red = new Color(255,0,0);
-		Color blue = new Color(0,0,255);
-		Color green = new Color(0,255,0);
-		Color yellow = new Color(0,255,255);
-		Color white = new Color(255,255,255);
-		Color black = new Color(0,0,0);
+	private void generateAllProximityMap(){
+		//Generate the proximityMaps of the players' bases
+		for (int i=0;i<numberOfPlayer;i++){
+			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+			generateProximityMap(proximityMap,playerBasePosition[i]);
+			playerProximityMap[i] = proximityMap;
+			playerProximityMap[i].saveAsPNGProximity("pm"+i+".png");
+		}
 		
-		int rgb;
-		BufferedImage outImage = new BufferedImage(m.getWidth(),m.getHeight(),BufferedImage.TYPE_INT_RGB);
-		for (int y = 0; y < m.getHeight();y++){ 
-			for (int x = 0; x < m.getWidth();x++){
-				int value;
-				try
-				{
-					value = m.getPixel(x,y).getValue();
+		//Generate the neutral bases' proximityMaps
+		int cpt = 0;
+		while(!neutralBasePosition.isEmpty()){
+			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+			generateProximityMap(proximityMap,neutralBasePosition.poll());
+			neutralProximityMap.add(proximityMap);
+			neutralProximityMap.getLast().saveAsPNGProximity("npm"+cpt+".png");
+			cpt++;
+		}
+	}
+	
+	/**
+	 * Generate a ProximityMap for a base
+	 * @param player id of the base
+	 * @see MapManager().generateAllProximityMap()
+	 */
+	private void generateProximityMap(Map proximityMap, Point base){
+		
+		LinkedList<Point> nextPixels = new LinkedList<Point>();
+		nextPixels.add(base);
+		int value=0;
+		Point p;
+		while(!nextPixels.isEmpty()){
+			p = nextPixels.poll();
+			if (proximityMap.getPixel(p.x,p.y)==-1){
+				if (heightMap.getPixel(p.x,p.y)!=0){
+					proximityMap.setPixel(p.x,p.y,value);
 				}
-				catch (NullPointerException e){
-					value = 5;
-				}
-				switch(value){
-				case 0:
-					rgb = black.getRGB();
-					break;
-				case 1:
-					rgb = blue.getRGB();
-					break;
-				case 2:
-					rgb = green.getRGB();
-					break;
-				case 3:
-					rgb = yellow.getRGB();
-					break;
-				case 4:
-					rgb = red.getRGB();
-					break;
-				case 5:
-					rgb = white.getRGB();
-					break;
-				default:
-					rgb=white.getRGB();
-					break;
+				else
+					proximityMap.setPixel(p.x,p.y,9999);
+				
+				//Right pixel
+				if (p.x<proximityMap.getWidth()-1)
+					nextPixels.add(new Point(p.x+1,p.y));
+				
+				
+				//Bottom pixel
+				if (p.y<proximityMap.getHeight()-1)
+					nextPixels.add(new Point(p.x,p.y+1));
+					
+				//Left pixel
+				if (p.y>0)
+					nextPixels.add(new Point(p.x,p.y-1));
+
+				
+				//Top pixel
+				if (p.x>0)
+					nextPixels.add(new Point(p.x-1,p.y));
+				
+				//Bottom-right pixel
+				if ((p.x<proximityMap.getWidth()-1)&&(p.y<proximityMap.getHeight()-1)){
+					nextPixels.add(new Point(p.x+1,p.y+1));
 				}
 				
-				outImage.setRGB(x, y, rgb);
+				//Bottom-left pixel
+				if (p.x>0&&(p.y<proximityMap.getHeight()-1)){
+					nextPixels.add(new Point(p.x-1,p.y+1));
+				}
+				
+				//Top-left pixel
+				if (p.x>0&&p.y>0){
+					nextPixels.add(new Point(p.x-1,p.y-1));
+				}
+				
+				//Top-right pixel
+				if ((p.x<proximityMap.getWidth()-1)&&p.y>0){
+					nextPixels.add(new Point(p.x+1,p.y-1));
+				}
+				
+				value++;
 			}
 		}
-		File outFile = new File(path);
-		try{
-			if (!ImageIO.write(outImage, "png", outFile)){
-				System.out.println("Format d'écriture non pris en charge");
-			}
-		}
-		catch(Exception e){
-			System.out.println("Erreur lors de l'enregistrement de l'image :");
-			e.printStackTrace();
-		}
-	}
-	
-	public Point[] getBasePosition(){
-		return basePosition;
-	}
-	
-	public Point getBasePosition(int player) {
-		return basePosition[player];
-	}
-
-	public void setBasePosition(int player, int x, int y) {
-		this.basePosition[player] = new Point(x,y);
-	}
-
-	public Map getHeightMap() {
-		return heightMap;
-	}
-
-	public int getHeightMapValue(int index){
-		return heightMap.getPixel(index).getValue();
-	}
-	
-	public int getHeightMapValue(int x, int y){
-		return heightMap.getPixel(x,y).getValue();
-	}
-	
-	public void setHeightMapValue(int x, int y, int value){
-		this.heightMap.setData(y*heightMap.getWidth() + x, x, y, value);
-	}
-	
-	public Map getTerritoryMap() {
-		return territoryMap;
-	}
-
-	public int getTerritoryMapValue(int index){
-		return territoryMap.getPixel(index).getValue();
-	}
-	
-	public int getTerritoryMapValue(int x, int y){
-		return territoryMap.getPixel(x,y).getValue();
-	}
-	
-	public void setTerritoryMap(int x, int y, int value){
-		this.territoryMap.setData(y*territoryMap.getWidth() + x, x, y, value);
 	}
 	
 	public static void main(String[] args){
-		MapManager myMap = new MapManager("map/Map.jpg");
+		MapManager myMap = new MapManager("img/map/Map.jpg");
 	}
 
 }
