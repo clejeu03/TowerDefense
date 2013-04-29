@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import View.Sprite;
+import View.StarterSprite;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - GameManager</b></br>
@@ -62,15 +65,22 @@ public class GameManager implements Runnable{
 	 * Initiate the game according to the player choices
 	 * @see Dispatcher.DispatcherManager#initiateGame()
 	 */
-	public void initiateGame(int humanId){
+	public void initiateGame(int humanId, int nbEnemies, ArrayList<Integer> enemiesId){
 		System.out.println("Engine say : Initating the game...");
 		
 		//Clear the towers list
 		towers.clear();
 		
-		//Adding towers (temporary !)
-		towers.add(new MedicalTower(new Point(50,50), 1, 90));
-		//human player tower...
+		System.out.println("Engine say : "+nbEnemies+" enemies");
+		
+		//Adding Enemies towers (temporary !)
+		Iterator<Integer> it = enemiesId.iterator();
+		while (it.hasNext()) {
+			int enemyId = it.next();
+			towers.add(new MedicalTower(new Point(50+(100*enemyId),50+(100*enemyId)), enemyId, 90));
+		}	
+		
+		//human player tower (temporary !)
 		towers.add(new MedicalTower(new Point(125,50), humanId, 90));
 				
 		//Adding a mapManager
