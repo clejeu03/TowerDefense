@@ -33,6 +33,10 @@ public class Base {
    */
   private Map proximityTab;
   /**
+   * Store the owner id of the base
+   */
+  private int playerId;
+  /**
    * Store the position of the center of the Base.
    */
   public Point position;
@@ -59,8 +63,9 @@ public class Base {
    * his type (small, medium or large). If the base is active, it will be a medium one.
    * @see ArmyManager.createBase(Point pos, Boolean neutral, BaseType type, Map proxMap);
    */
-  public Base(Point position, Boolean neutral, BaseType type, Map proximityTab ) {
+  public Base(Point position, int playerId, Boolean neutral, BaseType type, Map proximityTab) {
 	  super();
+	  this.playerId = playerId;
 	  if(position != null){
 	 	setPosition(position);
 	  }else{
@@ -81,8 +86,9 @@ public class Base {
   }
   /**Constructor of the active base only called from the ArmyManager
    * @see ArmyManager.createBase(Point pos, Boolean neutral, Map proxMap)*/
-  public Base(Point position, Boolean neutral, Map proximityTab) {
+  public Base(Point position, int playerId, Boolean neutral, Map proximityTab) {
 	  super();
+	  this.playerId = playerId;
 	  setPosition(position);
 	  setProximityTab(proximityTab);
 	  createActiveBase();
@@ -223,4 +229,10 @@ public class Base {
   public void setNeutral(Boolean neutral){
 	  this.neutral = neutral;
   }
+	/**
+	 * @return
+	 */
+	public int getPlayerId() {
+		return playerId;
+	}
 }

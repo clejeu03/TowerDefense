@@ -29,8 +29,12 @@ public class GameManager implements Runnable{
 	private DispatcherManager dispatcher;
 	private ConcurrentLinkedQueue<Order> queue;
 	
-	//temporary !!
+    private ArrayList<Player> players;
+	
+	//Temporary !!
     private ArrayList<Tower> towers;
+    private ArrayList<Base> bases;
+    
 	private MapManager mapManager;
     
     /**
@@ -40,7 +44,10 @@ public class GameManager implements Runnable{
 		super();
 		running = false;
 		queue = new ConcurrentLinkedQueue<Order>();
+		players = new ArrayList<Player>();
+		
 		towers = new ArrayList<Tower>();
+		bases = new ArrayList<Base>();
 	}
 	
 	/**
@@ -67,27 +74,49 @@ public class GameManager implements Runnable{
 	 */
 	public void initiateGame(int humanId, int nbEnemies, ArrayList<Integer> enemiesId){
 		System.out.println("Engine say : Initating the game...");
-		
-		//Clear the towers list
-		towers.clear();
-		
 		System.out.println("Engine say : "+nbEnemies+" enemies");
 		
+		//Adding a mapManager
+		mapManager = new MapManager("img/map/Map.jpg", nbEnemies+1);
+		
+		//Creating towers TEMPORARY !
+		//Clear the towers list
+		towers.clear();
 		//Adding Enemies towers (temporary !)
 		Iterator<Integer> it = enemiesId.iterator();
 		while (it.hasNext()) {
 			int enemyId = it.next();
 			towers.add(new MedicalTower(new Point(50+(100*enemyId),50+(100*enemyId)), enemyId, 90));
 		}	
-		
 		//human player tower (temporary !)
 		towers.add(new MedicalTower(new Point(125,50), humanId, 90));
-				
-		//Adding a mapManager
-		MapManager myMap = new MapManager("img/map/Map.jpg", nbEnemies+1);
 		
+		//Creating the player (human and IA)
+		//Clear the player list
+		players.clear();
+		//Adding the enemies
+		Iterator<Integer> iter = enemiesId.iterator();
+		while (iter.hasNext()) {
+			int enemyId = iter.next();
+			players.add(new Player(enemyId));
+		}	
+		//Adding the human player
+		players.add(new Player(humanId));
+		
+		
+		//Retrieve the bases positions
+		Point[] basesPositions = mapManager.getPlayerBasePosition();
+		//Clear the bases list
+		bases.clear();
+		for(int i=0; i<enemiesId.size();i++){
+			bases.add(new Base(basesPositions[i+1],enemiesId.get(i),false,mapManager.getPlayerProximityMap(i+1)));
+		}
+		//human player tower (temporary !)
+		bases.add(new Base(basesPositions[0],humanId,false,mapManager.getPlayerProximityMap(0)));
+		
+				
 		//Tells the dispatcher that the View need to be initialized
-		dispatcher.initiateGameView(towers);
+		dispatcher.initiateGameView(towers, bases);
 	}
 	
 	/**

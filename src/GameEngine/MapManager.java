@@ -59,13 +59,13 @@ public class MapManager {
    * Store the position of each player's base
    */
   private Point[] playerBasePosition;
-  
-  /**
+
+/**
    * Store the map that calculate the distance to each player's Base
    */
   private Map playerProximityMap[];
-  
-  /**
+
+/**
    * Store the position of each neutral bases
    */
   private LinkedList<Point> neutralBasePosition;
@@ -143,7 +143,23 @@ public class MapManager {
 		}	
 		heightMap.saveAsPNG("hm.png");
 	}
-
+	
+	/**
+	 * Getter - get the bases position
+	 * @return Point[]
+	 */
+	public Point[] getPlayerBasePosition() {
+		return playerBasePosition;
+	}
+	
+	/**
+	 * Getter - get the proximityMap of the base 
+	 * @return Map
+	 */
+	public Map getPlayerProximityMap(int index) {
+		return playerProximityMap[index];
+	}
+	
 	/**
 	 * Generate relief for the HeightMap and save the image at img/map/hrm.png
 	 * @see MapManager()

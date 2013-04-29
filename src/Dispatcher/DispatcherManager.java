@@ -50,10 +50,11 @@ public class DispatcherManager {
 	/**
 	 * Tell the View that the SceneView components have to be created and initialized (according the game objects initialized by the engine). 
 	 * @param towerList - ArrayList of towers created by the engine
+	 * @param bases 
 	 * @see GameEngine.GameManager#initiateGame()
 	 */	
-	public void initiateGameView(ArrayList<Tower> towerList){
-		view.initiateGameView(towerList);	
+	public void initiateGameView(ArrayList<Tower> towerList, ArrayList<Base> bases){
+		view.initiateGameView(towerList, bases);	
 	}
 
 	/**

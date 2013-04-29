@@ -17,6 +17,15 @@ package GameEngine;
 
 public class Player {
   /**
+   * Represents the color of the player 
+   * 0 electric 
+   * 1 Water 
+   * 2 Grass
+   * 3 Fire
+   */
+  public int idPokemon;
+
+  /**
    * Represents the amount of money the player owns.
    */
   public int money;
@@ -32,7 +41,8 @@ public class Player {
   /**
    * Constructor
    */
-  public Player() {
+  public Player(int idPokemon) {
+	  this.idPokemon = idPokemon;
   }
   /**
    * Setter that changes the current amount of player's money.

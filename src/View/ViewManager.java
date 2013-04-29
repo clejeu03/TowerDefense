@@ -169,9 +169,10 @@ public class ViewManager extends JFrame implements Runnable{
 	/**
 	 * Initialize the view when the game is launched
 	 * @param towers - ArrayList of towers created by the engine during the game initialization
+	 * @param bases 
 	 * @see Dispatcher.DispatcherManager#initiateGameView(ArrayList)
 	 */	
-    public void initiateGameView(ArrayList<Tower> towers){
+    public void initiateGameView(ArrayList<Tower> towers, ArrayList<Base> bases){
 		System.out.println("Engine say : Initating the game. interface..");
 
 		//Clear the Sprites list of the scene
@@ -200,12 +201,18 @@ public class ViewManager extends JFrame implements Runnable{
 			sceneView.addSprite(ts);
 		}
 		
-		//Adding two Bases (temporary !)
-		BaseSprite bs1 = new BaseSprite(sceneView, new Point(200,200), true,  sceneView.getHumanId(), 36, 36);
-		sceneView.addSprite(bs1);
-		BaseSprite bs2 = new BaseSprite(sceneView, new Point(400,300), true, 1, 36, 36);
-		sceneView.addSprite(bs2);
-		
+		Iterator<Base> iter = bases.iterator();
+		while (iter.hasNext()) {
+			//Retrieve the tower
+			Base base = iter.next();
+			System.out.println(base.getPosition());
+			//Create the corresponding TowerSprit
+			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerId(), 36, 36);
+
+			//Add the baseSprite in the sceneView list of Sprites
+			sceneView.addSprite(bs);
+		}
+				
 		//The view and engine initializations are done ! The game can start !
 		dispatcher.start();	
     }

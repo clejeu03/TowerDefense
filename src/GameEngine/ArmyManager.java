@@ -100,8 +100,8 @@ public class ArmyManager {
    * @param proxMap - proximityMap
    * @return base
    */
-  public Base createBase(Point pos, Boolean neutral, BaseType type, Map proxMap) {
-	Base base = new Base(pos, neutral, type, proxMap);
+  public Base createBase(Point pos, int id, Boolean neutral, BaseType type, Map proxMap) {
+	Base base = new Base(pos, id, neutral, type, proxMap);
 	return base;
   }
   /**
@@ -112,8 +112,8 @@ public class ArmyManager {
    * @param proxMap the proximityMap
    * @return base
    */
-  public Base createBase(Point pos, Boolean neutral, Map proxMap) {
-	Base base = new Base(pos, neutral, proxMap);
+  public Base createBase(Point pos, int id, Boolean neutral, Map proxMap) {
+	Base base = new Base(pos, id, neutral, proxMap);
 	return base;
   }
   /**
