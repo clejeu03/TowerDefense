@@ -77,7 +77,7 @@ public class GameManager implements Runnable{
 		System.out.println("Engine say : "+nbEnemies+" enemies");
 		
 		//Adding a mapManager
-		mapManager = new MapManager("img/map/Map.jpg", nbEnemies+1);
+		mapManager = new MapManager("Map", nbEnemies+1);
 		
 		//Creating towers TEMPORARY !
 		//Clear the towers list

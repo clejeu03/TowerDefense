@@ -10,6 +10,7 @@ package GameEngine;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
@@ -22,10 +23,26 @@ import javax.imageio.ImageIO;
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MapManager
  */
-public class Map {
+public class Map implements Serializable {
 	
+	/**
+	 * Default serial version ID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Store the information of each pixel of the Map
+	 */
 	private int[] data;
+	
+	/**
+	 * Store the height of the Map (in px)
+	 */
 	private final int height;
+	
+	/**
+	 * Store the width of the Map (in px)
+	 */
 	private final int width;
 	
 	Map(int width, int height){
