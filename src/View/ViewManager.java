@@ -173,7 +173,6 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @see Dispatcher.DispatcherManager#initiateGameView(ArrayList)
 	 */	
     public void initiateGameView(ArrayList<Tower> towers, ArrayList<Base> bases){
-		System.out.println("Engine say : Initating the game. interface..");
 
 		//Clear the Sprites list of the scene
 		sceneView.initiate();
@@ -205,7 +204,6 @@ public class ViewManager extends JFrame implements Runnable{
 		while (iter.hasNext()) {
 			//Retrieve the tower
 			Base base = iter.next();
-			System.out.println(base.getPosition());
 			//Create the corresponding TowerSprit
 			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerId(), 36, 36);
 
@@ -314,7 +312,6 @@ public class ViewManager extends JFrame implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(o instanceof SuppressTowerOrder) {
-					System.out.println("Interface say : I have to suppress the tower : OwnerID "+o.getPlayerId()+" Position "+((TowerOrder) o).getPosition().x + " "+((TowerOrder) o).getPosition().y);
 					sceneView.suppressTower(((TowerOrder) o).getPosition(), o.getPlayerId());
 				}
 			}

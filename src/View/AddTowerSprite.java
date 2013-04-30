@@ -3,7 +3,7 @@
  * By Aurélie Beauprez, Thomas Demenat, Keven Akyurek and Cecilia Lejeune
  * Copyright IMAC 2013 - All Rights Reserved
  *
- * File created on 26 avr. 2013
+ * File created on 30 avr. 2013
  */
 package View;
 
@@ -20,9 +20,9 @@ import GameEngine.GameManager;
 
 /**
  * Project - TowerDefense</br>
- * <b>Class - BaseSprite</b></br>
- * <p>The BaseSprite class represents the base images displayed on the ScenView</p>
- * <b>Creation :</b> 26/04/2013</br>
+ * <b>Class - AddTowerSprite</b></br>
+ * <p>The AddTowerSprite class represents the AddTower button displayed on the ScenView</p>
+ * <b>Creation :</b> 30/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MainViews
  * @see GameMenuBar
@@ -30,15 +30,21 @@ import GameEngine.GameManager;
  * @see GameManager
  */
 @SuppressWarnings("serial")
-public class BaseSprite extends Sprite{
+public class AddTowerSprite  extends Sprite{
+	/*
+	 * 1 : attaque
+	 * 2 : soutien
+	 */
+	private int towerType;
 
 	/**
 	 * 
 	 */
-	public BaseSprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height) {
+	public AddTowerSprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height, int towerType) {
 		super(scene, position,clickable,playerId,width,height);
 		
-		//Loading the tower image (different one according the tower type and player)
+		this.towerType = towerType;
+		
 		String fileName ="img/";
 		
 		if(playerId == 0){
@@ -54,7 +60,8 @@ public class BaseSprite extends Sprite{
 			fileName +="Fire/";
 		}
 		
-		fileName += "base.png";
+		
+		fileName += "addTower.png";
 		try {	
 		      image = ImageIO.read(new File(fileName));
 		  
@@ -62,7 +69,6 @@ public class BaseSprite extends Sprite{
 		      e.printStackTrace();
 		}
 		
-		//All the bases are clickable 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) { 
 	             myMousePressed(me);
@@ -73,9 +79,6 @@ public class BaseSprite extends Sprite{
 	       public void mouseExited(MouseEvent me) { 
 	    	   myMouseExited(me);
            } 
-	       public void mouseReleased(MouseEvent me) { 
-	    	   myMouseReleased(me);
-           } 
          });
 	}
 	
@@ -84,10 +87,7 @@ public class BaseSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).baseClicked(position, playerId);
-	}
-	private void myMouseReleased(MouseEvent me) {
-		((SceneView) view).attackBase(position, playerId);
+		((SceneView) view).addTowerClicked(position, playerId, towerType);
 	}
 	
 	/**
@@ -107,4 +107,5 @@ public class BaseSprite extends Sprite{
 		//Change the cursor aspect
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
+
 }

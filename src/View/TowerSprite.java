@@ -104,13 +104,29 @@ public class TowerSprite extends Sprite{
 		return range;
 	}
 	
+	public void setClickable(boolean clickable){
+		this.clickable = clickable;
+		
+		if(clickable){
+			addMouseListener(new MouseAdapter() {
+				public void mousePressed(MouseEvent me) { 
+		             myMousePressed(me);
+		            } 
+		       public void mouseEntered(MouseEvent me) { 
+		    	   myMouseEntered(me);
+	           }
+		       public void mouseExited(MouseEvent me) { 
+		    	   myMouseExited(me);
+	           } 
+	         });
+		}
+	}
+	
 	/**
 	 *  Event "the mouse has been pressed in the zone" handler
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			System.out.println("TowerOwner number : "+ playerId+" !");
-			System.out.println("Position on the Sprite ("+ me.getPoint().x+","+ me.getPoint().y+")");
 			((SceneView) view).towerClicked(position, playerId);
 	}
 	

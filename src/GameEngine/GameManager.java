@@ -73,8 +73,6 @@ public class GameManager implements Runnable{
 	 * @see Dispatcher.DispatcherManager#initiateGame()
 	 */
 	public void initiateGame(int humanId, int nbEnemies, ArrayList<Integer> enemiesId){
-		System.out.println("Engine say : Initating the game...");
-		System.out.println("Engine say : "+nbEnemies+" enemies");
 		
 		//Adding a mapManager
 		mapManager = new MapManager("img/map/Map.jpg", nbEnemies+1);
@@ -135,7 +133,6 @@ public class GameManager implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(order instanceof SuppressTowerOrder) {
-					System.out.println("Engine say : I have to suppress the tower : OwnerID "+order.getPlayerId()+" Position "+((TowerOrder) order).getPosition().x + " "+((TowerOrder) order).getPosition().y);
 					
 					//Remove the tower from the engine list
 					Iterator<Tower> it = towers.iterator();

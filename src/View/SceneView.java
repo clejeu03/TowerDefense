@@ -33,6 +33,8 @@ public class SceneView extends MainViews{
     private boolean towerClicked;
     private int indexTowerClicked;
     
+    private boolean addTowerClicked;
+    private Point addTowerPosition;
     
     private boolean baseClicked;
     private boolean attackBase;
@@ -56,7 +58,7 @@ public class SceneView extends MainViews{
 		indexTowerClicked = 0;		
 		mousePosition = new Point(0,0);
 		humanId = 0;
-		
+
 		//Loading the image map
 		try {
 		      map = ImageIO.read(new File("img/map/Map.jpg"));
@@ -79,7 +81,6 @@ public class SceneView extends MainViews{
 			}
 			//TODO : 
 			public void mouseDragged(MouseEvent e) {
-				//System.out.println("Hey !");
 			}
     	 });
 		
@@ -106,6 +107,20 @@ public class SceneView extends MainViews{
 		return humanId;
 	}
 
+	public void setMap(String filename){
+		
+		//Loading the image map
+		try {
+		      map = ImageIO.read(new File(filename));
+		  
+		} catch (IOException e) {
+		      e.printStackTrace();
+		}
+		
+		//Repaint the window
+		revalidate();
+		repaint();
+	}
 
 	/**
 	 * Add a Sprite on the map
@@ -141,6 +156,14 @@ public class SceneView extends MainViews{
 			remove(element);
 		}
 		
+		//Add the AddTower Attack Sprite on the panel
+		addSprite(new AddTowerSprite(this, new Point(30,370), true, humanId, 55, 55, 1));
+		//addSprite(new AddTowerSprite(this, basePosition, attackBase, humanId, humanId, humanId, humanId));
+		
+		if (addTowerClicked) {
+			addTowerFailed();
+		}
+		
         //Repaint the panel
     	revalidate();
     	repaint();	
@@ -152,7 +175,10 @@ public class SceneView extends MainViews{
 	 */
 	private void myMousePressed(MouseEvent me) {
 		
-		System.out.println("Position on the Map ("+ me.getPoint().x+","+ me.getPoint().y+")");
+		//Click on the map to add the tower
+		if (addTowerClicked) {
+			addTowerSuccess();
+		}
 		
 		//Click on the map when a tower is selected
 		if (towerClicked){
@@ -171,6 +197,8 @@ public class SceneView extends MainViews{
 	    	revalidate();
 	    	repaint();	
 		}
+		
+		//Click on the map when a base is selected
 		if (baseClicked){
 	    	baseClicked = false;
 			
@@ -192,6 +220,25 @@ public class SceneView extends MainViews{
 	    	revalidate();
 	    	repaint();	
 		}
+		if(addTowerClicked){			
+			//Suppress the tower Sprite
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				if(element.getPosition().equals(addTowerPosition)){
+					addTowerPosition = new Point(e.getPoint());
+					//remove(element);
+					element.setPosition(addTowerPosition);
+					
+					element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+					add(element);
+				}
+			}
+			
+	    	//Repaint the Panel
+	    	revalidate();
+	    	repaint();
+		}
 	}
 	
 	/**
@@ -201,12 +248,10 @@ public class SceneView extends MainViews{
 	 * @see TowerSprite#myMousePressed(MouseEvent)
 	 */
 	public void towerClicked(Point position, int playerId){
+		
 		//Display the  TowerInfoSprites of the clicked tower on the map
 		Point positionSprite = new Point(position);
 		positionSprite.translate((32/2) + (16/2),(32/2) + (16/2));
-		
-		System.out.println("Position Tower "+position.x);
-		System.out.println("Position Delete "+positionSprite.x);
 		
 		//Add the TowerInfoSprite
 		sprites.add(new TowerInfoSprite(this, positionSprite, true, playerId, 16,16, 0, position));	
@@ -219,17 +264,74 @@ public class SceneView extends MainViews{
 			//Retrieve the index of the clicked tower
 			if(element.getPosition().equals(position)){
 				indexTowerClicked = sprites.indexOf(element);
-				System.out.println(indexTowerClicked);
 			}
 			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
 			add(element);
 		}		
 		towerClicked = true;
 		
+		if (baseClicked) baseClicked = false;
+		
+		if (addTowerClicked) {
+			addTowerFailed();
+		}
+		
 		//Repaint the panel
     	revalidate();
     	repaint();	
 		
+	}
+	public void addTowerClicked(Point position, int playerId, int towerType){
+		if(!addTowerClicked){
+			addTowerClicked = true;
+			//Display the territory map
+			setMap("img/map/tm.png");
+			addTowerPosition = new Point(position.x+1, position.y+1);
+			
+			TowerSprite ts = new TowerSprite(this, addTowerPosition, false, humanId, 50, 50, towerType, 90);
+			
+			//Add the towerSprite in the sceneView list of Sprites
+			addSprite(ts);		
+		}
+		else{
+			addTowerFailed();
+		}
+	}
+	
+	public void addTowerSuccess(){
+		addTowerClicked = false;
+		//Display the simple map
+		setMap("img/map/Map.jpg");
+		
+		//Suppress the tower Sprite
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			if(element.getPosition().equals(addTowerPosition)){
+				((TowerSprite) element).setClickable(true);
+			}
+		}
+		
+	}
+	
+	public void addTowerFailed(){
+		addTowerClicked = false;
+		//Display the simple map
+		setMap("img/map/Map.jpg");
+		
+		//Suppress the tower Sprite
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			if(element.getPosition().equals(addTowerPosition)){
+				it.remove();
+				remove(element);
+			}
+		}
+		
+		//Repaint the panel
+    	revalidate();
+    	repaint();	
 	}
 	
 	/**
@@ -239,6 +341,11 @@ public class SceneView extends MainViews{
 	 * @see BaseSprite#myMousePressed(MouseEvent)
 	 */
 	public void baseClicked(Point position, int playerId){
+		if (towerClicked) towerClicked = false;
+		
+		if (addTowerClicked) {
+			addTowerFailed();
+		}
 		
 		//If the player has clicked on one of his base
 		if((!baseClicked)&&(playerId == humanId)){
@@ -264,11 +371,10 @@ public class SceneView extends MainViews{
 	 * @see BaseSprite#myMouseReleased(MouseEvent)
 	 */
 	public void attackBase(Point position, int playerId){
-		System.out.println("Position Base "+position.x);
 		
 		//If the player has first clicked on one of his base, then clicked on an enemy base 
 		if(attackBase&&(playerId != humanId)){
-			System.out.println("Attack !!");
+			System.out.println("View - Attack !!");
 			//Remove the line between the two bases
 			baseClicked = false;
 			attackBase = false;
@@ -334,7 +440,6 @@ public class SceneView extends MainViews{
 	    	Sprite s = sprites.get(indexTowerClicked);
 	    	if(s instanceof TowerSprite){
 	    		g.setColor(Color.blue);
-				System.out.println("Circle ! "+s.getPosition().x);
 	    		g.drawOval(s.getPosition().x-(((TowerSprite) s).getRange()/2), s.getPosition().y -(((TowerSprite) s).getRange()/2), ((TowerSprite) s).getRange(), ((TowerSprite) s).getRange());
 	    	}
 	    }

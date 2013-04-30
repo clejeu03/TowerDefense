@@ -58,7 +58,6 @@ public class GameMenuBar extends MainViews{
 	 * @param evt - ActionEvent performed by the player
 	 */
     private void jButtonBackPerformed(ActionEvent evt) {
-    	System.out.println("View - Back to the Home menu !");
     	view.homeMenu();
     }
 }

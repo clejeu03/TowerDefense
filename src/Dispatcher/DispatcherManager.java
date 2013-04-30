@@ -68,7 +68,7 @@ public class DispatcherManager {
 		threadEngine = new Thread(this.engine);
 		threadView.start();
 		threadEngine.start();
-		System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
+		//System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public class DispatcherManager {
 		engine.setRunning(false);
 		threadView.interrupt();
 		threadEngine.interrupt();
-		System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
+		//System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	
 	/**

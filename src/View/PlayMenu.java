@@ -315,8 +315,6 @@ public class PlayMenu extends MainViews{
 		secondEnemySprite.resetImage(secondEnemyId);
 		thirdEnemySprite.resetImage(thirdEnemyId);
 		
-		System.out.println("Check 1 : "+firstEnemyId+" Check 2 : "+secondEnemyId+" Check 3 : "+thirdEnemyId);
-		
 		//The player has chosen a starter : the enemies selection boxes can appear on the panel
 		add(jEnemies);
 		add(jCheck1);
