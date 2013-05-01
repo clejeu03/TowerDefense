@@ -81,8 +81,8 @@ public class Map implements Serializable {
 	/**
 	 * Create a color image with the information of the Map
 	 * @param path of the output image
-	 * @see MapManager.generateHeightMap()
-	 * @see MapManager.generateTerritoryMap()
+	 * @see MapManager#generateHeightMap()
+	 * @see MapManager#generateTerritoryMap()
 	 */
 	public void saveAsPNG(String path){
 		int rgb;
@@ -136,7 +136,7 @@ public class Map implements Serializable {
 	/**
 	 * Create a color image with the information of a ProximityMap
 	 * @param path of the output image
-	 * @see MapManager.generateAllProximityMap()
+	 * @see MapManager#generateAllProximityMap()
 	 */
 	public void saveAsPNGProximity(String path){
 		BufferedImage outImage = new BufferedImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_RGB);

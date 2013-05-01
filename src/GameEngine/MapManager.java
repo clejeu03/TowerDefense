@@ -117,6 +117,11 @@ public class MapManager implements Serializable{
 		}
 	}
 	
+	/**
+	 * Test if there's an existing MapManager in a tmp file which meet the requirements
+	 * @return true if the tmp exists, false otherwise
+	 * @see #MapManager()
+	 */
 	private boolean existingMapManager(){
 		File tmpFile = new File("tmp/"+imageName+numberOfPlayer+".tmp");
 		if (tmpFile.exists()){
@@ -151,6 +156,11 @@ public class MapManager implements Serializable{
 			return false;
 	}
 	
+	/**
+	 * Set the MapManager according to an other pre-existing MapManager
+	 * @param mm : pre-existing MapManager
+	 * @see #existingMapManager()
+	 */
 	private void setMapManager(MapManager mm){
 		this.heightMap=mm.heightMap;
 		this.territoryMap=mm.territoryMap;
@@ -162,7 +172,7 @@ public class MapManager implements Serializable{
 	
 	/**
 	 * Generate the HeightMap using a local picture and save it as a png at /map
-	 * @see MapManager()
+	 * @see #MapManager()
 	 */
 	private void generateHeightMap(){
 		BufferedImage img = null;//Local image containment
@@ -229,7 +239,7 @@ public class MapManager implements Serializable{
 	
 	/**
 	 * Generate relief for the HeightMap and save the image at img/map/hrm.png
-	 * @see MapManager()
+	 * @see #MapManager()
 	 */
 	private void generateRelief(){
 		//Intensity of the relief
@@ -267,7 +277,7 @@ public class MapManager implements Serializable{
 	
 	/**
 	 * Generate the TerritoryMap and save it as a png at /map
-	 * @see MapManager() 
+	 * @see #MapManager() 
 	 */
 	private void generateTerritoryMap(){
 		//Initiate TerritoryMap
@@ -325,7 +335,7 @@ public class MapManager implements Serializable{
 	 * @param pixels Store pixels that have to be modified
 	 * @param player Value to set at those pixels according to the player
 	 * @return true if one or more pixels have been modified, false if not
-	 * @see MapManager.generateTerritoryMap() 
+	 * @see #generateTerritoryMap() 
 	 */
 	private boolean circlePropagation(Vector<Point> pixels,int player){
 		Vector<Point> nextPixels = new Vector<Point>();
@@ -397,7 +407,7 @@ public class MapManager implements Serializable{
 	
 	/**
 	 * Generate All the ProximityMap (one for each base)
-	 * @see MapManager()
+	 * @see #MapManager()
 	 */
 	private void generateAllProximityMap(){
 		//Generate the proximityMaps of the players' bases
@@ -422,7 +432,7 @@ public class MapManager implements Serializable{
 	/**
 	 * Generate a ProximityMap for a base
 	 * @param player id of the base
-	 * @see MapManager().generateAllProximityMap()
+	 * @see #generateAllProximityMap()
 	 */
 	private void generateProximityMap(Map proximityMap, Point base){
 		
@@ -482,6 +492,10 @@ public class MapManager implements Serializable{
 		}
 	}
 
+	/**
+	 * Save the MapManager in a tmp file to have faster results if we use it again
+	 * @see #MapManager()
+	 */
 	private void saveAsTMP(){
 		File tmpFile = new File("tmp/"+imageName+numberOfPlayer+".tmp");
 		FileOutputStream fos = null;
