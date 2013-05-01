@@ -7,6 +7,8 @@
  */
 package Dispatcher;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - Order</b></br>
@@ -16,15 +18,15 @@ package Dispatcher;
  */
 public abstract class Order {
 	
-	protected int playerId;
+	protected PlayerType playerType;
 	
 	/**
 	 * Constructor of the Order class
 	 * @param playerId - player id
 	 */
-	public Order(int playerId) {
+	public Order(PlayerType playerType) {
 		super();
-		this.playerId = playerId;
+		this.playerType = playerType;
 	}
 	
     /**
@@ -32,8 +34,8 @@ public abstract class Order {
      * @see View.ViewManager#refresh()
      * @see GameEngine.GameManager#execute()
      */	
-	public int getPlayerId(){
-		return playerId;
+	public PlayerType getPlayerType(){
+		return playerType;
 	}
 
 }

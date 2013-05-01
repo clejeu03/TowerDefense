@@ -1,6 +1,7 @@
 package GameEngine;
 
 import Dispatcher.*;
+import GameEngine.Player.PlayerType;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class GameManager implements Runnable{
 	 * Initiate the game according to the player choices
 	 * @see Dispatcher.DispatcherManager#initiateGame()
 	 */
-	public void initiateGame(int humanId, int nbEnemies, ArrayList<Integer> enemiesId){
+	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
 		
 		//Adding a mapManager
 		mapManager = new MapManager("img/map/Map.jpg", nbEnemies+1);
@@ -81,36 +82,36 @@ public class GameManager implements Runnable{
 		//Clear the towers list
 		towers.clear();
 		//Adding Enemies towers (temporary !)
-		Iterator<Integer> it = enemiesId.iterator();
+		/*Iterator<Integer> it = enemiesId.iterator();
 		while (it.hasNext()) {
 			int enemyId = it.next();
 			towers.add(new MedicalTower(new Point(50+(100*enemyId),50+(100*enemyId)), enemyId, 90));
 		}	
 		//human player tower (temporary !)
-		towers.add(new MedicalTower(new Point(125,50), humanId, 90));
+		towers.add(new MedicalTower(new Point(125,50), humanId, 90));*/
 		
 		//Creating the player (human and IA)
 		//Clear the player list
 		players.clear();
 		//Adding the enemies
-		Iterator<Integer> iter = enemiesId.iterator();
+		Iterator<PlayerType> iter = enemiesType.iterator();
 		while (iter.hasNext()) {
-			int enemyId = iter.next();
-			players.add(new Player(enemyId));
+			PlayerType enemyType = iter.next();
+			players.add(new Player(enemyType));
 		}	
 		//Adding the human player
-		players.add(new Player(humanId));
+		players.add(new Player(humanType));
 		
 		
 		//Retrieve the bases positions
 		Point[] basesPositions = mapManager.getPlayerBasePosition();
 		//Clear the bases list
 		bases.clear();
-		for(int i=0; i<enemiesId.size();i++){
-			bases.add(new Base(basesPositions[i+1],enemiesId.get(i),false,mapManager.getPlayerProximityMap(i+1)));
+		for(int i=0; i<enemiesType.size();i++){
+			bases.add(new Base(basesPositions[i+1],enemiesType.get(i),false,mapManager.getPlayerProximityMap(i+1)));
 		}
 		//human player tower (temporary !)
-		bases.add(new Base(basesPositions[0],humanId,false,mapManager.getPlayerProximityMap(0)));
+		bases.add(new Base(basesPositions[0],humanType,false,mapManager.getPlayerProximityMap(0)));
 		
 				
 		//Tells the dispatcher that the View need to be initialized
@@ -142,7 +143,7 @@ public class GameManager implements Runnable{
 							it.remove();
 						}
 						//Tell the dispatcher that the tower need to be remove from the view
-						dispatcher.addOrderToView(new SuppressTowerOrder(order.getPlayerId(), ((TowerOrder) order).getPosition()));
+						dispatcher.addOrderToView(new SuppressTowerOrder(order.getPlayerType(), ((TowerOrder) order).getPosition()));
 					}
 				
 				}

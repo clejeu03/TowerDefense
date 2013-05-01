@@ -17,6 +17,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import GameEngine.GameManager;
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -47,8 +48,8 @@ public class TowerInfoSprite extends Sprite{
 	 * @param type
 	 * @param positionElt
 	 */
-	public TowerInfoSprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height, int type, Point positionElt) {
-		super(scene, position,clickable,playerId,width,height);
+	public TowerInfoSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int type, Point positionElt) {
+		super(scene, position,clickable,playerType,width,height);
 		this.type = type;
 		this.positionElt = positionElt;
 		
@@ -82,7 +83,7 @@ public class TowerInfoSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).towerToSupress(positionElt, playerId);
+			((SceneView) view).towerToSupress(positionElt, playerType);
 	}
 	
 	/**

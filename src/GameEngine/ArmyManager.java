@@ -2,6 +2,8 @@ package GameEngine;
 import java.awt.Point;
 import java.util.HashMap;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - ArmyManager</b></br>
@@ -100,8 +102,8 @@ public class ArmyManager {
    * @param proxMap - proximityMap
    * @return base
    */
-  public Base createBase(Point pos, int id, Boolean neutral, BaseType type, Map proxMap) {
-	Base base = new Base(pos, id, neutral, type, proxMap);
+  public Base createBase(Point pos, PlayerType playerType, Boolean neutral, BaseType type, Map proxMap) {
+	Base base = new Base(pos, playerType, neutral, type, proxMap);
 	return base;
   }
   /**
@@ -112,8 +114,8 @@ public class ArmyManager {
    * @param proxMap the proximityMap
    * @return base
    */
-  public Base createBase(Point pos, int id, Boolean neutral, Map proxMap) {
-	Base base = new Base(pos, id, neutral, proxMap);
+  public Base createBase(Point pos, PlayerType playerType, Boolean neutral, Map proxMap) {
+	Base base = new Base(pos, playerType, neutral, proxMap);
 	return base;
   }
   /**

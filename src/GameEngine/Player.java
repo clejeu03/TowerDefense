@@ -23,7 +23,24 @@ public class Player {
    * 2 Grass
    * 3 Fire
    */
-  public int idPokemon;
+	
+  /**
+   * List all the sizes the Bases can take. The size of a base affects 
+   * the visual size of the Base and the speed of producing units into itself. 
+   * We define three sizes for the beginning :
+   * <ul><li>small,</li>
+   * <li>medium</li>
+   * <li>large</li></ul>
+   * @see Base
+   */
+  public enum PlayerType{
+	  ELECTRIC,
+	  FIRE,
+	  GRASS,
+	  WATER
+  }
+  
+  private PlayerType playerType;
 
   /**
    * Represents the amount of money the player owns.
@@ -41,8 +58,8 @@ public class Player {
   /**
    * Constructor
    */
-  public Player(int idPokemon) {
-	  this.idPokemon = idPokemon;
+  public Player(PlayerType playerType) {
+	  this.playerType = playerType;
   }
   /**
    * Setter that changes the current amount of player's money.

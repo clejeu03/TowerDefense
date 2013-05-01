@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import GameEngine.GameManager;
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -26,27 +27,28 @@ import GameEngine.GameManager;
  * @see SceneView
  * @see GameManager
  */
+@SuppressWarnings("serial")
 public class EnemySprite extends Sprite{
 
 	/**
 	 * 
 	 */
-	public EnemySprite(PlayMenu menu, Point position, boolean clickable, int playerId, int width, int height) {
-		super(menu, position,clickable,playerId,width,height);
+	public EnemySprite(PlayMenu menu, Point position, boolean clickable, PlayerType playerType, int width, int height) {
+		super(menu, position,clickable,playerType,width,height);
 		
 		//Loading the tower image (different one according the tower type and player)
 		String fileName ="img/";
 		
-		if(playerId == 0){
+		if(playerType == PlayerType.ELECTRIC){
 			fileName +="Electric/";
 		}
-		else if(playerId == 1){
+		else if(playerType == PlayerType.WATER){
 			fileName +="Water/";
 		}
-		else if(playerId == 2){
+		else if(playerType == PlayerType.GRASS){
 			fileName +="Grass/";
 		}
-		else if(playerId == 3){
+		else if(playerType == PlayerType.FIRE){
 			fileName +="Fire/";
 		}
 		
@@ -59,22 +61,22 @@ public class EnemySprite extends Sprite{
 		}
 	}
 	
-	public void resetImage(int id){
-		playerId = id;
+	public void resetImage(PlayerType playerType){
+		this.playerType = playerType;
 		
 		//Loading the new image
 		String fileName ="img/";
 		
-		if(playerId == 0){
+		if(playerType == PlayerType.ELECTRIC){
 			fileName +="Electric/";
 		}
-		else if(playerId == 1){
+		else if(playerType == PlayerType.WATER){
 			fileName +="Water/";
 		}
-		else if(playerId == 2){
+		else if(playerType == PlayerType.GRASS){
 			fileName +="Grass/";
 		}
-		else if(playerId == 3){
+		else if(playerType == PlayerType.FIRE){
 			fileName +="Fire/";
 		}
 		

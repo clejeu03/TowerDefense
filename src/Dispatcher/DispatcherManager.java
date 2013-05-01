@@ -11,6 +11,7 @@ package Dispatcher;
 import java.util.ArrayList;
 
 import GameEngine.*;
+import GameEngine.Player.PlayerType;
 import View.*;
 
 /**
@@ -43,8 +44,8 @@ public class DispatcherManager {
 	 * Tell the engine that the game objects have to be created and initialized (according to the player choices).
 	 * @see View.ViewManager#play()
 	 */	
-	public void initiateGame(int humanId, int nbEnemies, ArrayList<Integer> enemiesId){
-		engine.initiateGame(humanId, nbEnemies, enemiesId);	
+	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
+		engine.initiateGame(humanType, nbEnemies, enemiesType);	
 	}
 	
 	/**

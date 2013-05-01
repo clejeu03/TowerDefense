@@ -17,6 +17,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import GameEngine.GameManager;
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -35,22 +36,22 @@ public class BaseSprite extends Sprite{
 	/**
 	 * 
 	 */
-	public BaseSprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height) {
-		super(scene, position,clickable,playerId,width,height);
+	public BaseSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height) {
+		super(scene, position,clickable,playerType,width,height);
 		
 		//Loading the tower image (different one according the tower type and player)
 		String fileName ="img/";
 		
-		if(playerId == 0){
+		if(playerType == PlayerType.ELECTRIC){
 			fileName +="Electric/";
 		}
-		else if(playerId == 1){
+		else if(playerType == PlayerType.WATER){
 			fileName +="Water/";
 		}
-		else if(playerId == 2){
+		else if(playerType == PlayerType.GRASS){
 			fileName +="Grass/";
 		}
-		else if(playerId == 3){
+		else if(playerType == PlayerType.FIRE){
 			fileName +="Fire/";
 		}
 		
@@ -84,10 +85,10 @@ public class BaseSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).baseClicked(position, playerId);
+			((SceneView) view).baseClicked(position, playerType);
 	}
 	private void myMouseReleased(MouseEvent me) {
-		((SceneView) view).attackBase(position, playerId);
+		((SceneView) view).attackBase(position, playerType);
 	}
 	
 	/**

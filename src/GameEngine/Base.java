@@ -1,6 +1,7 @@
 package GameEngine;
 import java.awt.Point;
 import GameEngine.ArmyManager.BaseType;
+import GameEngine.Player.PlayerType;
 
 /**
 
@@ -35,7 +36,7 @@ public class Base {
   /**
    * Store the owner id of the base
    */
-  private int playerId;
+  private PlayerType playerType;
   /**
    * Store the position of the center of the Base.
    */
@@ -63,9 +64,9 @@ public class Base {
    * his type (small, medium or large). If the base is active, it will be a medium one.
    * @see ArmyManager.createBase(Point pos, Boolean neutral, BaseType type, Map proxMap);
    */
-  public Base(Point position, int playerId, Boolean neutral, BaseType type, Map proximityTab) {
+  public Base(Point position, PlayerType playerType, Boolean neutral, BaseType type, Map proximityTab) {
 	  super();
-	  this.playerId = playerId;
+	  this.playerType = playerType;
 	  if(position != null){
 	 	setPosition(position);
 	  }else{
@@ -86,9 +87,9 @@ public class Base {
   }
   /**Constructor of the active base only called from the ArmyManager
    * @see ArmyManager.createBase(Point pos, Boolean neutral, Map proxMap)*/
-  public Base(Point position, int playerId, Boolean neutral, Map proximityTab) {
+  public Base(Point position, PlayerType playerType, Boolean neutral, Map proximityTab) {
 	  super();
-	  this.playerId = playerId;
+	  this.playerType = playerType;
 	  setPosition(position);
 	  setProximityTab(proximityTab);
 	  createActiveBase();
@@ -232,7 +233,7 @@ public class Base {
 	/**
 	 * @return
 	 */
-	public int getPlayerId() {
-		return playerId;
+	public PlayerType getPlayerType() {
+		return playerType;
 	}
 }

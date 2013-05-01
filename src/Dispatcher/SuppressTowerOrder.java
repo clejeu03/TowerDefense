@@ -9,6 +9,8 @@ package Dispatcher;
 
 import java.awt.Point;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - SuppressTowerOrder</b></br>
@@ -23,8 +25,8 @@ public class SuppressTowerOrder extends TowerOrder{
 	 * @param idPlayer - player id
 	 * @param position - position of the tower to suppress
 	 */
-	public SuppressTowerOrder(int playerId, Point position) {
-		super(playerId,position);
+	public SuppressTowerOrder(PlayerType playerType, Point position) {
+		super(playerType,position);
 	}
 
 }

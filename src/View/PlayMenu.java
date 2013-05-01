@@ -19,6 +19,8 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - PlayMenu</b></br>
@@ -38,16 +40,16 @@ public class PlayMenu extends MainViews{
    
 	private JLabel jStarter;
     private ArrayList<Sprite> starters;
-    private int starterId;
+    private PlayerType starterType;
 
 	private JLabel jEnemies;
 	private JCheckBox jCheck1;
 	private JCheckBox jCheck2;
 	private JCheckBox jCheck3;
 	private int nbEnemies;
-	private int firstEnemyId;
-	private int secondEnemyId;
-	private int thirdEnemyId;
+	private PlayerType firstEnemyType;
+	private PlayerType secondEnemyType;
+	private PlayerType thirdEnemyType;
 	private EnemySprite firstEnemySprite;
 	private EnemySprite secondEnemySprite;
 	private EnemySprite thirdEnemySprite;
@@ -67,13 +69,13 @@ public class PlayMenu extends MainViews{
 	public PlayMenu(ViewManager view, Point position, int width, int height){
 		super(view, position, width,height);
 		
-		starterId = 0;
+		starterType = PlayerType.ELECTRIC;
 		starters = new ArrayList<Sprite>();
 		
 		nbEnemies = 0;
-		firstEnemyId = 1;
-		secondEnemyId = 2;
-		thirdEnemyId = 3;
+		firstEnemyType = PlayerType.WATER;
+		secondEnemyType = PlayerType.GRASS;
+		thirdEnemyType = PlayerType.FIRE;
 		
 		//Loading the home background
 		try {
@@ -85,18 +87,18 @@ public class PlayMenu extends MainViews{
 		
 		//Creating the components
 		jStarter = new javax.swing.JLabel("Choose your starter wisely : ");		
-		starters.add(new StarterSprite(this, new Point(350,60), true, 0, 50,50));
-		starters.add(new StarterSprite(this, new Point(400,60), true, 1, 50,50));
-		starters.add(new StarterSprite(this, new Point(450,60), true, 2, 50,50));
-		starters.add(new StarterSprite(this, new Point(500,60), true, 3, 50,50));
+		starters.add(new StarterSprite(this, new Point(350,60), true, PlayerType.ELECTRIC, 50,50));
+		starters.add(new StarterSprite(this, new Point(400,60), true, PlayerType.WATER, 50,50));
+		starters.add(new StarterSprite(this, new Point(450,60), true, PlayerType.GRASS, 50,50));
+		starters.add(new StarterSprite(this, new Point(500,60), true, PlayerType.FIRE, 50,50));
 		
 		jEnemies = new javax.swing.JLabel("Choose your enemies : ");
 		jCheck1 = new JCheckBox();
 		jCheck2 = new JCheckBox();
 		jCheck3 = new JCheckBox();
-		firstEnemySprite = new EnemySprite(this, new Point(375,110), false, firstEnemyId, 50,50);
-		secondEnemySprite = new EnemySprite(this, new Point(425,110), false, secondEnemyId, 50,50);		
-		thirdEnemySprite = new EnemySprite(this, new Point(475,110), false, thirdEnemyId, 50,50);
+		firstEnemySprite = new EnemySprite(this, new Point(375,110), false, firstEnemyType, 50,50);
+		secondEnemySprite = new EnemySprite(this, new Point(425,110), false, secondEnemyType, 50,50);		
+		thirdEnemySprite = new EnemySprite(this, new Point(475,110), false, thirdEnemyType, 50,50);
 		
 
 		jButtonStart = new javax.swing.JButton();
@@ -170,12 +172,12 @@ public class PlayMenu extends MainViews{
 	 */
     private void jButtonStartPerformed(ActionEvent evt) {
     	//Get the enemies id
-    	ArrayList<Integer> enemiesId = new ArrayList<Integer>();
-    	if (jCheck1.isSelected()) enemiesId.add(firstEnemyId);
-    	if (jCheck2.isSelected()) enemiesId.add(secondEnemyId);
-    	if (jCheck3.isSelected()) enemiesId.add(thirdEnemyId); 	
+    	ArrayList<PlayerType> enemiesType = new ArrayList<PlayerType>();
+    	if (jCheck1.isSelected()) enemiesType.add(firstEnemyType);
+    	if (jCheck2.isSelected()) enemiesType.add(secondEnemyType);
+    	if (jCheck3.isSelected()) enemiesType.add(thirdEnemyType); 	
     	
-    	view.play(starterId, nbEnemies, enemiesId);
+    	view.play(starterType, nbEnemies, enemiesType);
     }
     
 	/**
@@ -273,47 +275,47 @@ public class PlayMenu extends MainViews{
 	}
     
     /**
-	 * Set StarterId
-	 * @param starterId
+	 * Set starterType
+	 * @param playerType
 	 * @see StarterSprite#yMousePressed(MouseEvent)
 	 */
-	public void starterClicked(int starterId){
-		this.starterId = starterId;
+	public void starterClicked(PlayerType playerType){
+		this.starterType = playerType;
 		
 		//Reset the boolean chosen of the other starters sprites
 		Iterator<Sprite> it = starters.iterator();
 		while (it.hasNext()) {
 			Sprite element = it.next();
-			if(element.getPlayerId()!= starterId){
+			if(element.getPlayerType()!= playerType){
 				((StarterSprite) element).setChosen(false);
 			}
 		}
 		
 		//Set the Enemies selection boxes identifier according to the chosen starter
-		if(starterId == 0){
-			firstEnemyId = 1;
-			secondEnemyId = 2;
-			thirdEnemyId = 3;
+		if(playerType == PlayerType.ELECTRIC){
+			firstEnemyType = PlayerType.WATER;
+			secondEnemyType = PlayerType.GRASS;
+			thirdEnemyType = PlayerType.FIRE;
 		}
-		if(starterId == 1){
-			firstEnemyId = 0;
-			secondEnemyId = 2;
-			thirdEnemyId = 3;
+		if(playerType == PlayerType.WATER){
+			firstEnemyType = PlayerType.ELECTRIC;
+			secondEnemyType = PlayerType.GRASS;
+			thirdEnemyType = PlayerType.FIRE;
 		}
-		if(starterId == 2){
-			firstEnemyId = 0;
-			secondEnemyId = 1;
-			thirdEnemyId = 3;
+		if(playerType == PlayerType.GRASS){
+			firstEnemyType = PlayerType.ELECTRIC;
+			secondEnemyType = PlayerType.WATER;
+			thirdEnemyType = PlayerType.FIRE;
 		}
-		if(starterId == 3){
-			firstEnemyId = 0;
-			secondEnemyId = 1;
-			thirdEnemyId = 2;
+		if(playerType == PlayerType.FIRE){
+			firstEnemyType = PlayerType.ELECTRIC;
+			secondEnemyType = PlayerType.WATER;
+			thirdEnemyType = PlayerType.GRASS;
 		}
 		
-		firstEnemySprite.resetImage(firstEnemyId);
-		secondEnemySprite.resetImage(secondEnemyId);
-		thirdEnemySprite.resetImage(thirdEnemyId);
+		firstEnemySprite.resetImage(firstEnemyType);
+		secondEnemySprite.resetImage(secondEnemyType);
+		thirdEnemySprite.resetImage(thirdEnemyType);
 		
 		//The player has chosen a starter : the enemies selection boxes can appear on the panel
 		add(jEnemies);

@@ -1,6 +1,7 @@
 package View;
 
 import GameEngine.*;
+import GameEngine.Player.PlayerType;
 import Dispatcher.*; 
 
 import java.awt.Color;
@@ -187,14 +188,14 @@ public class ViewManager extends JFrame implements Runnable{
 			int towerType = 0;
 			
 			//If the tower's owner is the human player, the Sprite needs to be clickable
-			if(tower.getPlayerId() == sceneView.getHumanId()){
+			if(tower.getPlayerType() == sceneView.getHumanType()){
 				clickable = true;
 			}
 			//TODO Choose the the type of the tower
 			if(tower instanceof MedicalTower){
 				
 			}
-			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerId(), 50, 50, towerType, tower.getRange());
+			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerType(), 50, 50, towerType, tower.getRange());
 				
 			//Add the towerSprite in the sceneView list of Sprites
 			sceneView.addSprite(ts);
@@ -205,7 +206,7 @@ public class ViewManager extends JFrame implements Runnable{
 			//Retrieve the tower
 			Base base = iter.next();
 			//Create the corresponding TowerSprit
-			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerId(), 36, 36);
+			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerType(), 36, 36);
 
 			//Add the baseSprite in the sceneView list of Sprites
 			sceneView.addSprite(bs);
@@ -238,14 +239,14 @@ public class ViewManager extends JFrame implements Runnable{
 	 * Launch the game
 	 * @see HomeMenu#jButtonPlayPesrformed(ActionEvent)
 	 */	
-    public void play(int humanId, int nbEnemies, ArrayList<Integer> enemiesId){
+    public void play(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
     	
 		//tell the scene the id of the human player
-		sceneView.setHumanId(humanId);
+		sceneView.setHumanType(humanType);
     	
     	//Tell the engine (via the dispatcher) to initiate the game
-    	dispatcher.initiateGame(humanId,nbEnemies, enemiesId);
-    	
+    	dispatcher.initiateGame(humanType,nbEnemies, enemiesType);
+
     	//Remove the homeMenu panel from the window
     	remove(playMenu);
     	
@@ -289,11 +290,11 @@ public class ViewManager extends JFrame implements Runnable{
    /**
     * Tell the dispatcher a tower need to be suppress
     * @param position
-    * @param playerId
+    * @param playerType
     * @see SceneView#towerToSupress(Point, int)
     */
-   public void towerToSupress(Point position, int playerId){
-	   dispatcher.addOrderToEngine(new SuppressTowerOrder(playerId, position));
+   public void towerToSupress(Point position, PlayerType playerType){
+	   dispatcher.addOrderToEngine(new SuppressTowerOrder(playerType, position));
    }
     
 	/**
@@ -312,7 +313,7 @@ public class ViewManager extends JFrame implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(o instanceof SuppressTowerOrder) {
-					sceneView.suppressTower(((TowerOrder) o).getPosition(), o.getPlayerId());
+					sceneView.suppressTower(((TowerOrder) o).getPosition(), o.getPlayerType());
 				}
 			}
 		}

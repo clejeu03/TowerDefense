@@ -6,6 +6,8 @@ import java.awt.Point;
 
 import javax.swing.JComponent;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - Sprite</b></br> 
@@ -25,7 +27,7 @@ public abstract class Sprite extends JComponent{
 	protected int height;
 	protected Image image;
 	protected boolean clickable;
-	protected int playerId;
+	protected PlayerType playerType;
 	protected MainViews view;
 	
 	/**
@@ -36,13 +38,13 @@ public abstract class Sprite extends JComponent{
 	 * @param width - Sprite width
 	 * @param height - Sprite height
 	 */
-	public Sprite(MainViews view, Point position, boolean clickable, int playerId, int width, int height){ 
+	public Sprite(MainViews view, Point position, boolean clickable, PlayerType playerType, int width, int height){ 
 		super();
 		
 		this.view = view;
 		this.position = new Point(position);
 		this.clickable = clickable;
-		this.playerId = playerId;
+		this.playerType = playerType;
 		this.width = width;
 		this.height = height;
 	}
@@ -51,8 +53,8 @@ public abstract class Sprite extends JComponent{
      * Getter - retrieve the Sprite playerId
      * @return int - the id of the owner of the game object represented by the Sprite
      */
-	public int getPlayerId() {
-		return playerId;
+	public PlayerType getPlayerType() {
+		return playerType;
 	}
 	
 	/**

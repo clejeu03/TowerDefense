@@ -2,6 +2,8 @@ package GameEngine;
 
 import java.awt.Point;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - Tower</b></br>
@@ -22,7 +24,7 @@ import java.awt.Point;
 public abstract class Tower {
 	
 	protected Point position;
-	protected int playerId;
+	protected PlayerType playerType;
 	private int range;
 	public int damage;
 	  /**
@@ -40,9 +42,9 @@ public abstract class Tower {
 	 * @param playerId - player id
 	 * @param range 
 	 */
-	public Tower(Point position, int playerId, int range) {
+	public Tower(Point position, PlayerType playerType, int range) {
 		this.position = position;
-		this.playerId= playerId;
+		this.playerType= playerType;
 		this.range = range;
 	}
 	
@@ -50,8 +52,8 @@ public abstract class Tower {
 	 * Getter - Retrieve the playerId attribute
 	 * @return playerId
 	 */
-	public int getPlayerId() {
-		return playerId;
+	public PlayerType getPlayerType() {
+		return playerType;
 	}
 
 	/**

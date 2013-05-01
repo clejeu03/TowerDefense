@@ -17,6 +17,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import GameEngine.GameManager;
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -40,28 +41,35 @@ public class AddTowerSprite  extends Sprite{
 	/**
 	 * 
 	 */
-	public AddTowerSprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height, int towerType) {
-		super(scene, position,clickable,playerId,width,height);
+	public AddTowerSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int towerType) {
+		super(scene, position,clickable,playerType,width,height);
 		
 		this.towerType = towerType;
 		
 		String fileName ="img/";
 		
-		if(playerId == 0){
+		if(playerType == PlayerType.ELECTRIC){
 			fileName +="Electric/";
 		}
-		else if(playerId == 1){
+		else if(playerType == PlayerType.WATER){
 			fileName +="Water/";
 		}
-		else if(playerId == 2){
+		else if(playerType == PlayerType.GRASS){
 			fileName +="Grass/";
 		}
-		else if(playerId == 3){
+		else if(playerType == PlayerType.FIRE){
 			fileName +="Fire/";
 		}
 		
+		//Attack
+		if(towerType == 1){
+			fileName += "addAttackTower.png";
+		}
+		//Medical
+		else if(towerType == 2){
+			fileName += "addMedicalTower.png";
+		}
 		
-		fileName += "addTower.png";
 		try {	
 		      image = ImageIO.read(new File(fileName));
 		  
@@ -82,12 +90,16 @@ public class AddTowerSprite  extends Sprite{
          });
 	}
 	
+	public int getTowerType() {
+		return towerType;
+	}
+
 	/**
 	 *  Event "the mouse has been pressed in the zone" handler
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-		((SceneView) view).addTowerClicked(position, playerId, towerType);
+		((SceneView) view).addTowerClicked(position, playerType, towerType);
 	}
 	
 	/**

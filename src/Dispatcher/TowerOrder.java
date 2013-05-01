@@ -9,6 +9,8 @@ package Dispatcher;
 
 import java.awt.Point;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - TowerOrder</b></br>
@@ -25,8 +27,8 @@ public abstract class TowerOrder extends Order{
 	 * @param playerId - player id
 	 * @param position - position of the Tower
 	 */
-	public TowerOrder(int playerId, Point position) {
-		super(playerId);
+	public TowerOrder(PlayerType playerType, Point position) {
+		super(playerType);
 		this.position = new Point(position);
 	}
 	

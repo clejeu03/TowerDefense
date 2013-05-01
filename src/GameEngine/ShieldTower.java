@@ -2,6 +2,8 @@ package GameEngine;
 
 import java.awt.Point;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - ShieldTower</b></br>
@@ -18,7 +20,7 @@ import java.awt.Point;
  */
 public class ShieldTower extends MedicalTower {
 	  
-	public ShieldTower(Point position, int playerId,int range) {
-		  super(position,playerId,range);
+	public ShieldTower(Point position, PlayerType playerType,int range) {
+		  super(position,playerType,range);
 	} 
 }

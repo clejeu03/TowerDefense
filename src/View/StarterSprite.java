@@ -19,6 +19,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import GameEngine.GameManager;
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -40,8 +41,8 @@ public class StarterSprite extends Sprite{
 	/**
 	 * 
 	 */
-	public StarterSprite(PlayMenu menu, Point position, boolean clickable, int playerId, int width, int height) {
-		super(menu, position,clickable,playerId,width,height);
+	public StarterSprite(PlayMenu menu, Point position, boolean clickable, PlayerType playerType, int width, int height) {
+		super(menu, position,clickable,playerType,width,height);
 		
 		over = false;
 		chosen = false;
@@ -49,16 +50,16 @@ public class StarterSprite extends Sprite{
 		//Loading the tower image (different one according the tower type and player)
 		String fileName ="img/";
 		
-		if(playerId == 0){
+		if(playerType == PlayerType.ELECTRIC){
 			fileName +="Electric/";
 		}
-		else if(playerId == 1){
+		else if(playerType == PlayerType.WATER){
 			fileName +="Water/";
 		}
-		else if(playerId == 2){
+		else if(playerType == PlayerType.GRASS){
 			fileName +="Grass/";
 		}
-		else if(playerId == 3){
+		else if(playerType == PlayerType.FIRE){
 			fileName +="Fire/";
 		}
 		
@@ -107,7 +108,7 @@ public class StarterSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-		((PlayMenu) view).starterClicked(playerId);
+		((PlayMenu) view).starterClicked(playerType);
 		chosen = true;
 	}
 	

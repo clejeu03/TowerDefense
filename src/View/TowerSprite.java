@@ -19,6 +19,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import GameEngine.GameManager;
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -47,8 +48,8 @@ public class TowerSprite extends Sprite{
 	 * @param type
 	 * @param range
 	 */
-	public TowerSprite(SceneView scene, Point position, boolean clickable, int playerId, int width, int height, int type, int range) {
-		super(scene, position,clickable,playerId,width,height);
+	public TowerSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int type, int range) {
+		super(scene, position,clickable,playerType,width,height);
 		
 		towerType = type;
 		this.range = range;
@@ -56,21 +57,29 @@ public class TowerSprite extends Sprite{
 		//Loading the tower image (different one according the tower type and player)
 		String fileName ="img/";
 		
-		if(playerId == 0){
+		if(playerType == PlayerType.ELECTRIC){
 			fileName +="Electric/";
 		}
-		else if(playerId == 1){
+		else if(playerType == PlayerType.WATER){
 			fileName +="Water/";
 		}
-		else if(playerId == 2){
+		else if(playerType == PlayerType.GRASS){
 			fileName +="Grass/";
 		}
-		else if(playerId == 3){
+		else if(playerType == PlayerType.FIRE){
 			fileName +="Fire/";
 		}
 		
+		//Attack
+		if(towerType == 1){
+			fileName += "starter.png";
+		}
+		//Medical
+		else if(towerType == 2){
+			fileName += "medicalTower.png";
+		}
 		
-		fileName += "starter.png";
+		
 		try {	
 		      image = ImageIO.read(new File(fileName));
 		  
@@ -127,7 +136,7 @@ public class TowerSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).towerClicked(position, playerId);
+			((SceneView) view).towerClicked(position, playerType);
 	}
 	
 	/**
