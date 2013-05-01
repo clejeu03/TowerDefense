@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -296,6 +297,17 @@ public class ViewManager extends JFrame implements Runnable{
    public void towerToSupress(Point position, PlayerType playerType){
 	   dispatcher.addOrderToEngine(new SuppressTowerOrder(playerType, position));
    }
+   
+	/**
+	 * Tell the dispatcher a tower need to be add
+	 * @param position
+	 * @param humanType
+	 * @param towerType
+	 * @see SceneView#myMousePressed()
+	 */
+	public void towerToAdd(Point position, PlayerType playerType, int towerType) {
+		   dispatcher.addOrderToEngine(new AddTowerOrder(playerType, position, towerType));
+	}
     
 	/**
 	 * Refresh the graphic component of the view
@@ -314,6 +326,11 @@ public class ViewManager extends JFrame implements Runnable{
 				//If the order is a SuppressTowerOrder one
 				if(o instanceof SuppressTowerOrder) {
 					sceneView.suppressTower(((TowerOrder) o).getPosition(), o.getPlayerType());
+				}
+				
+				//If the order is an AddTowerOrder one
+				if(o instanceof AddTowerOrder) {
+					sceneView.addTower(((TowerOrder) o).getPosition(), o.getPlayerType(), ((AddTowerOrder) o).getTowerType());
 				}
 			}
 		}

@@ -112,6 +112,9 @@ public class TowerSprite extends Sprite{
 	public int getRange(){
 		return range;
 	}
+	public int getTowerType() {
+		return towerType;
+	}
 	
 	public void setClickable(boolean clickable){
 		this.clickable = clickable;

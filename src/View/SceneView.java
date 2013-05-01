@@ -39,6 +39,7 @@ public class SceneView extends MainViews{
     
     private boolean addTowerClicked;
     private Point addTowerPosition;
+    private int indexAddTower;
     
     private boolean baseClicked;
     private boolean attackBase;
@@ -59,7 +60,8 @@ public class SceneView extends MainViews{
 		towerClicked = false;
 		baseClicked = false;
 		attackBase = false;
-		indexTowerClicked = 0;		
+		indexTowerClicked = 0;	
+		indexAddTower = 0;		
 		mousePosition = new Point(0,0);
 		humanType = PlayerType.ELECTRIC;
 
@@ -196,7 +198,11 @@ public class SceneView extends MainViews{
 		
 		//Click on the map to add the tower
 		if (addTowerClicked) {
-			addTowerSuccess();
+			addTowerClicked = false;
+			//Tell the engine to check if the tower can be add there
+			Sprite s = sprites.get(indexAddTower);
+			view.towerToAdd(s.getPosition(), humanType,((TowerSprite) s).getTowerType());
+			//addTowerSuccess();
 		}
 		
 		//Click on the map when a tower is selected
@@ -240,19 +246,15 @@ public class SceneView extends MainViews{
 	    	repaint();	
 		}
 		if(addTowerClicked){			
-			//Suppress the tower Sprite
-			Iterator<Sprite> it = sprites.iterator();
-			while (it.hasNext()) {
-				Sprite element = it.next();
-				if(element.getPosition().equals(addTowerPosition)){
-					addTowerPosition = new Point(e.getPoint());
-					//remove(element);
-					element.setPosition(addTowerPosition);
-					
-					element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
-					add(element);
-				}
-			}
+			//Reset the tower Sprite Position accordingto the mouse one
+			Sprite element = sprites.get(indexAddTower);
+			
+			addTowerPosition = new Point(e.getPoint());
+	
+			element.setPosition(addTowerPosition);
+			
+			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+			add(element);
 			
 	    	//Repaint the Panel
 	    	revalidate();
@@ -310,11 +312,39 @@ public class SceneView extends MainViews{
 			TowerSprite ts = new TowerSprite(this, addTowerPosition, false, humanType, 50, 50, towerType, 90);
 			
 			//Add the towerSprite in the sceneView list of Sprites
-			addSprite(ts);		
+			addSprite(ts);	
+	
+			//TODO Retrieve the index of the tower to add
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				//Retrieve the index of the tower to add
+				if(element.getPosition().equals(addTowerPosition)){
+					indexAddTower = sprites.indexOf(element);
+				}
+			}
+			
 		}
 		else{
 			addTowerFailed();
 		}
+	}
+	
+	/**
+	 * Suppress a tower and its Sprite info
+	 * @param position
+	 * @param playerType
+	 * @see ViewManager#refresh()
+	 */
+	public void addTower(Point position, PlayerType playerType, int towerType){
+		
+		//If the tower to add is owned by the human player 
+		if(position.equals(addTowerPosition)){
+			addTowerSuccess();
+		}
+		
+		//TODO If the tower to add is owned by an AI player
+		
 	}
 	
 	public void addTowerSuccess(){
@@ -323,15 +353,9 @@ public class SceneView extends MainViews{
 		setMap("img/map/Map.jpg");
 		
 		//Set the tower Sprite clickable attribute to true
-		Iterator<Sprite> it = sprites.iterator();
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			if(element.getPosition().equals(addTowerPosition)){
-				((TowerSprite) element).setClickable(true);
-				//Tell the view manager that a tower need to be add
-				//view.towerToAdd(element.getPosition(), humanType,((AddTowerSprite) element).getTowerType());
-			}
-		}
+		Sprite element = sprites.get(indexAddTower);
+		((TowerSprite) element).setClickable(true);
+
 	}
 	
 	public void addTowerFailed(){
@@ -340,14 +364,9 @@ public class SceneView extends MainViews{
 		setMap("img/map/Map.jpg");
 		
 		//Suppress the tower Sprite
-		Iterator<Sprite> it = sprites.iterator();
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			if(element.getPosition().equals(addTowerPosition)){
-				it.remove();
-				remove(element);
-			}
-		}
+		Sprite element = sprites.get(indexAddTower);
+		sprites.remove(indexAddTower);
+		remove(element);
 		
 		//Repaint the panel
     	revalidate();

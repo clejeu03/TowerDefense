@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import View.Sprite;
-import View.StarterSprite;
-
 /**
  * Project - TowerDefense</br>
  * <b>Class - GameManager</b></br>
@@ -146,6 +143,19 @@ public class GameManager implements Runnable{
 						dispatcher.addOrderToView(new SuppressTowerOrder(order.getPlayerType(), ((TowerOrder) order).getPosition()));
 					}
 				
+				}
+				
+				//If the order is a AddTowerOrder one
+				if(order instanceof AddTowerOrder) {
+					
+					//TODO : Check if the tower can be add here !
+					
+					//TODO : Add the good type of tower !
+					//Add the tower to the list
+					towers.add(new MedicalTower(((TowerOrder) order).getPosition(),order.getPlayerType(), 90));
+					
+					//Tell the dispatcher that the tower can to be add on the view
+					dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((TowerOrder) order).getPosition(), 2));
 				}
 			}
 		}
