@@ -339,7 +339,7 @@ public class SceneView extends MainViews{
 		if(!addTowerClicked){
 			addTowerClicked = true;
 			//Display the territory map
-			setMap("img/map/tm.png");
+			setMap("tmp/tm.png");
 			addTowerPosition = new Point(position.x+1, position.y+1);
 			
 			TowerSprite ts = new TowerSprite(this, addTowerPosition, false, humanType, 50, 50, towerType, 90);
