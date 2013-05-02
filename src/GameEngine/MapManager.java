@@ -115,6 +115,7 @@ public class MapManager implements Serializable{
 		else{
 			System.out.println("Reading Maps!");
 		}
+		territoryMap.saveAsPNG("tm.png");
 	}
 	
 	/**
@@ -276,7 +277,7 @@ public class MapManager implements Serializable{
 	}
 	
 	/**
-	 * Generate the TerritoryMap and save it as a png at tmp/
+	 * Generate the TerritoryMap
 	 * @see #MapManager() 
 	 */
 	private void generateTerritoryMap(){
@@ -326,7 +327,6 @@ public class MapManager implements Serializable{
 
 			
 		}
-		territoryMap.saveAsPNG("tm.png");
 	}
 	
 	/**
