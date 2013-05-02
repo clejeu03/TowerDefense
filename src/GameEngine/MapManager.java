@@ -64,12 +64,12 @@ public class MapManager implements Serializable{
   /**
    * Store the map that describes the plains and hills of the map
    */
-  private Map heightMap;
+  private HeightMap heightMap;
   
   /**
    * Store the map that determine player's territory with their possessions
    */
-  private Map territoryMap;
+  private TerritoryMap territoryMap;
   
   /**
    * Store the position of each player's base
@@ -79,7 +79,7 @@ public class MapManager implements Serializable{
 /**
    * Store the map that calculate the distance to each player's Base
    */
-  private Map playerProximityMap[];
+  private ProximityMap playerProximityMap[];
 
 /**
    * Store the position of each neutral bases
@@ -89,7 +89,7 @@ public class MapManager implements Serializable{
   /**
    * Store the map that calculate the distance to each neutral Base
    */
-  private LinkedList<Map> neutralProximityMap;
+  private LinkedList<ProximityMap> neutralProximityMap;
   
   /**
 	 * MapManager's constructor, initiate and create the heightMap and the territoryMap
@@ -103,9 +103,9 @@ public class MapManager implements Serializable{
 		if (!existingMapManager()){
 			System.out.println("Creating Maps !");
 			playerBasePosition = new Point[numberOfPlayer];
-			playerProximityMap = new Map[numberOfPlayer];
+			playerProximityMap = new ProximityMap[numberOfPlayer];
 			neutralBasePosition = new LinkedList<Point>();
-			neutralProximityMap = new LinkedList<Map>();
+			neutralProximityMap = new LinkedList<ProximityMap>();
 			generateHeightMap();
 			generateRelief();
 			generateTerritoryMap();
@@ -147,7 +147,7 @@ public class MapManager implements Serializable{
 					e.printStackTrace();
 				}
 			} catch (IOException e) {
-				System.out.println("Error : ObjectOutputStream fos throw an IOException");
+				System.out.println("Error : ObjectInputStream fis throw an IOException");
 				e.printStackTrace();
 			}
 			return false;
@@ -185,7 +185,7 @@ public class MapManager implements Serializable{
 		}
 		
 		//Initiate the HeightMap
-		heightMap = new Map(img.getWidth(),img.getHeight());
+		heightMap = new HeightMap(img.getWidth(),img.getHeight());
 		
 		for (int y = 0; y < heightMap.getHeight();y++){ 
 			for (int x = 0; x < heightMap.getWidth();x++){
@@ -238,7 +238,7 @@ public class MapManager implements Serializable{
 	}
 	
 	/**
-	 * Generate relief for the HeightMap and save the image at img/map/hrm.png
+	 * Generate relief for the HeightMap and save the image at tmp/hrm.png
 	 * @see #MapManager()
 	 */
 	private void generateRelief(){
@@ -276,12 +276,12 @@ public class MapManager implements Serializable{
 	}
 	
 	/**
-	 * Generate the TerritoryMap and save it as a png at /map
+	 * Generate the TerritoryMap and save it as a png at tmp/
 	 * @see #MapManager() 
 	 */
 	private void generateTerritoryMap(){
 		//Initiate TerritoryMap
-		territoryMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+		territoryMap = new TerritoryMap(heightMap.getWidth(),heightMap.getHeight());
 		
 		//Vectors containing pixels that have to be modified
 		Vector<Point> pixelsJ4 = new Vector<Point>();
@@ -412,25 +412,25 @@ public class MapManager implements Serializable{
 	private void generateAllProximityMap(){
 		//Generate the proximityMaps of the players' bases
 		for (int i=0;i<numberOfPlayer;i++){
-			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+			ProximityMap proximityMap = new ProximityMap(heightMap.getWidth(),heightMap.getHeight());
 			generateProximityMap(proximityMap,playerBasePosition[i]);
 			playerProximityMap[i] = proximityMap;
-			playerProximityMap[i].saveAsPNGProximity("pm"+i+".png");
+			playerProximityMap[i].saveAsPNG("pm"+i+".png");
 		}
 		
 		//Generate the neutral bases' proximityMaps
 		int cpt = 0;
 		while(!neutralBasePosition.isEmpty()){
-			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+			ProximityMap proximityMap = new ProximityMap(heightMap.getWidth(),heightMap.getHeight());
 			generateProximityMap(proximityMap,neutralBasePosition.poll());
 			neutralProximityMap.add(proximityMap);
-			neutralProximityMap.getLast().saveAsPNGProximity("npm"+cpt+".png");
+			neutralProximityMap.getLast().saveAsPNG("npm"+cpt+".png");
 			cpt++;
 		}
 	}
 	
 	/**
-	 * Generate a ProximityMap for a base
+	 * Generate a ProximityMap for a base and save it as png at tmp/
 	 * @param player id of the base
 	 * @see #generateAllProximityMap()
 	 */
