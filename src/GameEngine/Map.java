@@ -7,12 +7,8 @@
  */
 package GameEngine;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.Serializable;
 import java.util.Arrays;
-
-import javax.imageio.ImageIO;
 
 /**
  * Project - TowerDefense</br>
@@ -22,10 +18,26 @@ import javax.imageio.ImageIO;
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MapManager
  */
-public class Map {
+public abstract class Map implements Serializable {
 	
+	/**
+	 * Default serial version ID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Store the information of each pixel of the Map
+	 */
 	private int[] data;
+	
+	/**
+	 * Store the height of the Map (in px)
+	 */
 	private final int height;
+	
+	/**
+	 * Store the width of the Map (in px)
+	 */
 	private final int width;
 	
 	Map(int width, int height){
@@ -61,96 +73,6 @@ public class Map {
 		return width;
 	}
 	
-	/**
-	 * Create a color image with the information of the Map
-	 * @param path of the output image
-	 * @see MapManager.generateHeightMap()
-	 * @see MapManager.generateTerritoryMap()
-	 */
-	public void saveAsPNG(String path){
-		int rgb;
-		BufferedImage outImage = new BufferedImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_RGB);
-		for (int y = 0; y < this.getHeight();y++){ 
-			for (int x = 0; x < this.getWidth();x++){
-				int value = this.getPixel(x,y);
-				
-				switch(value){
-				case 0:
-					rgb = Color.black.getRGB();
-					break;
-				case 1:
-					rgb = Color.cyan.getRGB();
-					break;
-				case 2:
-					rgb = Color.green.getRGB();
-					break;
-				case 3:
-					rgb = Color.yellow.getRGB();
-					break;
-				case 4:
-					rgb = Color.red.getRGB();
-					break;
-				case 5:
-					rgb = Color.white.getRGB();
-					break;
-				case 6:
-					rgb = Color.darkGray.getRGB();
-					break;
-				default:
-					rgb=Color.pink.getRGB();
-					break;
-				}
-				
-				outImage.setRGB(x, y, rgb);
-			}
-		}
-		File outFile = new File("img/map/"+path);
-		try{
-			if (!ImageIO.write(outImage, "png", outFile)){
-				System.out.println("Format d'écriture non pris en charge");
-			}
-		}
-		catch(Exception e){
-			System.out.println("Erreur lors de l'enregistrement de l'image :");
-			e.printStackTrace();
-		}
-	}
+	abstract void saveAsPNG(String path);
 
-	/**
-	 * Create a color image with the information of a ProximityMap
-	 * @param path of the output image
-	 * @see MapManager.generateAllProximityMap()
-	 */
-	public void saveAsPNGProximity(String path){
-		BufferedImage outImage = new BufferedImage(this.getWidth(),this.getHeight(),BufferedImage.TYPE_INT_RGB);
-		int value;
-		for (int y = 0; y < this.getHeight();y++){ 
-			for (int x = 0; x < this.getWidth();x++){
-				value = this.getPixel(x,y);
-				if (value==9999){
-					outImage.setRGB(x, y, Color.black.getRGB());
-				}
-				else
-				{
-					int R=(255*value)/500000;
-					int G=(255*(500000-value))/500000; 
-					int B=0;
-					outImage.setRGB(x, y, new Color(R,G,B).getRGB());
-				}
-				
-				
-			}
-		}
-		
-		File outFile = new File("img/map/"+path);
-		try{
-			if (!ImageIO.write(outImage, "png", outFile)){
-				System.out.println("Format d'écriture non pris en charge");
-			}
-		}
-		catch(Exception e){
-			System.out.println("Erreur lors de l'enregistrement de l'image :");
-			e.printStackTrace();
-		}
-	}
 }

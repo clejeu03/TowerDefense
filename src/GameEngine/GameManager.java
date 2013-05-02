@@ -73,7 +73,7 @@ public class GameManager implements Runnable{
 	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
 		
 		//Adding a mapManager
-		mapManager = new MapManager("img/map/Map.jpg", nbEnemies+1);
+		mapManager = new MapManager("Map", nbEnemies+1);
 		
 		//Creating towers TEMPORARY !
 		//Clear the towers list

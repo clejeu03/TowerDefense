@@ -3,7 +3,13 @@ package GameEngine;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -29,8 +35,13 @@ import GameEngine.Map;
  * @see Player
  */
 
-public class MapManager {
+public class MapManager implements Serializable{
   /**
+  * Default serial version id
+  * */
+  private static final long serialVersionUID = 1L;
+
+/**
    * Store the number maximum of Player 
    */
   private final int maxnumberOfPlayer = 4;
@@ -43,17 +54,22 @@ public class MapManager {
   /**
    * Store the path of the image we'll use to create our maps
    */
-  private String imagepath;
+  private String imagePath;
+  
+  /**
+   * Store the name of the image we'll use to create our maps
+   */
+  private String imageName;
   
   /**
    * Store the map that describes the plains and hills of the map
    */
-  private Map heightMap;
+  private HeightMap heightMap;
   
   /**
    * Store the map that determine player's territory with their possessions
    */
-  private Map territoryMap;
+  private TerritoryMap territoryMap;
   
   /**
    * Store the position of each player's base
@@ -63,7 +79,7 @@ public class MapManager {
 /**
    * Store the map that calculate the distance to each player's Base
    */
-  private Map playerProximityMap[];
+  private ProximityMap playerProximityMap[];
 
 /**
    * Store the position of each neutral bases
@@ -73,42 +89,103 @@ public class MapManager {
   /**
    * Store the map that calculate the distance to each neutral Base
    */
-  private LinkedList<Map> neutralProximityMap;
+  private LinkedList<ProximityMap> neutralProximityMap;
   
   /**
 	 * MapManager's constructor, initiate and create the heightMap and the territoryMap
 	 * @param i_imagepath path of the local image to analyse
 	 */
-	MapManager(String i_imagepath, int numberOfPlayer){
+	MapManager(String i_imageName, int numberOfPlayer){
 		super();
-		imagepath = i_imagepath;
+		imageName = i_imageName;
+		imagePath = "img/map/"+i_imageName+".jpg";
 		this.numberOfPlayer = numberOfPlayer;
-		playerBasePosition = new Point[numberOfPlayer];
-		playerProximityMap = new Map[numberOfPlayer];
-		neutralBasePosition = new LinkedList<Point>();
-		neutralProximityMap = new LinkedList<Map>();
-		generateHeightMap();
-		generateRelief();
-		generateTerritoryMap();
-		generateAllProximityMap();
+		if (!existingMapManager()){
+			System.out.println("Creating Maps !");
+			playerBasePosition = new Point[numberOfPlayer];
+			playerProximityMap = new ProximityMap[numberOfPlayer];
+			neutralBasePosition = new LinkedList<Point>();
+			neutralProximityMap = new LinkedList<ProximityMap>();
+			generateHeightMap();
+			generateRelief();
+			generateTerritoryMap();
+			generateAllProximityMap();
+			saveAsTMP();
+		}
+		else{
+			System.out.println("Reading Maps!");
+		}
+	}
+	
+	/**
+	 * Test if there's an existing MapManager in a tmp file which meet the requirements
+	 * @return true if the tmp exists, false otherwise
+	 * @see #MapManager()
+	 */
+	private boolean existingMapManager(){
+		File tmpFile = new File("tmp/"+imageName+numberOfPlayer+".tmp");
+		if (tmpFile.exists()){
+			FileInputStream fis = null;
+			ObjectInputStream ois = null;
+			
+			try {
+				fis = new FileInputStream(tmpFile);
+			} catch (FileNotFoundException e) {
+				System.out.println("Error : tmpFile not found");
+				e.printStackTrace();
+			}
+			
+			try {
+				ois = new ObjectInputStream(fis);
+				try {
+					this.setMapManager((MapManager)ois.readObject());
+					ois.close();
+					fis.close();
+					return true;
+				} catch (ClassNotFoundException e) {
+					System.out.println("Error : ois.readObject didn't return an MapManager");
+					e.printStackTrace();
+				}
+			} catch (IOException e) {
+				System.out.println("Error : ObjectInputStream fis throw an IOException");
+				e.printStackTrace();
+			}
+			return false;
+		}
+		else
+			return false;
+	}
+	
+	/**
+	 * Set the MapManager according to an other pre-existing MapManager
+	 * @param mm : pre-existing MapManager
+	 * @see #existingMapManager()
+	 */
+	private void setMapManager(MapManager mm){
+		this.heightMap=mm.heightMap;
+		this.territoryMap=mm.territoryMap;
+		this.playerBasePosition=mm.playerBasePosition;
+		this.playerProximityMap=mm.playerProximityMap;
+		this.neutralBasePosition=mm.neutralBasePosition;
+		this.neutralProximityMap=mm.neutralProximityMap;
 	}
 	
 	/**
 	 * Generate the HeightMap using a local picture and save it as a png at /map
-	 * @see MapManager()
+	 * @see #MapManager()
 	 */
 	private void generateHeightMap(){
 		BufferedImage img = null;//Local image containment
 		
 		try {
-			img = ImageIO.read(new File(imagepath)); //We get the image
+			img = ImageIO.read(new File(imagePath)); //We get the image
 		} catch (IOException e) {
 			System.out.println("Erreur lors de la lecture de l'image de Map");
 			e.printStackTrace();
 		}
 		
 		//Initiate the HeightMap
-		heightMap = new Map(img.getWidth(),img.getHeight());
+		heightMap = new HeightMap(img.getWidth(),img.getHeight());
 		
 		for (int y = 0; y < heightMap.getHeight();y++){ 
 			for (int x = 0; x < heightMap.getWidth();x++){
@@ -161,8 +238,8 @@ public class MapManager {
 	}
 	
 	/**
-	 * Generate relief for the HeightMap and save the image at img/map/hrm.png
-	 * @see MapManager()
+	 * Generate relief for the HeightMap and save the image at tmp/hrm.png
+	 * @see #MapManager()
 	 */
 	private void generateRelief(){
 		//Intensity of the relief
@@ -197,13 +274,14 @@ public class MapManager {
 		}
 		heightMap.saveAsPNG("hrm.png");
 	}
+	
 	/**
-	 * Generate the TerritoryMap and save it as a png at /map
-	 * @see MapManager() 
+	 * Generate the TerritoryMap and save it as a png at tmp/
+	 * @see #MapManager() 
 	 */
 	private void generateTerritoryMap(){
 		//Initiate TerritoryMap
-		territoryMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+		territoryMap = new TerritoryMap(heightMap.getWidth(),heightMap.getHeight());
 		
 		//Vectors containing pixels that have to be modified
 		Vector<Point> pixelsJ4 = new Vector<Point>();
@@ -257,7 +335,7 @@ public class MapManager {
 	 * @param pixels Store pixels that have to be modified
 	 * @param player Value to set at those pixels according to the player
 	 * @return true if one or more pixels have been modified, false if not
-	 * @see MapManager.generateTerritoryMap() 
+	 * @see #generateTerritoryMap() 
 	 */
 	private boolean circlePropagation(Vector<Point> pixels,int player){
 		Vector<Point> nextPixels = new Vector<Point>();
@@ -329,32 +407,32 @@ public class MapManager {
 	
 	/**
 	 * Generate All the ProximityMap (one for each base)
-	 * @see MapManager()
+	 * @see #MapManager()
 	 */
 	private void generateAllProximityMap(){
 		//Generate the proximityMaps of the players' bases
 		for (int i=0;i<numberOfPlayer;i++){
-			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+			ProximityMap proximityMap = new ProximityMap(heightMap.getWidth(),heightMap.getHeight());
 			generateProximityMap(proximityMap,playerBasePosition[i]);
 			playerProximityMap[i] = proximityMap;
-			playerProximityMap[i].saveAsPNGProximity("pm"+i+".png");
+			playerProximityMap[i].saveAsPNG("pm"+i+".png");
 		}
 		
 		//Generate the neutral bases' proximityMaps
 		int cpt = 0;
 		while(!neutralBasePosition.isEmpty()){
-			Map proximityMap = new Map(heightMap.getWidth(),heightMap.getHeight());
+			ProximityMap proximityMap = new ProximityMap(heightMap.getWidth(),heightMap.getHeight());
 			generateProximityMap(proximityMap,neutralBasePosition.poll());
 			neutralProximityMap.add(proximityMap);
-			neutralProximityMap.getLast().saveAsPNGProximity("npm"+cpt+".png");
+			neutralProximityMap.getLast().saveAsPNG("npm"+cpt+".png");
 			cpt++;
 		}
 	}
 	
 	/**
-	 * Generate a ProximityMap for a base
+	 * Generate a ProximityMap for a base and save it as png at tmp/
 	 * @param player id of the base
-	 * @see MapManager().generateAllProximityMap()
+	 * @see #generateAllProximityMap()
 	 */
 	private void generateProximityMap(Map proximityMap, Point base){
 		
@@ -411,6 +489,32 @@ public class MapManager {
 				
 				value++;
 			}
+		}
+	}
+
+	/**
+	 * Save the MapManager in a tmp file to have faster results if we use it again
+	 * @see #MapManager()
+	 */
+	private void saveAsTMP(){
+		File tmpFile = new File("tmp/"+imageName+numberOfPlayer+".tmp");
+		FileOutputStream fos = null;
+		ObjectOutputStream oos = null;
+		
+		try {
+			fos = new FileOutputStream(tmpFile);
+		} catch (FileNotFoundException e) {
+			System.out.println("Error : tmpFile not found");
+			e.printStackTrace();
+		}
+		
+		try {
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(this);
+			oos.close();
+		} catch (IOException e) {
+			System.out.println("Error : ObjectOutputStream fos throw an IOException");
+			e.printStackTrace();
 		}
 	}
 }
