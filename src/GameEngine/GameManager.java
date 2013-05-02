@@ -72,8 +72,26 @@ public class GameManager implements Runnable{
 	 */
 	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
 		
+		//Creating the player (human and IA)
+		//Clear the player list
+		players.clear();
+		
+		//Adding the human player
+		players.add(new Player(humanType));
+		
+		ArrayList<PlayerType> playerTypes = new ArrayList<PlayerType>();
+		playerTypes.add(humanType);
+		
+		//Adding the enemies
+		Iterator<PlayerType> iter = enemiesType.iterator();
+		while (iter.hasNext()) {
+			PlayerType enemyType = iter.next();
+			players.add(new Player(enemyType));
+			playerTypes.add(enemyType);
+		}	
+		
 		//Adding a mapManager
-		mapManager = new MapManager("Map", nbEnemies+1);
+		mapManager = new MapManager("Map", playerTypes);
 		
 		//Creating towers TEMPORARY !
 		//Clear the towers list
@@ -87,17 +105,9 @@ public class GameManager implements Runnable{
 		//human player tower (temporary !)
 		towers.add(new MedicalTower(new Point(125,50), humanId, 90));*/
 		
-		//Creating the player (human and IA)
-		//Clear the player list
-		players.clear();
-		//Adding the enemies
-		Iterator<PlayerType> iter = enemiesType.iterator();
-		while (iter.hasNext()) {
-			PlayerType enemyType = iter.next();
-			players.add(new Player(enemyType));
-		}	
-		//Adding the human player
-		players.add(new Player(humanType));
+		
+		
+		
 		
 		
 		//Retrieve the bases positions

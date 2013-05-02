@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
 import GameEngine.Map;
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -95,11 +97,11 @@ public class MapManager implements Serializable{
 	 * MapManager's constructor, initiate and create the heightMap and the territoryMap
 	 * @param i_imagepath path of the local image to analyse
 	 */
-	MapManager(String i_imageName, int numberOfPlayer){
+	MapManager(String i_imageName, ArrayList<PlayerType> playerTypes){
 		super();
 		imageName = i_imageName;
 		imagePath = "img/map/"+i_imageName+".jpg";
-		this.numberOfPlayer = numberOfPlayer;
+		this.numberOfPlayer = playerTypes.size();
 		if (!existingMapManager()){
 			System.out.println("Creating Maps !");
 			playerBasePosition = new Point[numberOfPlayer];
@@ -115,7 +117,7 @@ public class MapManager implements Serializable{
 		else{
 			System.out.println("Reading Maps!");
 		}
-		territoryMap.saveAsPNG("tm.png");
+		territoryMap.saveAsPNG("tm.png",playerTypes);
 	}
 	
 	/**
