@@ -10,8 +10,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Timer;
 
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
 
 import GameEngine.Player.PlayerType;
 
@@ -27,7 +29,7 @@ import GameEngine.Player.PlayerType;
  */
 
 @SuppressWarnings("serial")
-public class SceneView extends MainViews{   
+public class SceneView extends MainViews implements Runnable{   
     private Image map;
     private Image territoryMap;
     
@@ -42,11 +44,18 @@ public class SceneView extends MainViews{
     
     private boolean addTowerClicked;
     private Point addTowerPosition;
+   
     
     private boolean baseClicked;
     private boolean attackBase;
+    private int attackAmountPercent;
+    private JLabel jAttackAmountPercent;
     private Point basePosition;
+    private Point baseToAttackPosition;
     private Point mousePosition;
+	private Thread thread;
+	
+	
     
     /**
      * Constructor of the SceneView class
@@ -62,10 +71,12 @@ public class SceneView extends MainViews{
 		towerClicked = false;
 		baseClicked = false;
 		attackBase = false;	
+		attackAmountPercent = 50;
 		mousePosition = new Point(0,0);
 		clickedTowerPosition = new Point(0,0);
 		humanType = PlayerType.ELECTRIC;
 
+		jAttackAmountPercent = new JLabel();
 		
         //Add a mouse listener on the map
     	addMouseListener(new MouseAdapter() {
@@ -147,7 +158,13 @@ public class SceneView extends MainViews{
 		else if(humanType == PlayerType.FIRE){
 			color = new Color(255,0,0,100);
 		}
-	
+		
+		//Resetting the attackAmount
+		attackAmountPercent = 50;
+
+		jAttackAmountPercent.setVisible(false);
+		remove(jAttackAmountPercent);
+		
 		
 		//Removing all the Sprites		
 		Iterator<Sprite> it = sprites.iterator();
@@ -397,7 +414,6 @@ public class SceneView extends MainViews{
 				remove(element);
 			}
 		}
-		
 		//Repaint the panel
     	revalidate();
     	repaint();	
@@ -427,6 +443,23 @@ public class SceneView extends MainViews{
 		
 		//If the player has first clicked on one of his base, then clicked on an enemy base 
 		if((baseClicked)&&(playerType != humanType)){
+			
+			//Set the amont percent
+			attackAmountPercent = 50;
+
+			
+			baseToAttackPosition = new Point(position);
+			System.out.println(basePosition + " want to attack : "+baseToAttackPosition);
+			System.out.println(basePosition + " amountPercent : "+ attackAmountPercent+"%");
+			
+			jAttackAmountPercent.setBounds(baseToAttackPosition.x+18, baseToAttackPosition.y-18, 100,25);
+			jAttackAmountPercent.setText(attackAmountPercent+"%");
+			jAttackAmountPercent.setVisible(true);
+			add(jAttackAmountPercent);
+			
+			//Start the thread
+			thread = new Thread(this);
+	        thread.start();
 			attackBase = true;
 		}
 		
@@ -448,14 +481,31 @@ public class SceneView extends MainViews{
 			System.out.println("View - Attack !!");
 			//Remove the line between the two bases
 			baseClicked = false;
+			//Stop the thread
 			attackBase = false;
-			//TODO : attack !!! Number of unit increase according to the mouse 
-			//Will need basePosition (position of the first base) and position (position of the second base...)
+			//TODO :telle the engine to attack !!
+			//Will need basePosition (position of the first base) and position (position of the second base...) and 
+			//the number of soldiers in the unit (attackAmountPercent)
+			
+			jAttackAmountPercent.setVisible(false);
+			remove(jAttackAmountPercent);
 		}
 		
 		//Repaint the panel
     	revalidate();
     	repaint();		
+	}
+	
+	public void run()
+	{
+		 while(attackBase)
+		 {
+			 try{
+				 Thread.sleep(100);
+				 if((attackAmountPercent+1)<=99)  attackAmountPercent+=1;
+				 jAttackAmountPercent.setText(attackAmountPercent+"%");
+		 	}catch(Exception e){e.printStackTrace();}
+		 }
 	}
 	
 	/**

@@ -206,7 +206,7 @@ public class ViewManager extends JFrame implements Runnable{
 			//Retrieve the tower
 			Base base = iter.next();
 			//Create the corresponding TowerSprit
-			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerType(), 36, 36);
+			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerType(), 36, 36, 200);
 
 			//Add the baseSprite in the sceneView list of Sprites
 			sceneView.addSprite(bs);
