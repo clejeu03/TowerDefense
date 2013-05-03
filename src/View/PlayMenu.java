@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -15,6 +16,7 @@ import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -37,7 +39,7 @@ import GameEngine.Player.PlayerType;
  */
 @SuppressWarnings("serial")
 public class PlayMenu extends MainViews{
-   
+	
 	private JLabel jStarter;
     private ArrayList<Sprite> starters;
     private PlayerType starterType;
@@ -85,6 +87,7 @@ public class PlayMenu extends MainViews{
 		      e.printStackTrace();
 		}
 		
+		
 		//Creating the components
 		jStarter = new javax.swing.JLabel("Choose your starter wisely : ");		
 		starters.add(new StarterSprite(this, new Point(350,60), true, PlayerType.ELECTRIC, 50,50));
@@ -100,7 +103,6 @@ public class PlayMenu extends MainViews{
 		secondEnemySprite = new EnemySprite(this, new Point(425,110), false, secondEnemyType, 50,50);		
 		thirdEnemySprite = new EnemySprite(this, new Point(475,110), false, thirdEnemyType, 50,50);
 		
-
 		jButtonStart = new javax.swing.JButton();
 		jButtonHome = new javax.swing.JButton();
 
@@ -164,7 +166,7 @@ public class PlayMenu extends MainViews{
 		jButtonHome.setBounds(340, 220, 120,25);
 		
 		add(jStarter);
-		add(jButtonHome);		
+		add(jButtonHome);	
 	}
 	/**
 	 * To call after all the choices are made - Time to launch the game!

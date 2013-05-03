@@ -184,6 +184,7 @@ public class SceneView extends MainViews{
 		addSprite(new AddTowerSprite(this, new Point(30,310), true, humanType, 55, 55, 1));
 		addSprite(new AddTowerSprite(this, new Point(30,370), true, humanType, 55, 55, 2));
 		
+		
 		if (addTowerClicked) {
 			addTowerFailed();
 		}

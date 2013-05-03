@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Point;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 
 import GameEngine.Player.PlayerType;
 
@@ -20,7 +21,7 @@ import GameEngine.Player.PlayerType;
  */
 
 @SuppressWarnings("serial")
-public abstract class Sprite extends JComponent{
+public abstract class Sprite extends JLabel{
 	//Position of the center of the Sprite
 	protected Point position;
 	protected int width;
