@@ -29,6 +29,8 @@ import GameEngine.Player.PlayerType;
 @SuppressWarnings("serial")
 public class SceneView extends MainViews{   
     private Image map;
+    private Image territoryMap;
+    
     private ArrayList<Sprite> sprites;
     
     private PlayerType humanType;
@@ -64,13 +66,6 @@ public class SceneView extends MainViews{
 		clickedTowerPosition = new Point(0,0);
 		humanType = PlayerType.ELECTRIC;
 
-		//Loading the image map
-		try {
-		      map = ImageIO.read(new File("img/map/Map.jpg"));
-		  
-		} catch (IOException e) {
-		      e.printStackTrace();
-		}
 		
         //Add a mouse listener on the map
     	addMouseListener(new MouseAdapter() {
@@ -113,25 +108,6 @@ public class SceneView extends MainViews{
 	}
 
 	/**
-	 * Setter - set the map image displayed by the ScenView Panel
-	 * @param filename - new map filename
-	 */
-	public void setMap(String filename){
-		
-		//Loading the image map
-		try {
-		      map = ImageIO.read(new File(filename));
-		  
-		} catch (IOException e) {
-		      e.printStackTrace();
-		}
-		
-		//Repaint the window
-		revalidate();
-		repaint();
-	}
-
-	/**
 	 * Add a Sprite in the ScenView ArrayList
 	 * @param sprite
 	 * @see ViewManager#initiateGameView(ArrayList)
@@ -171,6 +147,7 @@ public class SceneView extends MainViews{
 		else if(humanType == PlayerType.FIRE){
 			color = new Color(255,0,0,100);
 		}
+	
 		
 		//Removing all the Sprites		
 		Iterator<Sprite> it = sprites.iterator();
@@ -178,6 +155,15 @@ public class SceneView extends MainViews{
 			Sprite element = it.next();
 			it.remove();
 			remove(element);
+		}
+		
+		//Loading the image map
+		try {
+		      map = ImageIO.read(new File("img/map/Map.jpg"));
+		      territoryMap = ImageIO.read(new File("tmp/tm.png"));
+		  
+		} catch (IOException e) {
+		      e.printStackTrace();
 		}
 		
 		//Add the AddTower Attack Sprite on the panel
@@ -339,8 +325,6 @@ public class SceneView extends MainViews{
 	public void addTowerClicked(Point position, PlayerType playerType, int towerType){
 		if(!addTowerClicked){
 			addTowerClicked = true;
-			//Display the territory map
-			setMap("tmp/tm.png");
 			addTowerPosition = new Point(position.x+1, position.y+1);
 			
 			TowerSprite ts = new TowerSprite(this, addTowerPosition, false, humanType, 50, 50, towerType, 90);
@@ -380,8 +364,6 @@ public class SceneView extends MainViews{
 	 */
 	public void addTowerSuccess(){
 		addTowerClicked = false;
-		//Display the simple map
-		setMap("img/map/Map.jpg");
 		
 		//Set the tower Sprite clickable attribute to true
 		Iterator<Sprite> it = sprites.iterator();
@@ -391,7 +373,9 @@ public class SceneView extends MainViews{
 				((TowerSprite) element).setClickable(true);
 			}
 		}	
-
+    	//Repaint the Panel
+    	revalidate();
+    	repaint();	
 	}
 	
 	/**
@@ -403,8 +387,6 @@ public class SceneView extends MainViews{
 	 */
 	public void addTowerFailed(){
 		addTowerClicked = false;
-		//Display the simple map
-		setMap("img/map/Map.jpg");
 		
 		//Suppress the tower-to-add Sprite
 		Iterator<Sprite> it = sprites.iterator();
@@ -514,6 +496,11 @@ public class SceneView extends MainViews{
 		super.paintComponent(g);
 	    g.drawImage(map, 0, 0, this.getWidth(), this.getHeight(), this);
 	    g.setColor(color);
+	 
+	    if(addTowerClicked){
+	    	//Display the territoryMap
+		    g.drawImage(territoryMap, 0, 0, this.getWidth(), this.getHeight(), this);
+	    }    
 	    
 	    if(towerClicked){
 	    	//Retrieve the clicked tower

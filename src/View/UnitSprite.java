@@ -14,12 +14,21 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import GameEngine.GameManager;
 import GameEngine.Player.PlayerType;
 
 /**
- * @author aurelie
- *
+ * Project - TowerDefense</br>
+ * <b>Class - UnitSprite</b></br>
+ * <p>The UnitSprite class represents the units images displayed on the ScenView</p>
+ * <b>Creation :</b> 03/05/2013</br>
+ * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
+ * @see MainViews
+ * @see GameMenuBar
+ * @see SceneView
+ * @see GameManager
  */
+@SuppressWarnings("serial")
 public class UnitSprite  extends Sprite{
 	private boolean flipped;
 
