@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import GameEngine.GameManager;
 import GameEngine.Player.PlayerType;
@@ -147,7 +148,6 @@ public class StarterSprite extends Sprite{
 	public void paintComponent(Graphics g){
 		if((!over)&&(!chosen)) g.drawImage(image, 7, 7,this);
 		else if((over)||chosen) g.drawImage(imageOver, 0, 0,this);
-
 	  }  
 
 }

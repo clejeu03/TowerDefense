@@ -20,6 +20,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import com.sun.awt.AWTUtilities;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - ViewManager</b></br>
