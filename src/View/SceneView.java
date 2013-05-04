@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
 
 import GameEngine.Player.PlayerType;
 
@@ -27,8 +28,10 @@ import GameEngine.Player.PlayerType;
  */
 
 @SuppressWarnings("serial")
-public class SceneView extends MainViews{   
+public class SceneView extends MainViews implements Runnable{   
     private Image map;
+    private Image territoryMap;
+    
     private ArrayList<Sprite> sprites;
     
     private PlayerType humanType;
@@ -40,11 +43,18 @@ public class SceneView extends MainViews{
     
     private boolean addTowerClicked;
     private Point addTowerPosition;
+   
     
     private boolean baseClicked;
     private boolean attackBase;
+    private int attackAmountPercent;
+    private JLabel jAttackAmountPercent;
     private Point basePosition;
+    private Point baseToAttackPosition;
     private Point mousePosition;
+	private Thread thread;
+	
+	
     
     /**
      * Constructor of the SceneView class
@@ -60,17 +70,13 @@ public class SceneView extends MainViews{
 		towerClicked = false;
 		baseClicked = false;
 		attackBase = false;	
+		attackAmountPercent = 50;
 		mousePosition = new Point(0,0);
 		clickedTowerPosition = new Point(0,0);
 		humanType = PlayerType.ELECTRIC;
 
-		//Loading the image map
-		try {
-		      map = ImageIO.read(new File("img/map/MapView.png"));
-		  
-		} catch (IOException e) {
-		      e.printStackTrace();
-		}
+		jAttackAmountPercent = new JLabel();
+
 		
         //Add a mouse listener on the map
     	addMouseListener(new MouseAdapter() {
@@ -110,25 +116,6 @@ public class SceneView extends MainViews{
 	 */
 	public PlayerType getHumanType() {
 		return humanType;
-	}
-
-	/**
-	 * Setter - set the map image displayed by the ScenView Panel
-	 * @param filename - new map filename
-	 */
-	public void setMap(String filename){
-		
-		//Loading the image map
-		try {
-		      map = ImageIO.read(new File(filename));
-		  
-		} catch (IOException e) {
-		      e.printStackTrace();
-		}
-		
-		//Repaint the window
-		revalidate();
-		repaint();
 	}
 
 	/**
@@ -172,12 +159,28 @@ public class SceneView extends MainViews{
 			color = new Color(255,0,0,100);
 		}
 		
+		//Resetting the attackAmount
+		attackAmountPercent = 50;
+
+		jAttackAmountPercent.setVisible(false);
+		remove(jAttackAmountPercent);
+		
+		
 		//Removing all the Sprites		
 		Iterator<Sprite> it = sprites.iterator();
 		while (it.hasNext()) {
 			Sprite element = it.next();
 			it.remove();
 			remove(element);
+		}
+		
+		//Loading the image map
+		try {
+		      map = ImageIO.read(new File("img/map/MapView.png"));
+		      territoryMap = ImageIO.read(new File("tmp/tm.png"));
+		  
+		} catch (IOException e) {
+		      e.printStackTrace();
 		}
 		
 		//Add the AddTower Attack Sprite on the panel
@@ -339,8 +342,6 @@ public class SceneView extends MainViews{
 	public void addTowerClicked(Point position, PlayerType playerType, int towerType){
 		if(!addTowerClicked){
 			addTowerClicked = true;
-			//Display the territory map
-			setMap("tmp/tm.png");
 			addTowerPosition = new Point(position.x+1, position.y+1);
 			
 			TowerSprite ts = new TowerSprite(this, addTowerPosition, false, humanType, 50, 50, towerType, 90);
@@ -380,8 +381,6 @@ public class SceneView extends MainViews{
 	 */
 	public void addTowerSuccess(){
 		addTowerClicked = false;
-		//Display the simple map
-		setMap("img/map/MapView.png");
 		
 		//Set the tower Sprite clickable attribute to true
 		Iterator<Sprite> it = sprites.iterator();
@@ -391,7 +390,9 @@ public class SceneView extends MainViews{
 				((TowerSprite) element).setClickable(true);
 			}
 		}	
-
+    	//Repaint the Panel
+    	revalidate();
+    	repaint();	
 	}
 	
 	/**
@@ -403,8 +404,6 @@ public class SceneView extends MainViews{
 	 */
 	public void addTowerFailed(){
 		addTowerClicked = false;
-		//Display the simple map
-		setMap("img/map/MapView.png");
 		
 		//Suppress the tower-to-add Sprite
 		Iterator<Sprite> it = sprites.iterator();
@@ -415,7 +414,6 @@ public class SceneView extends MainViews{
 				remove(element);
 			}
 		}
-		
 		//Repaint the panel
     	revalidate();
     	repaint();	
@@ -445,6 +443,28 @@ public class SceneView extends MainViews{
 		
 		//If the player has first clicked on one of his base, then clicked on an enemy base 
 		if((baseClicked)&&(playerType != humanType)){
+			
+			//Set the amont percent
+			attackAmountPercent = 50;
+
+			
+			baseToAttackPosition = new Point(position);
+			System.out.println(basePosition + " want to attack : "+baseToAttackPosition);
+			System.out.println(basePosition + " amountPercent : "+ attackAmountPercent+"%");
+			
+			if(baseToAttackPosition.x<=400){
+				jAttackAmountPercent.setBounds(baseToAttackPosition.x+20, baseToAttackPosition.y-10, 50,25);
+			}
+			else{
+				jAttackAmountPercent.setBounds(baseToAttackPosition.x-50, baseToAttackPosition.y-10, 50,25);
+			}
+			jAttackAmountPercent.setText(attackAmountPercent+"%");
+			jAttackAmountPercent.setVisible(true);
+			add(jAttackAmountPercent);
+			
+			//Start the thread
+			thread = new Thread(this);
+	        thread.start();
 			attackBase = true;
 		}
 		
@@ -466,14 +486,31 @@ public class SceneView extends MainViews{
 			System.out.println("View - Attack !!");
 			//Remove the line between the two bases
 			baseClicked = false;
+			//Stop the thread
 			attackBase = false;
-			//TODO : attack !!! Number of unit increase according to the mouse 
-			//Will need basePosition (position of the first base) and position (position of the second base...)
+			//TODO :telle the engine to attack !!
+			//Will need basePosition (position of the first base) and position (position of the second base...) and 
+			//the number of soldiers in the unit (attackAmountPercent)
+			
+			jAttackAmountPercent.setVisible(false);
+			remove(jAttackAmountPercent);
 		}
 		
 		//Repaint the panel
     	revalidate();
     	repaint();		
+	}
+	
+	public void run()
+	{
+		 while(attackBase)
+		 {
+			 try{
+				 Thread.sleep(100);
+				 if((attackAmountPercent+1)<=99)  attackAmountPercent+=1;
+				 jAttackAmountPercent.setText(attackAmountPercent+"%");
+		 	}catch(Exception e){e.printStackTrace();}
+		 }
 	}
 	
 	/**
@@ -514,6 +551,11 @@ public class SceneView extends MainViews{
 		super.paintComponent(g);
 	    g.drawImage(map, 0, 0, this.getWidth(), this.getHeight(), this);
 	    g.setColor(color);
+	 
+	    if(addTowerClicked){
+	    	//Display the territoryMap
+		    g.drawImage(territoryMap, 0, 0, this.getWidth(), this.getHeight(), this);
+	    }    
 	    
 	    if(towerClicked){
 	    	//Retrieve the clicked tower

@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 import GameEngine.Player.PlayerType;

@@ -10,7 +10,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,8 +18,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-
-import com.sun.awt.AWTUtilities;
 
 /**
  * Project - TowerDefense</br>
@@ -209,10 +206,12 @@ public class ViewManager extends JFrame implements Runnable{
 			//Retrieve the tower
 			Base base = iter.next();
 			//Create the corresponding TowerSprit
-			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerType(), 36, 36);
+			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerType(), 36, 36, 200);
 
 			//Add the baseSprite in the sceneView list of Sprites
 			sceneView.addSprite(bs);
+			//Add the matching TextInfoSprite in the sceneView list of Sprites
+			sceneView.addSprite(bs.getTextAmount());
 		}
 				
 		//The view and engine initializations are done ! The game can start !

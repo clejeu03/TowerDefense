@@ -32,12 +32,21 @@ import GameEngine.Player.PlayerType;
  */
 @SuppressWarnings("serial")
 public class BaseSprite extends Sprite{
+	private int amount;
+	private TextInfoSprite textAmount;
 
 	/**
 	 * 
 	 */
-	public BaseSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height) {
+	public BaseSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int amount) {
 		super(scene, position,clickable,playerType,width,height);
+		
+		this.amount = amount;
+		
+		//The amount will be display under the base
+		Point textPosition = new Point(position.x, position.y + 5 +(height/2));
+		textAmount = new TextInfoSprite(scene, textPosition, false, playerType, 25, 25);
+		textAmount.setText(""+amount);
 		
 		//Loading the tower image (different one according the tower type and player)
 		String fileName ="img/";
@@ -80,6 +89,20 @@ public class BaseSprite extends Sprite{
          });
 	}
 	
+	
+	public int getAmount() {
+		return amount;
+	}
+
+	public void setAmount(int amount) {
+		this.amount = amount;	
+		textAmount.setText(""+amount);
+	}
+
+	public TextInfoSprite getTextAmount(){
+		return textAmount;
+	}
+
 	/**
 	 *  Event "the mouse has been pressed in the zone" handler
 	 * @param me - MouseEvent
