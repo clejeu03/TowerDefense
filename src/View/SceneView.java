@@ -66,7 +66,7 @@ public class SceneView extends MainViews{
 
 		//Loading the image map
 		try {
-		      map = ImageIO.read(new File("img/map/Map.jpg"));
+		      map = ImageIO.read(new File("img/map/MapView.png"));
 		  
 		} catch (IOException e) {
 		      e.printStackTrace();
@@ -380,7 +380,7 @@ public class SceneView extends MainViews{
 	public void addTowerSuccess(){
 		addTowerClicked = false;
 		//Display the simple map
-		setMap("img/map/Map.jpg");
+		setMap("img/map/MapView.png");
 		
 		//Set the tower Sprite clickable attribute to true
 		Iterator<Sprite> it = sprites.iterator();
@@ -403,7 +403,7 @@ public class SceneView extends MainViews{
 	public void addTowerFailed(){
 		addTowerClicked = false;
 		//Display the simple map
-		setMap("img/map/Map.jpg");
+		setMap("img/map/MapView.png");
 		
 		//Suppress the tower-to-add Sprite
 		Iterator<Sprite> it = sprites.iterator();
