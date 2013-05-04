@@ -36,7 +36,7 @@ public class DispatcherManager {
 	 */
 	public DispatcherManager(GameManager engine,ViewManager view) {
 		super();
-		this.engine =engine;
+		this.engine = engine;
 		this.view = view;
 	}
 	

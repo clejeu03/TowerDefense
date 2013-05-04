@@ -206,7 +206,7 @@ public class ViewManager extends JFrame implements Runnable{
 			//Retrieve the tower
 			Base base = iter.next();
 			//Create the corresponding TowerSprit
-			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerType(), 36, 36, 200);
+			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerType(), 36, 36,  base.getAmount());
 
 			//Add the baseSprite in the sceneView list of Sprites
 			sceneView.addSprite(bs);
@@ -309,7 +309,19 @@ public class ViewManager extends JFrame implements Runnable{
 	public void towerToAdd(Point position, PlayerType playerType, int towerType) {
 		   dispatcher.addOrderToEngine(new AddTowerOrder(playerType, position, towerType));
 	}
+	/**
+	 * Tell the dispatcher a player want to attack an other base
+	 * @param position
+	 * @param humanType
+	 * @param towerType
+	 * @see SceneView#myMousePressed()
+	 */
+	public void baseToAttack(Point srcPosition, PlayerType srcPlayerType,Point dstPosition, int amount) {
+		   dispatcher.addOrderToEngine(new AttackBaseOrder(srcPlayerType, srcPosition, dstPosition, amount));
+	}
     
+	
+	
 	/**
 	 * Refresh the graphic component of the view
 	 * @see #run()
@@ -332,6 +344,10 @@ public class ViewManager extends JFrame implements Runnable{
 				//If the order is an AddTowerOrder one
 				if(o instanceof AddTowerOrder) {
 					sceneView.addTower(((TowerOrder) o).getPosition(), o.getPlayerType(), ((AddTowerOrder) o).getTowerType());
+				}
+				//If the order is an AttackBaseOrder one
+				if(o instanceof AttackBaseOrder) {
+					sceneView.setAmountBase(((BaseOrder) o).getSrcPosition(),o.getPlayerType(), ((AttackBaseOrder) o).getAmount());
 				}
 			}
 		}

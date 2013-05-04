@@ -37,7 +37,8 @@ public class Player {
 	  ELECTRIC,
 	  FIRE,
 	  GRASS,
-	  WATER
+	  WATER,
+	  NEUTRAL
   }
   
   private PlayerType playerType;

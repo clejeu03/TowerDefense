@@ -28,7 +28,7 @@ public class Base {
    * Represents the number of soldier currently in the Base. A soldier is only a notion
    * and has no existence on itself. The amount increments with time.
    */
-  public int amount;
+  private int amount;
   /**
    * Store the proximityMap deduced from the all Bases positions.
    */

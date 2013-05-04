@@ -449,8 +449,6 @@ public class SceneView extends MainViews implements Runnable{
 
 			
 			baseToAttackPosition = new Point(position);
-			System.out.println(basePosition + " want to attack : "+baseToAttackPosition);
-			System.out.println(basePosition + " amountPercent : "+ attackAmountPercent+"%");
 			
 			if(baseToAttackPosition.x<=400){
 				jAttackAmountPercent.setBounds(baseToAttackPosition.x+20, baseToAttackPosition.y-10, 50,25);
@@ -488,9 +486,8 @@ public class SceneView extends MainViews implements Runnable{
 			baseClicked = false;
 			//Stop the thread
 			attackBase = false;
-			//TODO :telle the engine to attack !!
-			//Will need basePosition (position of the first base) and position (position of the second base...) and 
-			//the number of soldiers in the unit (attackAmountPercent)
+			//Tell the engine that the player want to attack an other base
+			view.baseToAttack(basePosition, humanType,baseToAttackPosition, attackAmountPercent);
 			
 			jAttackAmountPercent.setVisible(false);
 			remove(jAttackAmountPercent);
@@ -541,6 +538,25 @@ public class SceneView extends MainViews implements Runnable{
 			}
 		}	
 		hideTowerInfo();		
+	}
+	
+	/**
+	 * Reset the base amount whenthe base is the source (or the destination) of an attack
+	 * @param position
+	 * @param playerType
+	 * @param newAmount
+	 * @see ViewManager#refresh()
+	 */
+	public void setAmountBase(Point position, PlayerType playerType, int newAmount){
+		Iterator<Sprite> it = sprites.iterator();
+
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			//Set the baseSprite amount
+			if(element.getPosition().equals(position)){
+				((BaseSprite)element).setAmount(newAmount);
+			}
+		}	
 	}
 	
     /**
