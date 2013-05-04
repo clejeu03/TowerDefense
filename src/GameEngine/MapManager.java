@@ -246,22 +246,26 @@ public class MapManager implements Serializable{
 	 */
 	private void generateRelief(){
 		//Intensity of the relief
-		int reliefDown = 10;
-		int reliefLeft = 4;
+		int reliefDown = 17;
+		int reliefLeft = 16;
+		int reliefRight = 16;
 		
 		for (int y = 0; y < heightMap.getHeight();y++){ 
 			for (int x = 0; x < heightMap.getWidth();x++){
 				if (heightMap.getPixel(x,y)==0){
 					
+					//Relief bottom
 					if(y<heightMap.getHeight()-1){
 						if (heightMap.getPixel(x,y+1)==5)
 						{
 							for (int i=1;i<reliefDown;i++){
-								if(y+i<heightMap.getHeight())
+								if((y+i)<heightMap.getHeight())
 									heightMap.setPixel(x,y+i,6);
 							}
 						}
 					}
+					
+					//Relief left
 					if (x>0){
 						if (heightMap.getPixel(x-1,y)==5)
 						{
@@ -272,6 +276,19 @@ public class MapManager implements Serializable{
 							}
 						}
 					}
+					
+					//Relief right
+					if (x<heightMap.getWidth()-1){
+						if (heightMap.getPixel(x+1,y)==5)
+						{
+							for (int i=1;i<reliefRight;i++)
+							{
+								if((x+i)<=heightMap.getWidth())
+									heightMap.setPixel(x+i,y,6);
+							}
+						}
+					}
+					
 				}
 			}
 		}
