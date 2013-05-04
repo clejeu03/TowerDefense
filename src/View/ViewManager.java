@@ -210,6 +210,8 @@ public class ViewManager extends JFrame implements Runnable{
 
 			//Add the baseSprite in the sceneView list of Sprites
 			sceneView.addSprite(bs);
+			//Add the matching TextInfoSprite in the sceneView list of Sprites
+			sceneView.addSprite(bs.getTextAmount());
 		}
 				
 		//The view and engine initializations are done ! The game can start !

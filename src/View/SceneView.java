@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Timer;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
@@ -452,7 +451,12 @@ public class SceneView extends MainViews implements Runnable{
 			System.out.println(basePosition + " want to attack : "+baseToAttackPosition);
 			System.out.println(basePosition + " amountPercent : "+ attackAmountPercent+"%");
 			
-			jAttackAmountPercent.setBounds(baseToAttackPosition.x+18, baseToAttackPosition.y-18, 100,25);
+			if(baseToAttackPosition.x<=400){
+				jAttackAmountPercent.setBounds(baseToAttackPosition.x+20, baseToAttackPosition.y-10, 50,25);
+			}
+			else{
+				jAttackAmountPercent.setBounds(baseToAttackPosition.x-50, baseToAttackPosition.y-10, 50,25);
+			}
 			jAttackAmountPercent.setText(attackAmountPercent+"%");
 			jAttackAmountPercent.setVisible(true);
 			add(jAttackAmountPercent);

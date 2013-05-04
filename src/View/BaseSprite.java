@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JLabel;
 
 import GameEngine.GameManager;
 import GameEngine.Player.PlayerType;
@@ -34,7 +33,7 @@ import GameEngine.Player.PlayerType;
 @SuppressWarnings("serial")
 public class BaseSprite extends Sprite{
 	private int amount;
-	private JLabel jAmount;
+	private TextInfoSprite textAmount;
 
 	/**
 	 * 
@@ -43,10 +42,11 @@ public class BaseSprite extends Sprite{
 		super(scene, position,clickable,playerType,width,height);
 		
 		this.amount = amount;
-		jAmount = new JLabel();
-		jAmount.setBounds(5, 0, 100,25);
-		jAmount.setText(""+amount);
-		add(jAmount);
+		
+		//The amount will be display under the base
+		Point textPosition = new Point(position.x, position.y + 5 +(height/2));
+		textAmount = new TextInfoSprite(scene, textPosition, false, playerType, 25, 25);
+		textAmount.setText(""+amount);
 		
 		//Loading the tower image (different one according the tower type and player)
 		String fileName ="img/";
@@ -95,11 +95,13 @@ public class BaseSprite extends Sprite{
 	}
 
 	public void setAmount(int amount) {
-		this.amount = amount;
-		jAmount.setText(""+amount);
-		add(jAmount);
+		this.amount = amount;	
+		textAmount.setText(""+amount);
 	}
 
+	public TextInfoSprite getTextAmount(){
+		return textAmount;
+	}
 
 	/**
 	 *  Event "the mouse has been pressed in the zone" handler
