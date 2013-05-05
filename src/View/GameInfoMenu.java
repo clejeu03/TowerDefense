@@ -9,6 +9,14 @@ package View;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -25,6 +33,8 @@ import java.awt.Point;
 @SuppressWarnings("serial")
 public class GameInfoMenu extends MainViews{
 
+    private ArrayList<Sprite> sprites;
+    private PlayerType humanType;
 	/**
 	 * Constructor of the GameInfoMenu class
 	 * @param view
@@ -34,9 +44,63 @@ public class GameInfoMenu extends MainViews{
 	 */
 	public GameInfoMenu(ViewManager view, Point position, int width, int height) {
 		super(view, position, width,height);
+		
+		sprites = new ArrayList<Sprite>();
 		//Laying the components on the Panel
 		setLayout(null);
-		setBackground(Color.gray); 
+		setBackground(Color.gray); 		
 	}
-
+	
+	/**
+	 * Add a Sprite in the ScenView ArrayList
+	 * @param sprite
+	 * @see ViewManager#initiateGameView(ArrayList)
+	 */
+	public void addSprite(Sprite sprite){
+		sprites.add(sprite);
+		
+		//TO DO : retrieve the last element added...
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+			add(element);
+		}
+		
+        //Repaint the panel
+    	revalidate();
+    	repaint();	
+	}
+	
+	/**
+	 * Reset the SceneView
+	 * @see ViewManager#initiateGameView(ArrayList)
+	 */
+	public void initiate(SceneView scene){
+			
+		//Removing all the Sprites		
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			it.remove();
+			remove(element);
+		}
+		
+		//Add the AddTower Attack Sprite on the panel
+		addSprite(new AddTowerSprite(scene, this, new Point(30,40), true, humanType, 55, 55, 1));
+		addSprite(new AddTowerSprite(scene, this, new Point(30,100), true, humanType, 55, 55, 2));
+			
+        //Repaint the panel
+    	revalidate();
+    	repaint();	
+	}
+	
+	/**
+	 * Setter - humanType
+	 * @param humanType - id of the human player
+	 * @see ViewManager#play(int)
+	 */
+	public void setHumanType(PlayerType humanType) {
+		this.humanType = humanType;
+	}
 }

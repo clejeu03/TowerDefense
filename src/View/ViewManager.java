@@ -177,6 +177,7 @@ public class ViewManager extends JFrame implements Runnable{
 
 		//Clear the Sprites list of the scene
 		sceneView.initiate();
+		gameInfoMenu.initiate(sceneView);
 			
 		Iterator<Tower> it = towers.iterator();
 		while (it.hasNext()) {
@@ -243,8 +244,9 @@ public class ViewManager extends JFrame implements Runnable{
 	 */	
     public void play(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
     	
-		//tell the scene the id of the human player
+		//tell the scene and the gameInfoMenu the id of the human player
 		sceneView.setHumanType(humanType);
+		gameInfoMenu.setHumanType(humanType);
     	
     	//Tell the engine (via the dispatcher) to initiate the game
     	dispatcher.initiateGame(humanType,nbEnemies, enemiesType);

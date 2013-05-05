@@ -37,14 +37,16 @@ public class AddTowerSprite  extends Sprite{
 	 * 2 : soutien
 	 */
 	private int towerType;
+	protected MainViews info;
 
 	/**
 	 * 
 	 */
-	public AddTowerSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int towerType) {
+	public AddTowerSprite(SceneView scene, GameInfoMenu info, Point position, boolean clickable, PlayerType playerType, int width, int height, int towerType) {
 		super(scene, position,clickable,playerType,width,height);
 		
 		this.towerType = towerType;
+		this.info = info;
 		
 		String fileName ="img/";
 		
@@ -99,7 +101,8 @@ public class AddTowerSprite  extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-		((SceneView) view).addTowerClicked(position, playerType, towerType);
+		((SceneView) view).addTowerClicked(info.getPosition(), playerType, towerType);
+		//TODOdisplay the towerToAdd information in the GameInfoMenu ((GameInfoMenu) info).addTowerClicked(towerType);
 	}
 	
 	/**

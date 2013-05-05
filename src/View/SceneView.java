@@ -184,8 +184,8 @@ public class SceneView extends MainViews implements Runnable{
 		}
 		
 		//Add the AddTower Attack Sprite on the panel
-		addSprite(new AddTowerSprite(this, new Point(30,310), true, humanType, 55, 55, 1));
-		addSprite(new AddTowerSprite(this, new Point(30,370), true, humanType, 55, 55, 2));
+		//addSprite(new AddTowerSprite(this, new Point(30,310), true, humanType, 55, 55, 1));
+		//addSprite(new AddTowerSprite(this, new Point(30,370), true, humanType, 55, 55, 2));
 		
 		
 		if (addTowerClicked) {
@@ -246,17 +246,22 @@ public class SceneView extends MainViews implements Runnable{
 	    	revalidate();
 	    	repaint();	
 		}
-		if(addTowerClicked){			
+		if(addTowerClicked){
 			//Retrieve the the add tower Sprite
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
 				Sprite element = it.next();
 				if(element.getPosition().equals(addTowerPosition)){
 					//Reset the tower Sprite Position according to the mouse one
-					addTowerPosition = new Point(e.getPoint());
-					element.setPosition(addTowerPosition);
-					element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
-					add(element);
+					if(e.getPoint().y<(height-10)){
+						addTowerPosition = new Point(e.getPoint());
+						element.setPosition(addTowerPosition);
+						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+						add(element);
+					}
+					else {
+						remove(element);
+					}
 				}
 			}		
 			//Repaint the Panel
