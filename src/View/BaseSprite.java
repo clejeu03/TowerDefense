@@ -48,7 +48,7 @@ public class BaseSprite extends Sprite{
 		textAmount = new TextInfoSprite(scene, textPosition, false, playerType, 25, 25);
 		textAmount.setText(""+amount);
 		
-		//Loading the tower image (different one according the tower type and player)
+		//Loading the base image (different one according the tower type and player)
 		String fileName ="img/";
 		
 		if(playerType == PlayerType.ELECTRIC){

@@ -494,6 +494,13 @@ public class SceneView extends MainViews implements Runnable{
 			//Tell the engine that the player want to attack an other base
 			view.baseToAttack(basePosition, humanType,baseToAttackPosition, attackAmountPercent);
 			
+			//TODO TEMPORARY create a unit 
+			/*UnitSprite test = new UnitSprite(this, new Point (100,100), false, humanType, 50,50, 10);
+			test.start();
+			addSprite(test);	
+			addSprite(test.getTextAmount());*/
+			
+			
 			jAttackAmountPercent.setVisible(false);
 			remove(jAttackAmountPercent);
 		}
@@ -502,6 +509,19 @@ public class SceneView extends MainViews implements Runnable{
     	revalidate();
     	repaint();		
 	}
+	
+	/*public void refreshScene(){
+		
+		//TO DO : retrieve the last element added...
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+			add(element);
+		}
+    	revalidate();
+    	repaint();	
+	}*/
 	
 	public void run()
 	{

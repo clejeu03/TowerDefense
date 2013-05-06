@@ -29,18 +29,29 @@ import GameEngine.Player.PlayerType;
  * @see GameManager
  */
 @SuppressWarnings("serial")
-public class UnitSprite  extends Sprite{
+public class UnitSprite  extends Sprite  implements Runnable{
 	private boolean flipped;
+	private int amount;
+	private TextInfoSprite textAmount;
+	
+	private Thread thread;
 
 	/**
 	 * 
 	 */
-	public UnitSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height) {
+	public UnitSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int amount) {
 		super(scene, position,clickable,playerType,width,height);
 		
+		this.amount = amount;
 		flipped = false;
 		
-		//Loading the tower image (different one according the tower type and player)
+		//The amount will be display above the Unit
+		Point textPosition = new Point(position.x, position.y - 5 -(height/2));
+		textAmount = new TextInfoSprite(scene, textPosition, false, playerType, 25, 25);
+		textAmount.setText(""+amount);
+	
+		
+		//Loading the unit image (different one according the player)
 		String fileName ="img/";
 		
 		if(playerType == PlayerType.ELECTRIC){
@@ -66,6 +77,14 @@ public class UnitSprite  extends Sprite{
 	}
 	
 	
+	public void setAmount(int amount) {
+		this.amount = amount;	
+		textAmount.setText(""+amount);
+	}
+	public TextInfoSprite getTextAmount(){
+		return textAmount;
+	}
+
 	
     public void setFlipped(boolean flipped) {
 		this.flipped = flipped;
@@ -86,7 +105,27 @@ public class UnitSprite  extends Sprite{
 	            0, 0, image.getWidth(this), image.getHeight(this),
 	            this);
 	    }
-	  }  
+	  }
+
+
+	@Override
+	public void run() {
+		while(true){
+			 try{
+				Thread.sleep(100);
+				setPosition(new Point(position.x+10, position.y));
+				//((SceneView) view).refreshScene();
+		 	}catch(Exception e){e.printStackTrace();}
+		}	
+	}
+
+
+	//TODO TEMPORARY start a thread
+	public void start() {
+		thread = new Thread(this);
+        thread.start();
+		
+	}  
 
 
 }
