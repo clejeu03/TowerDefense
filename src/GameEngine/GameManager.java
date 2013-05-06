@@ -93,19 +93,9 @@ public class GameManager implements Runnable{
 		//Adding a mapManager
 		mapManager = new MapManager("Map", playerTypes);
 		
-		//Creating towers TEMPORARY !
 		//Clear the towers list
 		towers.clear();
-		//Adding Enemies towers (temporary !)
-		/*Iterator<Integer> it = enemiesId.iterator();
-		while (it.hasNext()) {
-			int enemyId = it.next();
-			towers.add(new MedicalTower(new Point(50+(100*enemyId),50+(100*enemyId)), enemyId, 90));
-		}	
-		//human player tower (temporary !)
-		towers.add(new MedicalTower(new Point(125,50), humanId, 90));*/
-		
-		
+				
 		//Retrieve the bases positions
 		Point[] basesPositions = mapManager.getPlayerBasePosition();
 		//Clear the bases list
@@ -113,8 +103,10 @@ public class GameManager implements Runnable{
 		for(int i=0; i<enemiesType.size();i++){
 			bases.add(new Base(basesPositions[i+1],enemiesType.get(i),false,mapManager.getPlayerProximityMap(i+1)));
 		}
-		//human player tower (temporary !)
+		//human player base
 		bases.add(new Base(basesPositions[0],humanType,false,mapManager.getPlayerProximityMap(0)));
+		
+		//TODO add neutral bases ! cd MapManager neutralBasePosition !
 		
 				
 		//Tells the dispatcher that the View need to be initialized
@@ -178,6 +170,7 @@ public class GameManager implements Runnable{
 							int attackPercent = ((AttackBaseOrder) order).getAmount();
 							
 							int attackAmount = (attackPercent * baseAmount)/100;
+							
 							//TODO send amount of unit !
 							System.out.println("Engine - TODO : base : "+((BaseOrder) order).getSrcPosition()+" want to send "+attackAmount+" Units to "+((AttackBaseOrder) order).getDstPosition());
 							

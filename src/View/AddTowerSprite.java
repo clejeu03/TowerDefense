@@ -102,7 +102,7 @@ public class AddTowerSprite  extends Sprite{
 	 */
 	private void myMousePressed(MouseEvent me) {
 		((SceneView) view).addTowerClicked(info.getPosition(), playerType, towerType);
-		//TODOdisplay the towerToAdd information in the GameInfoMenu ((GameInfoMenu) info).addTowerClicked(towerType);
+		//TODO display the towerToAdd information in the GameInfoMenu ((GameInfoMenu) info).addTowerClicked(towerType);
 	}
 	
 	/**
