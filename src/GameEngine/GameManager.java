@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import View.Sprite;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - GameManager</b></br>
@@ -107,7 +109,10 @@ public class GameManager implements Runnable{
 		bases.add(new Base(basesPositions[0],humanType,false,mapManager.getPlayerProximityMap(0)));
 		
 		//TODO add neutral bases ! cd MapManager neutralBasePosition !
-		
+		ArrayList<Point> neutralBasePosition = mapManager.getNeutralBasePosition();
+		for(int i=0; i<neutralBasePosition.size();i++){
+			bases.add(new Base(neutralBasePosition.get(i),PlayerType.NEUTRAL,true,mapManager.getNeutralProximityMap(i)));
+		}	
 				
 		//Tells the dispatcher that the View need to be initialized
 		dispatcher.initiateGameView(towers, bases);

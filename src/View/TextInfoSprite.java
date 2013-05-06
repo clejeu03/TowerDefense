@@ -7,6 +7,7 @@
  */
 package View;
 
+import java.awt.Color;
 import java.awt.Point;
 
 import GameEngine.Player.PlayerType;
@@ -23,7 +24,7 @@ public class TextInfoSprite extends Sprite{
 	 */
 	public TextInfoSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height) {
 		super(scene, position,clickable,playerType,width,height);
-		
+		setForeground(Color.BLACK);
 		
 	}
 

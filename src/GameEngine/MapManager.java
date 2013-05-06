@@ -266,11 +266,19 @@ public class MapManager implements Serializable{
 	}
 	
 	/**
-	 * Getter - get the proximityMap of the base 
+	 * Getter - get the proximityMap of the player base 
 	 * @return Map
 	 */
 	public Map getPlayerProximityMap(int index) {
 		return playerProximityMap[index];
+	}
+	
+	/**
+	 * Getter - get the proximityMap of the neutral base 
+	 * @return Map
+	 */
+	public Map getNeutralProximityMap(int index) {
+		return neutralTerritoryMap.get(index);
 	}
 	
 	/**
@@ -755,4 +763,10 @@ public class MapManager implements Serializable{
 			e.printStackTrace();
 		}
 	}
+
+	public ArrayList<Point> getNeutralBasePosition() {
+		return neutralBasePosition;
+	}
+	
+	
 }

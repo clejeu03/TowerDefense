@@ -76,6 +76,7 @@ public class SceneView extends MainViews implements Runnable{
 		humanType = PlayerType.ELECTRIC;
 
 		jAttackAmountPercent = new JLabel();
+		jAttackAmountPercent.setForeground(Color.BLACK);
 
 		
         //Add a mouse listener on the map
