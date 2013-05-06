@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
@@ -48,9 +49,16 @@ public class MapManager implements Serializable{
   private final int maxnumberOfPlayer = 4;
   
   /**
+   * Store the number maximum of Neutral Bases
+   */
+  private final int maxnumberOfNeutralBases = 5;
+  
+  /**
    * Store the number of players playing
    */
   private final int numberOfPlayer;
+  
+  private int numberOfNeutralBases;
   
   /**
    * Store the path of the image we'll use to create our maps
@@ -85,12 +93,12 @@ public class MapManager implements Serializable{
 /**
    * Store the position of each neutral bases
    */
-  private LinkedList<Point> neutralBasePosition;
+  private ArrayList<Point> neutralBasePosition;
   
   /**
    * Store the map that calculate the distance to each neutral Base
    */
-  private LinkedList<ProximityMap> neutralProximityMap;
+  private ProximityMap[] neutralProximityMap;
   
   /**
 	 * MapManager's constructor, initiate and create the heightMap and the territoryMap
@@ -100,14 +108,15 @@ public class MapManager implements Serializable{
 		super();
 		imageName = i_imageName;
 		imagePath = "img/map/"+i_imageName+".jpg";
-		this.numberOfPlayer = playerTypes.size();
+		numberOfPlayer = playerTypes.size();
+		numberOfNeutralBases = 0;
 		if (!existingMapManager()){
 			System.out.println("Creating Maps !");
 			playerBasePosition = new Point[numberOfPlayer];
 			playerProximityMap = new ProximityMap[numberOfPlayer];
-			neutralBasePosition = new LinkedList<Point>();
-			neutralProximityMap = new LinkedList<ProximityMap>();
+			neutralBasePosition = new ArrayList<Point>();
 			generateHeightMap();
+			neutralProximityMap = new ProximityMap[numberOfNeutralBases];
 			generateRelief();
 			generateTerritoryMap();
 			generateAllProximityMap();
@@ -214,7 +223,12 @@ public class MapManager implements Serializable{
 						playerBasePosition[player]=new Point(x,y);
 					}
 					else{
-						neutralBasePosition.add(new Point(x,y));
+						if (numberOfNeutralBases<maxnumberOfNeutralBases)
+						{
+							neutralBasePosition.add(new Point(x,y));
+							numberOfNeutralBases++;
+						}
+							
 					}
 					heightMap.setPixel(x,y, 5);
 				}
@@ -303,44 +317,96 @@ public class MapManager implements Serializable{
 		territoryMap = new TerritoryMap(heightMap.getWidth(),heightMap.getHeight());
 		
 		//Vectors containing pixels that have to be modified
+		ArrayList<Point> pixelsN4 = new ArrayList<Point>();
+		ArrayList<Point> pixelsN3 = new ArrayList<Point>();
+		ArrayList<Point> pixelsN2 = new ArrayList<Point>();
+		ArrayList<Point> pixelsN1 = new ArrayList<Point>();
+		ArrayList<Point> pixelsN0 = new ArrayList<Point>();
 		ArrayList<Point> pixelsJ4 = new ArrayList<Point>();
 		ArrayList<Point> pixelsJ3 = new ArrayList<Point>();
 		ArrayList<Point> pixelsJ2 = new ArrayList<Point>();
 		ArrayList<Point> pixelsJ1 = new ArrayList<Point>();
 		
-		boolean loopJ1 = false, loopJ2=false, loopJ3=false, loopJ4=false;
-		 
+		boolean[] loopBases = new boolean[numberOfPlayer+numberOfNeutralBases];
+		Arrays.fill(loopBases, false);
+		boolean loop = true;
+		
 		switch (numberOfPlayer){
 		case 4:
 			pixelsJ4.add(playerBasePosition[3]);// The first pixel is the player's base
-			loopJ4 = true;
+			loopBases[3] = true;
 		case 3:
 			pixelsJ3.add(playerBasePosition[2]);
-			loopJ3=true;
+			loopBases[2]=true;
 		case 2:
 			pixelsJ2.add(playerBasePosition[1]);
 			pixelsJ1.add(playerBasePosition[0]);
-			loopJ2=true;
-			loopJ1=true;
+			loopBases[1]=true;
+			loopBases[0]=true;
+			break;
+		default:
+			break;
+		}
+		
+		switch (numberOfNeutralBases){
+		case 5:
+			pixelsN4.add(neutralBasePosition.get(4));
+			loopBases[numberOfPlayer+4]=true;
+		case 4:
+			pixelsN3.add(neutralBasePosition.get(3));
+			loopBases[numberOfPlayer+3]=true;
+		case 3:
+			pixelsN2.add(neutralBasePosition.get(2));
+			loopBases[numberOfPlayer+2]=true;
+		case 2:
+			pixelsN1.add(neutralBasePosition.get(1));
+			loopBases[numberOfPlayer+1]=true;
+		case 1:
+			pixelsN0.add(neutralBasePosition.get(0));
+			loopBases[numberOfPlayer]=true;
 			break;
 		default:
 			break;
 		}
 		
 		//Loop stopping only if not a single pixel of the TerritoryMap has been modified
-		while (loopJ1||loopJ2||loopJ3||loopJ4){
+		while (loop){
 			//Expand each player territory successively
 			switch (numberOfPlayer){
 			case 4:
-				loopJ4 = circlePropagation(pixelsJ4,4);
+				loopBases[3] = circlePropagation(pixelsJ4,4);
 			case 3:
-				loopJ3 = circlePropagation(pixelsJ3,3);
+				loopBases[2] = circlePropagation(pixelsJ3,3);
 			case 2:
-				loopJ2 = circlePropagation(pixelsJ2,2);
-				loopJ1 = circlePropagation(pixelsJ1,1);
+				loopBases[1] = circlePropagation(pixelsJ2,2);
+				loopBases[0] = circlePropagation(pixelsJ1,1);
 				break;
 			default:
 				break;
+			}
+			
+			switch (numberOfNeutralBases){
+			case 5:
+				loopBases[numberOfPlayer+4] = circlePropagation(pixelsN4,6);
+			case 4:
+				loopBases[numberOfPlayer+3] = circlePropagation(pixelsN3,6);
+			case 3:
+				loopBases[numberOfPlayer+2] = circlePropagation(pixelsN2,6);
+			case 2:
+				loopBases[numberOfPlayer+1] = circlePropagation(pixelsN1,6);
+			case 1:
+				loopBases[numberOfPlayer] = circlePropagation(pixelsN0,6);
+				break;
+			default:
+				break;
+			}
+			
+			loop = false;
+			for(int i =0;i<numberOfPlayer+numberOfNeutralBases;i++)
+			{
+				if (loopBases[i]){
+					loop = true;
+				}
 			}
 
 			
@@ -437,13 +503,11 @@ public class MapManager implements Serializable{
 		}
 		
 		//Generate the neutral bases' proximityMaps
-		int cpt = 0;
-		for(Point i:neutralBasePosition){
+		for(int i=0;i<numberOfNeutralBases;i++){
 			ProximityMap proximityMap = new ProximityMap(heightMap.getWidth(),heightMap.getHeight());
-			generateProximityMap(proximityMap,i);
-			neutralProximityMap.add(proximityMap);
-			neutralProximityMap.getLast().saveAsPNG("npm"+cpt+".png");
-			cpt++;
+			generateProximityMap(proximityMap,neutralBasePosition.get(i));
+			neutralProximityMap[i] = proximityMap;
+			neutralProximityMap[i].saveAsPNG("npm"+i+".png");
 		}
 	}
 		
