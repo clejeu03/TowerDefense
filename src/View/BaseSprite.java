@@ -63,6 +63,9 @@ public class BaseSprite extends Sprite{
 		else if(playerType == PlayerType.FIRE){
 			fileName +="Fire/";
 		}
+		else if(playerType == PlayerType.NEUTRAL){
+			fileName +="Neutral/";
+		}
 		
 		fileName += "base.png";
 		try {	
