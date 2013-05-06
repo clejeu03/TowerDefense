@@ -60,10 +60,7 @@ public class TerritoryMap extends Map implements Serializable {
 		Color playerColor[] = new Color[4];
 		Color c;
 		int i = 0;
-		Iterator<PlayerType> it = playerTypes.iterator();
-		
-		while(it.hasNext()){
-			PlayerType pt = it.next();
+		for (PlayerType pt:playerTypes){
 			switch(pt){
 			case ELECTRIC:
 				playerColor[i]=Color.yellow;
