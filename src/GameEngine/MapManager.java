@@ -1,5 +1,6 @@
 package GameEngine;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,8 +12,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -49,9 +50,19 @@ public class MapManager implements Serializable{
   private final int maxnumberOfPlayer = 4;
   
   /**
+   * Store the number maximum of Neutral Bases
+   */
+  private final int maxnumberOfNeutralBases = 5;
+  
+  /**
    * Store the number of players playing
    */
   private final int numberOfPlayer;
+  
+  /**
+   * Store the number of neutral bases on the map
+   */
+  private int numberOfNeutralBases;
   
   /**
    * Store the path of the image we'll use to create our maps
@@ -69,9 +80,14 @@ public class MapManager implements Serializable{
   private HeightMap heightMap;
   
   /**
-   * Store the map that determine player's territory with their possessions
+   * Store the map that determine player's territory
    */
-  private TerritoryMap territoryMap;
+  private TerritoryMap[] playerTerritoryMap;
+  
+  /**
+   * Store the map that determine neutral bases' territory
+   */
+  private ArrayList<TerritoryMap> neutralTerritoryMap;
   
   /**
    * Store the position of each player's base
@@ -86,38 +102,49 @@ public class MapManager implements Serializable{
 /**
    * Store the position of each neutral bases
    */
-  private LinkedList<Point> neutralBasePosition;
+  private ArrayList<Point> neutralBasePosition;
   
   /**
    * Store the map that calculate the distance to each neutral Base
    */
-  private LinkedList<ProximityMap> neutralProximityMap;
+  private ArrayList<ProximityMap> neutralProximityMap;
+  
+  private ArrayList<PlayerType> playersType;
   
   /**
 	 * MapManager's constructor, initiate and create the heightMap and the territoryMap
 	 * @param i_imagepath path of the local image to analyse
 	 */
-	MapManager(String i_imageName, ArrayList<PlayerType> playerTypes){
+	MapManager(String i_imageName, ArrayList<PlayerType> playersType){
 		super();
 		imageName = i_imageName;
 		imagePath = "img/map/"+i_imageName+".jpg";
-		this.numberOfPlayer = playerTypes.size();
+		numberOfPlayer = playersType.size();
+		numberOfNeutralBases = 0;
+		this.playersType = playersType;
 		if (!existingMapManager()){
 			System.out.println("Creating Maps !");
+			
 			playerBasePosition = new Point[numberOfPlayer];
 			playerProximityMap = new ProximityMap[numberOfPlayer];
-			neutralBasePosition = new LinkedList<Point>();
-			neutralProximityMap = new LinkedList<ProximityMap>();
+			neutralBasePosition = new ArrayList<Point>();
+			neutralProximityMap = new ArrayList<ProximityMap>();
+			playerTerritoryMap = new TerritoryMap[numberOfPlayer];
+			neutralTerritoryMap = new ArrayList<TerritoryMap>();
+			
 			generateHeightMap();
 			generateRelief();
 			generateTerritoryMap();
 			generateAllProximityMap();
+			
+			saveAllTerritoryMap(playersType);
 			saveAsTMP();
 		}
 		else{
 			System.out.println("Reading Maps!");
 		}
-		territoryMap.saveAsPNG("tm.png",playerTypes);
+
+		saveTerritoryMap(playersType);
 	}
 	
 	/**
@@ -166,7 +193,8 @@ public class MapManager implements Serializable{
 	 */
 	private void setMapManager(MapManager mm){
 		this.heightMap=mm.heightMap;
-		this.territoryMap=mm.territoryMap;
+		this.playerTerritoryMap=mm.playerTerritoryMap;
+		this.neutralTerritoryMap=mm.neutralTerritoryMap;
 		this.playerBasePosition=mm.playerBasePosition;
 		this.playerProximityMap=mm.playerProximityMap;
 		this.neutralBasePosition=mm.neutralBasePosition;
@@ -215,7 +243,12 @@ public class MapManager implements Serializable{
 						playerBasePosition[player]=new Point(x,y);
 					}
 					else{
-						neutralBasePosition.add(new Point(x,y));
+						if (numberOfNeutralBases<maxnumberOfNeutralBases)
+						{
+							neutralBasePosition.add(new Point(x,y));
+							numberOfNeutralBases++;
+						}
+							
 					}
 					heightMap.setPixel(x,y, 5);
 				}
@@ -300,51 +333,106 @@ public class MapManager implements Serializable{
 	 * @see #MapManager() 
 	 */
 	private void generateTerritoryMap(){
-		//Initiate TerritoryMap
-		territoryMap = new TerritoryMap(heightMap.getWidth(),heightMap.getHeight());
+		//Initiate TerritoryMaps
+		for (int i=0;i<numberOfPlayer;i++){
+			playerTerritoryMap[i] = new TerritoryMap(heightMap.getWidth(),heightMap.getHeight());
+		}
+		for (int i=0;i<numberOfNeutralBases;i++){
+			neutralTerritoryMap.add(new TerritoryMap(heightMap.getWidth(),heightMap.getHeight()));
+		}
 		
 		//Vectors containing pixels that have to be modified
-		Vector<Point> pixelsJ4 = new Vector<Point>();
-		Vector<Point> pixelsJ3 = new Vector<Point>();
-		Vector<Point> pixelsJ2 = new Vector<Point>();
-		Vector<Point> pixelsJ1 = new Vector<Point>();
+		ArrayList<Point> pixelsN4 = new ArrayList<Point>();
+		ArrayList<Point> pixelsN3 = new ArrayList<Point>();
+		ArrayList<Point> pixelsN2 = new ArrayList<Point>();
+		ArrayList<Point> pixelsN1 = new ArrayList<Point>();
+		ArrayList<Point> pixelsN0 = new ArrayList<Point>();
+		ArrayList<Point> pixelsJ4 = new ArrayList<Point>();
+		ArrayList<Point> pixelsJ3 = new ArrayList<Point>();
+		ArrayList<Point> pixelsJ2 = new ArrayList<Point>();
+		ArrayList<Point> pixelsJ1 = new ArrayList<Point>();
 		
-		boolean loopJ1 = false,loopJ2=false, loopJ3=false,loopJ4=false;
-		 
+		boolean[] loopBases = new boolean[numberOfPlayer+numberOfNeutralBases];
+		Arrays.fill(loopBases, false);
+		boolean loop = true;
+		
 		switch (numberOfPlayer){
 		case 4:
 			pixelsJ4.add(playerBasePosition[3]);// The first pixel is the player's base
-			loopJ4 = true;
+			loopBases[3] = true;
 		case 3:
 			pixelsJ3.add(playerBasePosition[2]);
-			loopJ3=true;
+			loopBases[2]=true;
 		case 2:
 			pixelsJ2.add(playerBasePosition[1]);
 			pixelsJ1.add(playerBasePosition[0]);
-			loopJ2=true;
-			loopJ1=true;
+			loopBases[1]=true;
+			loopBases[0]=true;
+			break;
+		default:
+			break;
+		}
+		
+		switch (numberOfNeutralBases){
+		case 5:
+			pixelsN4.add(neutralBasePosition.get(4));
+			loopBases[numberOfPlayer+4]=true;
+		case 4:
+			pixelsN3.add(neutralBasePosition.get(3));
+			loopBases[numberOfPlayer+3]=true;
+		case 3:
+			pixelsN2.add(neutralBasePosition.get(2));
+			loopBases[numberOfPlayer+2]=true;
+		case 2:
+			pixelsN1.add(neutralBasePosition.get(1));
+			loopBases[numberOfPlayer+1]=true;
+		case 1:
+			pixelsN0.add(neutralBasePosition.get(0));
+			loopBases[numberOfPlayer]=true;
 			break;
 		default:
 			break;
 		}
 		
 		//Loop stopping only if not a single pixel of the TerritoryMap has been modified
-		while (loopJ1||loopJ2||loopJ3||loopJ4){
+		while (loop){
 			//Expand each player territory successively
 			switch (numberOfPlayer){
 			case 4:
-				loopJ4 = circlePropagation(pixelsJ4,4);
+				loopBases[3] = circlePropagation(playerTerritoryMap[3],pixelsJ4,4);
 			case 3:
-				loopJ3 = circlePropagation(pixelsJ3,3);
+				loopBases[2] = circlePropagation(playerTerritoryMap[2],pixelsJ3,3);
 			case 2:
-				loopJ2 = circlePropagation(pixelsJ2,2);
-				loopJ1 = circlePropagation(pixelsJ1,1);
+				loopBases[1] = circlePropagation(playerTerritoryMap[1],pixelsJ2,2);
+				loopBases[0] = circlePropagation(playerTerritoryMap[0],pixelsJ1,1);
 				break;
 			default:
 				break;
 			}
-
 			
+			switch (numberOfNeutralBases){
+			case 5:
+				loopBases[numberOfPlayer+4] = circlePropagation(neutralTerritoryMap.get(4),pixelsN4,6);
+			case 4:
+				loopBases[numberOfPlayer+3] = circlePropagation(neutralTerritoryMap.get(3),pixelsN3,6);
+			case 3:
+				loopBases[numberOfPlayer+2] = circlePropagation(neutralTerritoryMap.get(2),pixelsN2,6);
+			case 2:
+				loopBases[numberOfPlayer+1] = circlePropagation(neutralTerritoryMap.get(1),pixelsN1,6);
+			case 1:
+				loopBases[numberOfPlayer] = circlePropagation(neutralTerritoryMap.get(0),pixelsN0,6);
+				break;
+			default:
+				break;
+			}
+			
+			loop = false;
+			for(int i =0;i<numberOfPlayer+numberOfNeutralBases;i++)
+			{
+				if (loopBases[i]){
+					loop = true;
+				}
+			}
 		}
 	}
 	
@@ -356,14 +444,14 @@ public class MapManager implements Serializable{
 	 * @return true if one or more pixels have been modified, false if not
 	 * @see #generateTerritoryMap() 
 	 */
-	private boolean circlePropagation(Vector<Point> pixels,int player){
-		Vector<Point> nextPixels = new Vector<Point>();
+	private boolean circlePropagation(TerritoryMap territoryMap, ArrayList<Point> pixels,int player){
+		ArrayList<Point> nextPixels = new ArrayList<Point>();
 		boolean modified=false;
 		
 		//Getting each pixels
 		for (Point i:pixels){
 			//A non-modified pixel value is -1
-			if(territoryMap.getPixel(i.x,i.y)==-1){
+			if(getTerritoryMapValue(i.x, i.y)==-1){
 				//Add the value to the TerritoryMap according to the heightMap
 				if (heightMap.getPixel(i.x,i.y)==0)
 					territoryMap.setPixel(i.y*heightMap.getWidth() + i.x, player);
@@ -425,6 +513,28 @@ public class MapManager implements Serializable{
 	}
 	
 	/**
+	 * Return the value of the pixel at (x,y) if the value has already been modified on one TerritoryMap
+	 * @param x 
+	 * @param y
+	 * @return the value of the pixel if it is not -1 on at least one map, -1 otherwise
+	 * @see #circlePropagation()
+	 */
+	private int getTerritoryMapValue(int x, int y){
+		for (TerritoryMap tm:playerTerritoryMap){
+			if (tm.getPixel(x,y)!=-1)
+				return tm.getPixel(x,y);
+		}
+		
+		for (TerritoryMap tm:neutralTerritoryMap){
+			if (tm.getPixel(x,y)!=-1){
+				return tm.getPixel(x,y);
+			}
+			
+		}
+		return -1;
+	}
+	
+	/**
 	 * Generate All the ProximityMap (one for each base)
 	 * @see #MapManager()
 	 */
@@ -438,16 +548,14 @@ public class MapManager implements Serializable{
 		}
 		
 		//Generate the neutral bases' proximityMaps
-		int cpt = 0;
-		while(!neutralBasePosition.isEmpty()){
+		for(int i=0;i<numberOfNeutralBases;i++){
 			ProximityMap proximityMap = new ProximityMap(heightMap.getWidth(),heightMap.getHeight());
-			generateProximityMap(proximityMap,neutralBasePosition.poll());
+			generateProximityMap(proximityMap,neutralBasePosition.get(i));
 			neutralProximityMap.add(proximityMap);
-			neutralProximityMap.getLast().saveAsPNG("npm"+cpt+".png");
-			cpt++;
+			neutralProximityMap.get(i).saveAsPNG("npm"+i+".png");
 		}
 	}
-	
+		
 	/**
 	 * Generate a ProximityMap for a base and save it as png at tmp/
 	 * @param player id of the base
@@ -512,6 +620,24 @@ public class MapManager implements Serializable{
 	}
 
 	/**
+	 * Change the territory of the owner of a base and refresh the global TerritoryMap
+	 * @param tm
+	 * @param player
+	 */
+	public void changeOwnerOfTerritoryMap(TerritoryMap tm, int player){
+		
+		for (int y = 0; y < tm.getHeight();y++){ 
+			for (int x = 0; x < tm.getWidth();x++){
+				if (tm.getPixel(x,y)!=-1 && heightMap.getPixel(x,y)==0){
+					tm.setPixel(x,y,player);
+				}
+			}
+		}
+		
+		saveTerritoryMap(playersType);
+	}
+	
+	/**
 	 * Save the MapManager in a tmp file to have faster results if we use it again
 	 * @see #MapManager()
 	 */
@@ -533,6 +659,99 @@ public class MapManager implements Serializable{
 			oos.close();
 		} catch (IOException e) {
 			System.out.println("Error : ObjectOutputStream fos throw an IOException");
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Save all Territory Maps as PNG images at tmp/
+	 * @param playerTypes
+	 * @see #MapManager()
+	 */
+	private void saveAllTerritoryMap(ArrayList<PlayerType> playerTypes){
+		for (int i=0;i<numberOfPlayer;i++)
+			playerTerritoryMap[i].saveAsPNG("ptm"+i+".png",playerTypes);
+		
+		for (int i=0;i<numberOfNeutralBases;i++)
+			neutralTerritoryMap.get(i).saveAsPNG("ntm"+i+".png", playerTypes);
+	}
+	
+	/**
+	 * Save the global Territory Map according to each Territory Maps as a PNG image at tmp/tm.png
+	 * @param playerTypes
+	 * @see #MapManager
+	 */
+	private void saveTerritoryMap(ArrayList<PlayerType> playerTypes){
+		Color playerColor[] = new Color[4];
+		Color c;
+		
+		int i = 0;
+		for (PlayerType pt:playerTypes){
+			switch(pt){
+			case ELECTRIC:
+				playerColor[i]=Color.yellow;
+				break;
+			case FIRE:
+				playerColor[i]=Color.red;
+				break;
+			case WATER:
+				playerColor[i]=Color.cyan;
+				break;
+			case GRASS:
+				playerColor[i]=Color.green;
+				break;
+			default:
+				playerColor[i]=Color.pink;
+				break;
+			}
+			i++;
+		}
+		
+		BufferedImage outImage = new BufferedImage(heightMap.getWidth(),heightMap.getHeight(),BufferedImage.TYPE_INT_ARGB);
+		for (int y = 0; y < heightMap.getHeight();y++){ 
+			for (int x = 0; x < heightMap.getWidth();x++){
+				int value = getTerritoryMapValue(x,y);
+				
+				switch(value){
+				case 0:
+					c = Color.black;
+					break;
+				case 1:
+					c = playerColor[0];
+					break;
+				case 2:
+					c = playerColor[1];
+					break;
+				case 3:
+					c = playerColor[2];
+					break;
+				case 4:
+					c = playerColor[3];
+					break;
+				case 5:
+					c = Color.white;
+					break;
+				case 6:
+					c = Color.darkGray;
+					break;
+				default:
+					c=Color.pink;
+					break;
+				}
+				Color alphaColor = new Color(c.getRed(),c.getGreen(),c.getBlue(),150);
+				
+				outImage.setRGB(x, y, alphaColor.getRGB());
+			}
+		}
+		
+		File outFile = new File("tmp/tm.png");
+		try{
+			if (!ImageIO.write(outImage, "png", outFile)){
+				System.out.println("Format d'écriture non pris en charge");
+			}
+		}
+		catch(Exception e){
+			System.out.println("Erreur lors de l'enregistrement de l'image :");
 			e.printStackTrace();
 		}
 	}
