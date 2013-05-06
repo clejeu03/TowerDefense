@@ -12,7 +12,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -304,12 +303,12 @@ public class MapManager implements Serializable{
 		territoryMap = new TerritoryMap(heightMap.getWidth(),heightMap.getHeight());
 		
 		//Vectors containing pixels that have to be modified
-		Vector<Point> pixelsJ4 = new Vector<Point>();
-		Vector<Point> pixelsJ3 = new Vector<Point>();
-		Vector<Point> pixelsJ2 = new Vector<Point>();
-		Vector<Point> pixelsJ1 = new Vector<Point>();
+		ArrayList<Point> pixelsJ4 = new ArrayList<Point>();
+		ArrayList<Point> pixelsJ3 = new ArrayList<Point>();
+		ArrayList<Point> pixelsJ2 = new ArrayList<Point>();
+		ArrayList<Point> pixelsJ1 = new ArrayList<Point>();
 		
-		boolean loopJ1 = false,loopJ2=false, loopJ3=false,loopJ4=false;
+		boolean loopJ1 = false, loopJ2=false, loopJ3=false, loopJ4=false;
 		 
 		switch (numberOfPlayer){
 		case 4:
@@ -356,8 +355,8 @@ public class MapManager implements Serializable{
 	 * @return true if one or more pixels have been modified, false if not
 	 * @see #generateTerritoryMap() 
 	 */
-	private boolean circlePropagation(Vector<Point> pixels,int player){
-		Vector<Point> nextPixels = new Vector<Point>();
+	private boolean circlePropagation(ArrayList<Point> pixels,int player){
+		ArrayList<Point> nextPixels = new ArrayList<Point>();
 		boolean modified=false;
 		
 		//Getting each pixels
@@ -439,15 +438,15 @@ public class MapManager implements Serializable{
 		
 		//Generate the neutral bases' proximityMaps
 		int cpt = 0;
-		while(!neutralBasePosition.isEmpty()){
+		for(Point i:neutralBasePosition){
 			ProximityMap proximityMap = new ProximityMap(heightMap.getWidth(),heightMap.getHeight());
-			generateProximityMap(proximityMap,neutralBasePosition.poll());
+			generateProximityMap(proximityMap,i);
 			neutralProximityMap.add(proximityMap);
 			neutralProximityMap.getLast().saveAsPNG("npm"+cpt+".png");
 			cpt++;
 		}
 	}
-	
+		
 	/**
 	 * Generate a ProximityMap for a base and save it as png at tmp/
 	 * @param player id of the base
