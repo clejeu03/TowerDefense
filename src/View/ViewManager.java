@@ -178,7 +178,8 @@ public class ViewManager extends JFrame implements Runnable{
 		//Clear the Sprites list of the scene
 		sceneView.initiate();
 		gameInfoMenu.initiate(sceneView);
-			
+		
+		//TODO : suppress => temporary !!
 		Iterator<Tower> it = towers.iterator();
 		while (it.hasNext()) {
 			//Retrieve the tower
@@ -196,7 +197,7 @@ public class ViewManager extends JFrame implements Runnable{
 			if(tower instanceof MedicalTower){
 				
 			}
-			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerType(), 50, 50, towerType, tower.getRange());
+			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerType(), 64, 64, towerType, tower.getRange());
 				
 			//Add the towerSprite in the sceneView list of Sprites
 			sceneView.addSprite(ts);

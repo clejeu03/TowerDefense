@@ -72,7 +72,7 @@ public class TowerSprite extends Sprite{
 		
 		//Attack
 		if(towerType == 1){
-			fileName += "starter.png";
+			fileName += "attackTower.png";
 		}
 		//Medical
 		else if(towerType == 2){

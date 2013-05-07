@@ -350,7 +350,7 @@ public class SceneView extends MainViews implements Runnable{
 			addTowerClicked = true;
 			addTowerPosition = new Point(position.x+1, position.y+1);
 			
-			TowerSprite ts = new TowerSprite(this, addTowerPosition, false, humanType, 50, 50, towerType, 90);
+			TowerSprite ts = new TowerSprite(this, addTowerPosition, false, humanType, 64, 64, towerType, 90);
 			
 			//Add the towerSprite in the sceneView list of Sprites
 			addSprite(ts);	
