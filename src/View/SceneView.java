@@ -487,7 +487,6 @@ public class SceneView extends MainViews implements Runnable{
 		
 		//If the player has first clicked on one of his base, then clicked on an enemy base 
 		if(attackBase&&(playerType != humanType)){
-			System.out.println("View - Attack !!");
 			//Remove the line between the two bases
 			baseClicked = false;
 			//Stop the thread
@@ -500,7 +499,6 @@ public class SceneView extends MainViews implements Runnable{
 			test.start();
 			addSprite(test);	
 			addSprite(test.getTextAmount());*/
-			
 			
 			jAttackAmountPercent.setVisible(false);
 			remove(jAttackAmountPercent);

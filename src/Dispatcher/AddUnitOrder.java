@@ -15,6 +15,10 @@ import GameEngine.Player.PlayerType;
  * Project - TowerDefense</br>
  * <b>Class - AddUnitOrder</b></br>
  * <p>The AddUnitOrder class represents the "add unit" tasks adding to the engine and view queues by the dispatcher</p>
+ * <ul>
+ * <li>View → Engine : A player want to launch an attack. Amount represents the percent of soldiers in the source base to send to the destination base.</li>
+ * <li>Engine → View : The Engine tells the view that a unit with the "amount" of soldiers need to be display</li>
+ * </ul>
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */

@@ -15,6 +15,10 @@ import GameEngine.Player.PlayerType;
  * Project - TowerDefense</br>
  * <b>Class - SuppressTowerOrder</b></br>
  * <p>The SuppressTowerOrder class represents the "suppress tower" tasks adding to the engine and view queues by the dispatcher</p>
+ * <ul>
+ * <li>View → Engine : A player want to suppress on of his tower</li>
+ * <li>Engine → View : A tower need to be remove from the view</li>
+ * </ul>
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */

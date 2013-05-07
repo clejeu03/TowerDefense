@@ -14,7 +14,8 @@ import GameEngine.Player.PlayerType;
 /**
  * Project - TowerDefense</br>
  * <b>Class - TowerOrder</b></br>
- * <p>The TowerOrder class represents the "tower tasks" adding to the engine and view queues by the dispatcher</p>
+ * <p>The Abstract TowerOrder class represents the "army tasks", which concerns the towers, bases and units,
+ *  adding to the engine and view queues by the dispatcher</p>
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */

@@ -14,7 +14,12 @@ import GameEngine.Player.PlayerType;
 /**
  * Project - TowerDefense</br>
  * <b>Class - AddTowerOrder</b></br>
- * <p>The AddTowerOrder class represents the "add tower" tasks adding to the engine and view queues by the dispatcher</p>
+ * <p>The AddTowerOrder class represents the "add tower" tasks adding to the engine and view queues by the dispatcher :</p>
+ * <ul>
+ * <li>View -> Engine : The view ask the engine if a tower can be add at the position wanted by a player</li>
+ * <li>Engine ->View : The Engine tells the view that a tower need to be display at the given position. 
+ * (If the position is (-1,-1), the engine tells the view that the tower can't be add at the position wanted by the player</li>
+ * </ul>
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */

@@ -12,7 +12,7 @@ import GameEngine.Player.PlayerType;
 /**
  * Project - TowerDefense</br>
  * <b>Class - Order</b></br>
- * <p>The Order class represents the tasks adding to the engine and view queues by the dispatcher</p>
+ * <p>The Abstract Order class represents the tasks adding to the engine and view queues by the dispatcher</p>
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */

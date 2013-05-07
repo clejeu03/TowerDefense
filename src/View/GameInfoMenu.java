@@ -9,12 +9,8 @@ package View;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import javax.imageio.ImageIO;
 
 import GameEngine.Player.PlayerType;
 

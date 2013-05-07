@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import View.Sprite;
-
 /**
  * Project - TowerDefense</br>
  * <b>Class - GameManager</b></br>
