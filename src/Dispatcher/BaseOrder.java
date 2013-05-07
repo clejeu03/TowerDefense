@@ -20,20 +20,20 @@ import GameEngine.Player.PlayerType;
  */
 public  abstract class BaseOrder extends Order{
 
-	protected Point srcPosition;
+	protected Point position;
 	/**
 	 * 
 	 */
-	public BaseOrder(PlayerType playerType, Point srcPosition) {
+	public BaseOrder(PlayerType playerType, Point position) {
 		super(playerType);
-		this.srcPosition = new Point(srcPosition);
+		this.position = new Point(position);
 	}
 	  /**
      * Getter srcPosition
      * @see View.ViewManager#refresh()
      * @see GameEngine.GameManager#execute()
      */	
-	public Point getSrcPosition(){
-		return srcPosition;
+	public Point getPosition(){
+		return position;
 	}
 }

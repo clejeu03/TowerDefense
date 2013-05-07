@@ -169,7 +169,7 @@ public class GameManager implements Runnable{
 					Iterator<Base> it = bases.iterator();
 					while (it.hasNext()) {
 						Base element = it.next();
-						if(element.getPosition().equals(((AttackBaseOrder) order).getSrcPosition())){
+						if(element.getPosition().equals(((AttackBaseOrder) order).getPosition())){
 							//Calculate the amount of unit that will be send according to the percent chose by the player
 							int baseAmount = element.getAmount();
 							int attackPercent = ((AttackBaseOrder) order).getAmount();
@@ -177,13 +177,13 @@ public class GameManager implements Runnable{
 							int attackAmount = (attackPercent * baseAmount)/100;
 							
 							//TODO send amount of unit !
-							System.out.println("Engine - TODO : base : "+((BaseOrder) order).getSrcPosition()+" want to send "+attackAmount+" Units to "+((AttackBaseOrder) order).getDstPosition());
+							System.out.println("Engine - TODO : base : "+((BaseOrder) order).getPosition()+" want to send "+attackAmount+" Units to "+((AttackBaseOrder) order).getDstPosition());
 							
 							//Set the new amount
 							element.setAmount(baseAmount - attackAmount);
 							
 							//Tell the dispatcher that the sourceBase amount need to be decreased in the view
-							dispatcher.addOrderToView(new AttackBaseOrder(order.getPlayerType(), ((BaseOrder) order).getSrcPosition(), ((AttackBaseOrder) order).getDstPosition(), baseAmount - attackAmount));
+							dispatcher.addOrderToView(new AttackBaseOrder(order.getPlayerType(), ((BaseOrder) order).getPosition(), ((AttackBaseOrder) order).getDstPosition(), baseAmount - attackAmount));
 						}
 					
 					}

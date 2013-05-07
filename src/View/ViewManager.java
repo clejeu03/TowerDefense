@@ -350,7 +350,7 @@ public class ViewManager extends JFrame implements Runnable{
 				}
 				//If the order is an AttackBaseOrder one
 				if(o instanceof AttackBaseOrder) {
-					sceneView.setAmountBase(((BaseOrder) o).getSrcPosition(),o.getPlayerType(), ((AttackBaseOrder) o).getAmount());
+					sceneView.setAmountBase(((BaseOrder) o).getPosition(),o.getPlayerType(), ((AttackBaseOrder) o).getAmount());
 				}
 			}
 		}
