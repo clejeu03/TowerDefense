@@ -139,10 +139,10 @@ public class GameManager implements Runnable{
 					Iterator<Tower> it = towers.iterator();
 					while (it.hasNext()) {
 						Tower element = it.next();
-						if(element.getPosition().equals(((TowerOrder) order).getPosition())){
+						if(element.getPosition().equals(((ArmyOrder) order).getPosition())){
 							it.remove();
 							//Tell the dispatcher that the tower need to be remove from the view
-							dispatcher.addOrderToView(new SuppressTowerOrder(order.getPlayerType(), ((TowerOrder) order).getPosition()));
+							dispatcher.addOrderToView(new SuppressTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition()));
 						}
 					}
 				}
@@ -154,36 +154,36 @@ public class GameManager implements Runnable{
 					
 					//TODO : Add the good type of tower !
 					//Add the tower to the list
-					towers.add(new MedicalTower(((TowerOrder) order).getPosition(),order.getPlayerType(), 90));
+					towers.add(new MedicalTower(((ArmyOrder) order).getPosition(),order.getPlayerType(), 90));
 					
 					//Tell the dispatcher that the tower can to be add on the view
-					dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((TowerOrder) order).getPosition(), 2));
+					dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), 2));
 				}
 				
 				
-				//If the order is an AttackBaseOrder one
-				if(order instanceof AttackBaseOrder) {
-					
-					//PlayerType srcPlayerType, Point srcPosition, Point dstPosition, int amount
+				//If the order is an AddUnitOrder one
+				if(order instanceof AddUnitOrder) {
+				
 					//Retrieve the source base from the engine list
 					Iterator<Base> it = bases.iterator();
 					while (it.hasNext()) {
 						Base element = it.next();
-						if(element.getPosition().equals(((AttackBaseOrder) order).getPosition())){
+						if(element.getPosition().equals(((AddUnitOrder) order).getPosition())){
 							//Calculate the amount of unit that will be send according to the percent chose by the player
 							int baseAmount = element.getAmount();
-							int attackPercent = ((AttackBaseOrder) order).getAmount();
+							int attackPercent = ((AddUnitOrder) order).getAmount();
 							
 							int attackAmount = (attackPercent * baseAmount)/100;
 							
 							//TODO send amount of unit !
-							System.out.println("Engine - TODO : base : "+((BaseOrder) order).getPosition()+" want to send "+attackAmount+" Units to "+((AttackBaseOrder) order).getDstPosition());
-							
-							//Set the new amount
+							System.out.println("Engine - TODO : base : "+((ArmyOrder) order).getPosition()+" want to send "+attackAmount+" Units to "+((AddUnitOrder) order).getDstPosition());
+							dispatcher.addOrderToView(new AddUnitOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddUnitOrder) order).getDstPosition(), attackAmount));
+	
+							//Set the new amount to the base in the engine
 							element.setAmount(baseAmount - attackAmount);
 							
 							//Tell the dispatcher that the sourceBase amount need to be decreased in the view
-							dispatcher.addOrderToView(new AttackBaseOrder(order.getPlayerType(), ((BaseOrder) order).getPosition(), ((AttackBaseOrder) order).getDstPosition(), baseAmount - attackAmount));
+							dispatcher.addOrderToView(new AmountBaseOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), baseAmount - attackAmount));
 						}
 					
 					}

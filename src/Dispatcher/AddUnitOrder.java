@@ -13,19 +13,19 @@ import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
- * <b>Class - AttackBaseOrder</b></br>
- * <p>The AttackBaseOrder class represents the "attack base" tasks adding to the engine and view queues by the dispatcher</p>
+ * <b>Class - AddUnitOrder</b></br>
+ * <p>The AddUnitOrder class represents the "add unit" tasks adding to the engine and view queues by the dispatcher</p>
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
-public class AttackBaseOrder extends BaseOrder{
+public class AddUnitOrder extends ArmyOrder{
 
 	private Point dstPosition;
 	private int amount;
 	/**
 	 * 
 	 */
-	public AttackBaseOrder(PlayerType srcPlayerType, Point srcPosition, Point dstPosition, int amount) {
+	public AddUnitOrder(PlayerType srcPlayerType, Point srcPosition, Point dstPosition, int amount) {
 		super(srcPlayerType,srcPosition);
 		
 		this.dstPosition = new Point(dstPosition);

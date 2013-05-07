@@ -18,7 +18,7 @@ import GameEngine.Player.PlayerType;
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
-public class AddTowerOrder extends TowerOrder{
+public class AddTowerOrder extends ArmyOrder{
 	private int towerType;
 
 	/**

@@ -320,7 +320,7 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @see SceneView#myMousePressed()
 	 */
 	public void baseToAttack(Point srcPosition, PlayerType srcPlayerType,Point dstPosition, int amount) {
-		   dispatcher.addOrderToEngine(new AttackBaseOrder(srcPlayerType, srcPosition, dstPosition, amount));
+		   dispatcher.addOrderToEngine(new AddUnitOrder(srcPlayerType, srcPosition, dstPosition, amount));
 	}
     
 	
@@ -341,16 +341,22 @@ public class ViewManager extends JFrame implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(o instanceof SuppressTowerOrder) {
-					sceneView.suppressTower(((TowerOrder) o).getPosition(), o.getPlayerType());
+					sceneView.suppressTower(((ArmyOrder) o).getPosition(), o.getPlayerType());
 				}
 				
 				//If the order is an AddTowerOrder one
 				if(o instanceof AddTowerOrder) {
-					sceneView.addTower(((TowerOrder) o).getPosition(), o.getPlayerType(), ((AddTowerOrder) o).getTowerType());
+					sceneView.addTower(((ArmyOrder) o).getPosition(), o.getPlayerType(), ((AddTowerOrder) o).getTowerType());
 				}
-				//If the order is an AttackBaseOrder one
-				if(o instanceof AttackBaseOrder) {
-					sceneView.setAmountBase(((BaseOrder) o).getPosition(),o.getPlayerType(), ((AttackBaseOrder) o).getAmount());
+				//If the order is an AddUnitOrder one
+				if(o instanceof AddUnitOrder) {
+					//TO DO 
+					System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" "+o.getPlayerType()+" units at "+((AddUnitOrder) o).getPosition());
+
+				}	
+				//If the order is an AmountBaseOrder one
+				if(o instanceof AmountBaseOrder){
+					sceneView.setAmountBase(((ArmyOrder) o).getPosition(),o.getPlayerType(), ((AmountBaseOrder) o).getAmount());
 				}
 			}
 		}
