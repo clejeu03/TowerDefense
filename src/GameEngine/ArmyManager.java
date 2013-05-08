@@ -1,6 +1,7 @@
 package GameEngine;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import GameEngine.Player.PlayerType;
 
@@ -58,12 +59,9 @@ public class ArmyManager {
    */
   public ArmyManager() {
 	  super();
+	  units = new ArrayList<Unit>();
+	  bases = new ArrayList<Base>();
 	  }
-  /**
-   * Initialize the attributes whomBaseList and unitList at the creation of the game.
-   */
-  public void init() {
-  }
   /**
    * Create a new group, called Unit, from the selected Base with an amount equal 50% from the 
    * Base amount
@@ -81,7 +79,6 @@ public class ArmyManager {
 	  //Adding the unit to the hashMap by finding the owner of the base
 	  units.add(unit);
 	  
-	  //TODO make the unit know his original base
   }
   /**
    * Create a new unit from the base
@@ -96,6 +93,7 @@ public class ArmyManager {
   
   /**
    * Create a new base, neutral or active.
+   * =========> WARNING : And attributes it to a player ?
    * @param pos - position
    * @param neutral - is neutral or not ?
    * @param type - BaseType (small, medium or large)
@@ -109,6 +107,7 @@ public class ArmyManager {
   }
   /**
    * Create especially an active base.
+   * =========> WARNING : And attributes it to a player ?
    * @param pos position
    * @param neutral is it neutral or not ?
    * @param proxMap the proximityMap
@@ -124,9 +123,9 @@ public class ArmyManager {
    * @param base
    * @param player - the new player that own the base
    */
-  public void attributeBase(Base base, PlayerType playerType){
-	//If the base type is neutral, then we change the user NEUTRAL to a real in game user
-	base.setPlayerType(playerType);
+  public void reattributeBase(Base base, PlayerType playerType){
+	  //Change the owner
+	  base.setPlayerType(playerType);
   }
   
   /**
