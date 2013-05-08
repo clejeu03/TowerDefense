@@ -170,7 +170,8 @@ public class GameManager implements Runnable{
 								//TODO : Add the good type of tower !
 								
 								//Add the Tower and draw it
-								towers.add(new MedicalTower(((ArmyOrder) order).getPosition(),order.getPlayerType(), 90));
+								//TODO CHANGE THIS :
+								//towers.add(new SupportTower(((ArmyOrder) order).getPosition(),order.getPlayerType(), 90));
 								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
 							}else{
 								//Tell the dispatcher that the tower CAN'T be add on the view

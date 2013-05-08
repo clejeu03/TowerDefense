@@ -29,7 +29,7 @@ public class ArmyManager {
    * @see Base
    * @see Player
    */
-  public HashMap<Base, Player> whomBaseList;
+  public HashMap<Base, PlayerType> whomBaseList;
 
   /**
    * Associates in a HashMap thread safe the Units
@@ -37,7 +37,7 @@ public class ArmyManager {
    * @see Units
    * @see Player
    */
-  public HashMap<Unit, Player> unitList;
+  public HashMap<Unit, PlayerType> unitList;
   /**
    * List all the sizes the Bases can take. The size of a base affects 
    * the visual size of the Base and the speed of producing units into itself. 
@@ -123,14 +123,14 @@ public class ArmyManager {
    * @param base
    * @param player - the new player that own the base
    */
-  public void attributeBase(Base base, Player player){
+  public void attributeBase(Base base, PlayerType playerType){
 	  if(base.getNeutral()){
 		  //Si la base est neutre alors on lui attribue un possesseur pour la première fois
-		  whomBaseList.put(base, player);
+		  whomBaseList.put(base, playerType);
 	  }else{
 		  //Sinon on enlève le dernier possesseur et lui attribue le nouveau
 		  whomBaseList.remove(base);
-		  whomBaseList.put(base, player);
+		  whomBaseList.put(base, playerType);
 	  }
   }
   

@@ -1,5 +1,8 @@
 package GameEngine;
-import java.util.concurrent.ConcurrentHashMap;
+
+import java.awt.Point;
+import java.util.HashMap;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - TowerManager</b></br>
@@ -20,11 +23,14 @@ public class TowerManager {
   /**
    * Associate all the Towers in game to the Players that owns them in thread safe Map. 
    */
-  public ConcurrentHashMap<Tower, Player> whomTowerList;
+  private HashMap<Tower, Player.PlayerType> whomTowerList;
+
   /**
-   * Constructor of the TowerManager class
+   * List all the the types of towers. There are two families of towers :
+   * <ul><li>the AttackTower family, that attack your enemies</li>
+   * <li>the SupportTower family, that supports your units</li></ul>
+   *@see Tower
    */
-  
   public enum TowerTypes{
 	  NOTOWER, //replace the ancient zero in the view
 	  ATTACKTOWER,
@@ -36,7 +42,13 @@ public class TowerManager {
 	  MEDICALTOWER,
 	  SHIELDTOWER
   }
+  
+  /**
+   * Constructor of the TowerManager class
+   */
   public TowerManager() {
+	  super();
+	  whomTowerList = new HashMap<Tower, Player.PlayerType>();
   }
   /**
    * Set the selected tower active because of the proximity of a enemy Unit.
@@ -51,7 +63,16 @@ public class TowerManager {
   /**
    * Create a Tower
    */
-  public void createTower() {
+  public void createTower(Player.PlayerType playerType, TowerTypes towerType, Point position) {
+	  Tower tower = null;
+	  if(towerType == TowerTypes.ATTACKTOWER){
+		  tower = new AttackTower(position, playerType);
+	  }
+	  if(towerType == TowerTypes.SUPPORTTOWER){
+		  tower = new SupportTower(position, playerType);
+	  }
+	  
+	  this.whomTowerList.put(tower, playerType);
   }
 
 
