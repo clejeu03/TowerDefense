@@ -235,7 +235,7 @@ public class ViewManager extends JFrame implements Runnable{
     	add(playMenu);
         
         //Repaint the window
-    	revalidate();
+    	validate();
     	repaint();	  	
     }
     

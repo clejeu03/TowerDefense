@@ -18,10 +18,11 @@ package GameEngine;
 public class Player {
   /**
    * Represents the color of the player 
-   * 0 electric 
-   * 1 Water 
+   * 0 neutral
+   * 1 electric 
+   * 3 Water 
    * 2 Grass
-   * 3 Fire
+   * 4 Fire
    */
 	
   /**

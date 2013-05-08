@@ -28,6 +28,7 @@ public class GameManager implements Runnable{
 	private ConcurrentLinkedQueue<Order> queue;
 	
     private ArrayList<Player> players;
+    private ArrayList<PlayerType> playerTypes;
 	
 	//Temporary !!
     private ArrayList<Tower> towers;
@@ -79,7 +80,7 @@ public class GameManager implements Runnable{
 		//Adding the human player
 		players.add(new Player(humanType));
 		
-		ArrayList<PlayerType> playerTypes = new ArrayList<PlayerType>();
+		playerTypes = new ArrayList<PlayerType>();
 		playerTypes.add(humanType);
 		
 		//Adding the enemies
@@ -148,14 +149,41 @@ public class GameManager implements Runnable{
 				//If the order is a AddTowerOrder one
 				if(order instanceof AddTowerOrder) {
 					
-					//TODO : Check if the tower can be add here !
+					//Get the owner of the selected pixel in the territoryMap
+					int zoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x, ((ArmyOrder) order).getPosition().y);
 					
-					//TODO : Add the good type of tower !
-					//Add the tower to the list
-					towers.add(new MedicalTower(((ArmyOrder) order).getPosition(),order.getPlayerType(), 90));
+					//Test if the entire sprite is in the same area
+					int supRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+32, ((ArmyOrder) order).getPosition().y+32);
+					int supLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-32, ((ArmyOrder) order).getPosition().y+32);
+					int infRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+32, ((ArmyOrder) order).getPosition().y-32);
+					int infLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-32, ((ArmyOrder) order).getPosition().y-32);
 					
-					//Tell the dispatcher that the tower can to be add on the view
-					dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), 2));
+					if(	supRightZoneId == zoneId && supLeftZoneId == zoneId &&
+							infLeftZoneId == zoneId && infRightZoneId == zoneId){
+						
+						//Compare the zone with the order of types in the playerTypes array 
+						if(zoneId !=0){
+							if(zoneId <6 && order.getPlayerType()== playerTypes.get(zoneId-1)){
+								//TODO : Add the good type of tower !
+								
+								//Add the Tower and draw it
+								towers.add(new MedicalTower(((ArmyOrder) order).getPosition(),order.getPlayerType(), 90));
+								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), 2));
+							}else{
+								//Tell the dispatcher that the tower CAN'T be add on the view
+								System.out.println("GameEngine says : You try to add a tower but this is not your territory");
+								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), 2));
+							}
+						}else{
+							//TODO a tower need to be placed on the hills
+							//Tell the dispatcher that the tower CAN'T be add on the view
+							dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), 2));
+						}
+					}else{
+						//Tell the dispatcher that the tower CAN'T be add on the view
+						dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), 2));
+					}
+					
 				}
 				
 				

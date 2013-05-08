@@ -527,7 +527,7 @@ public class MapManager implements Serializable{
 	 * @return the value of the pixel if it is not -1 on at least one map, -1 otherwise
 	 * @see #circlePropagation()
 	 */
-	private int getTerritoryMapValue(int x, int y){
+	protected int getTerritoryMapValue(int x, int y){
 		for (TerritoryMap tm:playerTerritoryMap){
 			if (tm.getPixel(x,y)!=-1)
 				return tm.getPixel(x,y);
