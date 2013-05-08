@@ -346,12 +346,12 @@ public class ViewManager extends JFrame implements Runnable{
 				}
 				
 				//If the order is an AddTowerOrder one
-				if(o instanceof AddTowerOrder) {
+				if(o instanceof AddTowerOrder) {	
 					sceneView.addTower(((ArmyOrder) o).getPosition(), o.getPlayerType(), ((AddTowerOrder) o).getTowerType());
 				}
 				//If the order is an AddUnitOrder one
 				if(o instanceof AddUnitOrder) {
-					//TO DO 
+					//TODO 
 					System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" "+o.getPlayerType()+" units at "+((AddUnitOrder) o).getPosition());
 
 				}	
