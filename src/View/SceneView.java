@@ -14,6 +14,7 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
+import Dispatcher.ArmyOrder;
 import GameEngine.Player.PlayerType;
 
 /**
@@ -371,14 +372,22 @@ public class SceneView extends MainViews implements Runnable{
 	 * @see ViewManager#refresh()
 	 */
 	public void addTower(Point position, PlayerType playerType, int towerType){
+		Point test = new Point(-1,-1);
 		
-		//If the tower to add is owned by the human player 
-		if(position.equals(addTowerPosition)){
-			addTowerSuccess();
+		//If the position of the tower is (-1,-1), the tower can't be add :
+		if(position.equals(test)){
+			addTowerFailed();
 		}
+		else{
 		
-		//TODO If the tower to add is owned by an AI player
-		
+			//If the tower to add is owned by the human player 
+			if(position.equals(addTowerPosition)){
+				addTowerSuccess();
+			}
+			
+			//TODO If the tower to add is owned by an AI player
+			
+		}
 	}
 	
 	/**
