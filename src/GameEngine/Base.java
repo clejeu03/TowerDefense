@@ -236,4 +236,11 @@ public class Base {
 	public PlayerType getPlayerType() {
 		return playerType;
 	}
+	/**
+	 * @param playerType
+	 */
+	public void setPlayerType(PlayerType playerType) {
+		this.playerType = playerType;
+		
+	}
 }

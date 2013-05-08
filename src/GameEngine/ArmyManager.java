@@ -1,6 +1,6 @@
 package GameEngine;
 import java.awt.Point;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import GameEngine.Player.PlayerType;
 
@@ -29,7 +29,7 @@ public class ArmyManager {
    * @see Base
    * @see Player
    */
-  public HashMap<Base, PlayerType> whomBaseList;
+  public ArrayList<Base> bases;
 
   /**
    * Associates in a HashMap thread safe the Units
@@ -37,7 +37,7 @@ public class ArmyManager {
    * @see Units
    * @see Player
    */
-  public HashMap<Unit, PlayerType> unitList;
+  public ArrayList<Unit> units;
   /**
    * List all the sizes the Bases can take. The size of a base affects 
    * the visual size of the Base and the speed of producing units into itself. 
@@ -79,8 +79,9 @@ public class ArmyManager {
 	  //Changing the base amount
 	  origin.setAmount(baseAmount-unitAmount);
 	  //Adding the unit to the hashMap by finding the owner of the base
-	  unitList.put(unit, whomBaseList.get(origin));
+	  units.add(unit);
 	  
+	  //TODO make the unit know his original base
   }
   /**
    * Create a new unit from the base
@@ -95,7 +96,6 @@ public class ArmyManager {
   
   /**
    * Create a new base, neutral or active.
-   * =========> WARNING : And attributes it to a player ?
    * @param pos - position
    * @param neutral - is neutral or not ?
    * @param type - BaseType (small, medium or large)
@@ -104,11 +104,11 @@ public class ArmyManager {
    */
   public Base createBase(Point pos, PlayerType playerType, Boolean neutral, BaseType type, Map proxMap) {
 	Base base = new Base(pos, playerType, neutral, type, proxMap);
+	bases.add(base);
 	return base;
   }
   /**
    * Create especially an active base.
-   * =========> WARNING : And attributes it to a player ?
    * @param pos position
    * @param neutral is it neutral or not ?
    * @param proxMap the proximityMap
@@ -116,6 +116,7 @@ public class ArmyManager {
    */
   public Base createBase(Point pos, PlayerType playerType, Boolean neutral, Map proxMap) {
 	Base base = new Base(pos, playerType, neutral, proxMap);
+	bases.add(base);
 	return base;
   }
   /**
@@ -124,14 +125,8 @@ public class ArmyManager {
    * @param player - the new player that own the base
    */
   public void attributeBase(Base base, PlayerType playerType){
-	  if(base.getNeutral()){
-		  //Si la base est neutre alors on lui attribue un possesseur pour la première fois
-		  whomBaseList.put(base, playerType);
-	  }else{
-		  //Sinon on enlève le dernier possesseur et lui attribue le nouveau
-		  whomBaseList.remove(base);
-		  whomBaseList.put(base, playerType);
-	  }
+	//If the base type is neutral, then we change the user NEUTRAL to a real in game user
+	base.setPlayerType(playerType);
   }
   
   /**
