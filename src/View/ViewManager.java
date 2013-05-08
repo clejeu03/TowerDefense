@@ -195,7 +195,7 @@ public class ViewManager extends JFrame implements Runnable{
 				clickable = true;
 			}
 			//TODO Choose the the type of the tower
-			if(tower instanceof MedicalTower){
+			if(tower instanceof SupportTower){
 				
 			}
 			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerType(), 64, 64, towerType, tower.getRange());

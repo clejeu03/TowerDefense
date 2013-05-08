@@ -14,18 +14,6 @@ package GameEngine;
  */
 
 public class WarManager {
-  /**
-   * Contains the unique ArmyManager of a game
-   * @element-type ArmyManager
-   * @see ArmyManager
-   */
-  public ArmyManager army;
-  /**
-   * Contains the unique TowerManager of a game
-   * @element-type TowerManager
-   * @see TowerManager
-   */
-  public TowerManager towers;
 
   /**
    * Constructor of the WarManager class

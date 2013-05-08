@@ -1,7 +1,9 @@
 package GameEngine;
 
 import java.awt.Point;
-import java.util.HashMap;
+import java.util.ArrayList;
+
+import Dispatcher.ArmyOrder;
 
 /**
  * Project - TowerDefense</br>
@@ -23,7 +25,7 @@ public class TowerManager {
   /**
    * Associate all the Towers in game to the Players that owns them in thread safe Map. 
    */
-  private HashMap<Tower, Player.PlayerType> whomTowerList;
+  private ArrayList<Tower> towers;
 
   /**
    * List all the the types of towers. There are two families of towers :
@@ -48,7 +50,7 @@ public class TowerManager {
    */
   public TowerManager() {
 	  super();
-	  whomTowerList = new HashMap<Tower, Player.PlayerType>();
+	  towers = new ArrayList<Tower>();
   }
   /**
    * Set the selected tower active because of the proximity of a enemy Unit.
@@ -60,21 +62,43 @@ public class TowerManager {
    */
   public void desactiveTower() {
   }
-  /**
-   * Create a Tower
-   */
+ /**
+  * Create a Tower of the given type
+  * @param playerType
+  * @param towerType
+  * @param position
+  */
   public void createTower(Player.PlayerType playerType, TowerTypes towerType, Point position) {
 	  Tower tower = null;
-	  if(towerType == TowerTypes.ATTACKTOWER){
-		  tower = new AttackTower(position, playerType);
-	  }
-	  if(towerType == TowerTypes.SUPPORTTOWER){
-		  tower = new SupportTower(position, playerType);
-	  }
 	  
-	  this.whomTowerList.put(tower, playerType);
+	  switch(towerType){
+	  	case ATTACKTOWER:
+	  		tower = new AttackTower(position, playerType);
+	  		break;
+	  	case SUPPORTTOWER :
+	  		tower = new SupportTower(position, playerType);
+	  		break;
+	  	default :
+	  		break;
+	  }  
+	  
+	  towers.add(tower);
   }
 
-
+  /**
+   * Remove a tower from the game
+   * @param position
+   * @see GameManager#execute()
+   */
+  public void suppressTower(Point position){
+	  
+	  //Search the tower by it's position
+	  for(Tower tower: towers){
+		  if(tower.getPosition().equals(position)){
+			  towers.remove(tower);
+			  break;
+		  }
+	  }
+  }
 
 }

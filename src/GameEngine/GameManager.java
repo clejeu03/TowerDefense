@@ -36,6 +36,8 @@ public class GameManager implements Runnable{
     private ArrayList<Base> bases;
     
 	private MapManager mapManager;
+	private ArmyManager armyManager;
+	private TowerManager towerManager;
     
     /**
      * Constructor of the GameManger class
@@ -95,6 +97,9 @@ public class GameManager implements Runnable{
 		//Adding a mapManager
 		mapManager = new MapManager("Map", playerTypes);
 		
+		armyManager = new ArmyManager();
+		towerManager = new TowerManager();
+		
 		//Clear the towers list
 		towers.clear();
 				
@@ -103,15 +108,15 @@ public class GameManager implements Runnable{
 		//Clear the bases list
 		bases.clear();
 		for(int i=0; i<enemiesType.size();i++){
-			bases.add(new Base(basesPositions[i+1],enemiesType.get(i),false,mapManager.getPlayerProximityMap(i+1)));
+			bases.add(armyManager.createBase(basesPositions[i+1],enemiesType.get(i),false,mapManager.getPlayerProximityMap(i+1)));
 		}
 		//human player base
-		bases.add(new Base(basesPositions[0],humanType,false,mapManager.getPlayerProximityMap(0)));
+		bases.add(armyManager.createBase(basesPositions[0],humanType,false,mapManager.getPlayerProximityMap(0)));
 		
-		//TODO add neutral bases ! cd MapManager neutralBasePosition !
+		//TODO add different sizes of neutral base
 		ArrayList<Point> neutralBasePosition = mapManager.getNeutralBasePosition();
 		for(int i=0; i<neutralBasePosition.size();i++){
-			bases.add(new Base(neutralBasePosition.get(i),PlayerType.NEUTRAL,true,mapManager.getNeutralProximityMap(i)));
+			bases.add(armyManager.createBase(neutralBasePosition.get(i),PlayerType.NEUTRAL,true,mapManager.getNeutralProximityMap(i)));
 		}	
 				
 		//Tells the dispatcher that the View need to be initialized
@@ -134,17 +139,11 @@ public class GameManager implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(order instanceof SuppressTowerOrder) {
-					
+
 					//Remove the tower from the engine list
-					Iterator<Tower> it = towers.iterator();
-					while (it.hasNext()) {
-						Tower element = it.next();
-						if(element.getPosition().equals(((ArmyOrder) order).getPosition())){
-							it.remove();
-							//Tell the dispatcher that the tower need to be remove from the view
-							dispatcher.addOrderToView(new SuppressTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition()));
-						}
-					}
+					towerManager.suppressTower(((ArmyOrder) order).getPosition());
+					//Tell the dispatcher that the tower need to be remove from the view
+					dispatcher.addOrderToView(new SuppressTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition()));
 				}
 				
 				//If the order is a AddTowerOrder one
@@ -154,10 +153,10 @@ public class GameManager implements Runnable{
 					int zoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x, ((ArmyOrder) order).getPosition().y);
 					
 					//Test if the entire sprite is in the same area
-					int supRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+32, ((ArmyOrder) order).getPosition().y+32);
-					int supLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-32, ((ArmyOrder) order).getPosition().y+32);
-					int infRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+32, ((ArmyOrder) order).getPosition().y-32);
-					int infLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-32, ((ArmyOrder) order).getPosition().y-32);
+					int supRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+15, ((ArmyOrder) order).getPosition().y+15);
+					int supLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-15, ((ArmyOrder) order).getPosition().y+15);
+					int infRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+15, ((ArmyOrder) order).getPosition().y-15);
+					int infLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-15, ((ArmyOrder) order).getPosition().y-15);
 					
 					if(	supRightZoneId == zoneId && supLeftZoneId == zoneId &&
 							infLeftZoneId == zoneId && infRightZoneId == zoneId){
@@ -170,8 +169,7 @@ public class GameManager implements Runnable{
 								//TODO : Add the good type of tower !
 								
 								//Add the Tower and draw it
-								//TODO CHANGE THIS :
-								//towers.add(new SupportTower(((ArmyOrder) order).getPosition(),order.getPlayerType(), 90));
+								towerManager.createTower(order.getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((ArmyOrder) order).getPosition());
 								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
 							}else{
 								//Tell the dispatcher that the tower CAN'T be add on the view
@@ -179,8 +177,8 @@ public class GameManager implements Runnable{
 								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 							}
 						}else{
-							//TODO a tower need to be placed on the hills
 							//Tell the dispatcher that the tower CAN'T be add on the view
+							System.out.println("GameEngine says : maybe you should try on a hill...");
 							dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 						}
 					}else{
