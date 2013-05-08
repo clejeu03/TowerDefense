@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 
 import GameEngine.GameManager;
 import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 
 /**
  * Project - TowerDefense</br>
@@ -34,7 +35,7 @@ import GameEngine.Player.PlayerType;
  */
 @SuppressWarnings("serial")
 public class TowerSprite extends Sprite{
-	private int towerType;
+	private TowerTypes towerType;
 	private int range;
 	
 	/**
@@ -45,13 +46,13 @@ public class TowerSprite extends Sprite{
 	 * @param playerId
 	 * @param width
 	 * @param height
-	 * @param type
+	 * @param towerType2
 	 * @param range
 	 */
-	public TowerSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int type, int range) {
+	public TowerSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, TowerTypes towerType2, int range) {
 		super(scene, position,clickable,playerType,width,height);
 		
-		towerType = type;
+		towerType = towerType2;
 		this.range = range;
 				
 		//Loading the tower image (different one according the tower type and player)
@@ -71,11 +72,11 @@ public class TowerSprite extends Sprite{
 		}
 		
 		//Attack
-		if(towerType == 1){
+		if(towerType == TowerTypes.ATTACKTOWER){
 			fileName += "attackTower.png";
 		}
 		//Medical
-		else if(towerType == 2){
+		else if(towerType == TowerTypes.SUPPORTTOWER){
 			fileName += "medicalTower.png";
 		}
 		
@@ -112,7 +113,7 @@ public class TowerSprite extends Sprite{
 	public int getRange(){
 		return range;
 	}
-	public int getTowerType() {
+	public TowerTypes getTowerType() {
 		return towerType;
 	}
 	

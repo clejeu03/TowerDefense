@@ -2,6 +2,7 @@ package GameEngine;
 
 import Dispatcher.*;
 import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -161,6 +162,8 @@ public class GameManager implements Runnable{
 					if(	supRightZoneId == zoneId && supLeftZoneId == zoneId &&
 							infLeftZoneId == zoneId && infRightZoneId == zoneId){
 						
+						//TODO test with the other towers of the same zone ?
+						
 						//Compare the zone with the order of types in the playerTypes array 
 						if(zoneId !=0){
 							if(zoneId <6 && order.getPlayerType()== playerTypes.get(zoneId-1)){
@@ -168,20 +171,20 @@ public class GameManager implements Runnable{
 								
 								//Add the Tower and draw it
 								towers.add(new MedicalTower(((ArmyOrder) order).getPosition(),order.getPlayerType(), 90));
-								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), 2));
+								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
 							}else{
 								//Tell the dispatcher that the tower CAN'T be add on the view
 								System.out.println("GameEngine says : You try to add a tower but this is not your territory");
-								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), 2));
+								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 							}
 						}else{
 							//TODO a tower need to be placed on the hills
 							//Tell the dispatcher that the tower CAN'T be add on the view
-							dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), 2));
+							dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 						}
 					}else{
 						//Tell the dispatcher that the tower CAN'T be add on the view
-						dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), 2));
+						dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 					}
 					
 				}

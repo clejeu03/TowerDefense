@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 
 import GameEngine.GameManager;
 import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 
 /**
  * Project - TowerDefense</br>
@@ -36,13 +37,13 @@ public class AddTowerSprite  extends Sprite{
 	 * 1 : attaque
 	 * 2 : soutien
 	 */
-	private int towerType;
+	private TowerTypes towerType;
 	protected MainViews info;
 
 	/**
 	 * 
 	 */
-	public AddTowerSprite(SceneView scene, GameInfoMenu info, Point position, boolean clickable, PlayerType playerType, int width, int height, int towerType) {
+	public AddTowerSprite(SceneView scene, GameInfoMenu info, Point position, boolean clickable, PlayerType playerType, int width, int height, TowerTypes towerType) {
 		super(scene, position,clickable,playerType,width,height);
 		
 		this.towerType = towerType;
@@ -64,11 +65,11 @@ public class AddTowerSprite  extends Sprite{
 		}
 		
 		//Attack
-		if(towerType == 1){
+		if(towerType == TowerTypes.ATTACKTOWER){
 			fileName += "addAttackTower.png";
 		}
 		//Medical
-		else if(towerType == 2){
+		else if(towerType == TowerTypes.SUPPORTTOWER){
 			fileName += "addMedicalTower.png";
 		}
 		
@@ -92,7 +93,7 @@ public class AddTowerSprite  extends Sprite{
          });
 	}
 	
-	public int getTowerType() {
+	public TowerTypes getTowerType() {
 		return towerType;
 	}
 

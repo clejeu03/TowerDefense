@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
 import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager;
 
 /**
  * Project - TowerDefense</br>
@@ -345,7 +346,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @param towerType
 	 */
-	public void addTowerClicked(Point position, PlayerType playerType, int towerType){
+	public void addTowerClicked(Point position, PlayerType playerType, TowerManager.TowerTypes towerType){
 		if(!addTowerClicked){
 			addTowerClicked = true;
 			addTowerPosition = new Point(position.x+1, position.y+1);
@@ -370,7 +371,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void addTower(Point position, PlayerType playerType, int towerType){
+	public void addTower(Point position, PlayerType playerType, TowerManager.TowerTypes towerType){
 		
 		//If the tower to add is owned by the human player 
 		if(position.equals(addTowerPosition)){

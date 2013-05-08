@@ -2,6 +2,7 @@ package View;
 
 import GameEngine.*;
 import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 import Dispatcher.*; 
 
 import java.awt.Color;
@@ -187,7 +188,7 @@ public class ViewManager extends JFrame implements Runnable{
 			
 			//Create the corresponding TowerSprite
 			boolean clickable = false;
-			int towerType = 0;
+			TowerTypes towerType = TowerTypes.NOTOWER;
 			
 			//If the tower's owner is the human player, the Sprite needs to be clickable
 			if(tower.getPlayerType() == sceneView.getHumanType()){
@@ -306,11 +307,11 @@ public class ViewManager extends JFrame implements Runnable{
 	 * Tell the dispatcher a tower need to be add
 	 * @param position
 	 * @param humanType
-	 * @param towerType
+	 * @param towerTypes
 	 * @see SceneView#myMousePressed()
 	 */
-	public void towerToAdd(Point position, PlayerType playerType, int towerType) {
-		   dispatcher.addOrderToEngine(new AddTowerOrder(playerType, position, towerType));
+	public void towerToAdd(Point position, PlayerType playerType, TowerTypes towerTypes) {
+		   dispatcher.addOrderToEngine(new AddTowerOrder(playerType, position, towerTypes));
 	}
 	/**
 	 * Tell the dispatcher a player want to attack an other base

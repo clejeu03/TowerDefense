@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 
 /**
  * Project - TowerDefense</br>
@@ -83,8 +84,8 @@ public class GameInfoMenu extends MainViews{
 		}
 		
 		//Add the AddTower Attack Sprite on the panel
-		addSprite(new AddTowerSprite(scene, this, new Point(30,40), true, humanType, 64, 64, 1));
-		addSprite(new AddTowerSprite(scene, this, new Point(30,100), true, humanType, 64, 64, 2));
+		addSprite(new AddTowerSprite(scene, this, new Point(30,40), true, humanType, 64, 64, TowerTypes.ATTACKTOWER));
+		addSprite(new AddTowerSprite(scene, this, new Point(30,100), true, humanType, 64, 64, TowerTypes.SUPPORTTOWER));
 			
         //Repaint the panel
     	revalidate();

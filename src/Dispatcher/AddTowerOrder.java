@@ -10,6 +10,7 @@ package Dispatcher;
 import java.awt.Point;
 
 import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 
 /**
  * Project - TowerDefense</br>
@@ -24,19 +25,19 @@ import GameEngine.Player.PlayerType;
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
 public class AddTowerOrder extends ArmyOrder{
-	private int towerType;
+	private TowerTypes towerType;
 
 	/**
 	 * Constructor of the AddTowerOrder class
 	 * @param idPlayer - player id
 	 * @param position - position of the tower to suppress
 	 */
-	public AddTowerOrder(PlayerType playerType, Point position, int towerType) {
+	public AddTowerOrder(PlayerType playerType, Point position, TowerTypes towerTypes) {
 		super(playerType,position);
-		this.towerType = towerType;
+		this.towerType = towerTypes;
 	}
 
-	public int getTowerType() {
+	public TowerTypes getTowerType() {
 		return towerType;
 	}
 

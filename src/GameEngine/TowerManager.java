@@ -24,6 +24,18 @@ public class TowerManager {
   /**
    * Constructor of the TowerManager class
    */
+  
+  public enum TowerTypes{
+	  NOTOWER, //replace the ancient zero in the view
+	  ATTACKTOWER,
+	  SUPPORTTOWER,
+	  GUNTOWER,
+	  FROSTTOWER,
+	  BOMBTOWER,
+	  LAZERTOWER,
+	  MEDICALTOWER,
+	  SHIELDTOWER
+  }
   public TowerManager() {
   }
   /**
