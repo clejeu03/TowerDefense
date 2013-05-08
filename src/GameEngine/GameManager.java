@@ -7,6 +7,8 @@ import GameEngine.TowerManager.TowerTypes;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -38,7 +40,12 @@ public class GameManager implements Runnable{
 	private MapManager mapManager;
 	private ArmyManager armyManager;
 	private TowerManager towerManager;
-    
+	
+	private Timer timer;
+	private TimerTask timerTask;
+    private long timeStart;
+    private long playingTime;
+	
     /**
      * Constructor of the GameManger class
      */
@@ -50,6 +57,10 @@ public class GameManager implements Runnable{
 		
 		towers = new ArrayList<Tower>();
 		bases = new ArrayList<Base>();
+	
+		
+		timeStart = 0;
+		playingTime = 0;
 	}
 	
 	/**
@@ -121,6 +132,31 @@ public class GameManager implements Runnable{
 				
 		//Tells the dispatcher that the View need to be initialized
 		dispatcher.initiateGameView(towers, bases);
+		
+		//Start the timer
+		timer = new Timer();
+		timeStart = System.currentTimeMillis();
+		timer();
+		
+	}
+	
+	public void timer(){
+		timerTask=new TimerTask(){
+            public void run(){
+            	//get the current Date 
+            	playingTime = System.currentTimeMillis()-timeStart;
+            	System.out.println("Temps écoulé : " + playingTime);
+            	
+            	//TODO Move all the Units 
+               
+            }
+        };
+		timer.schedule(timerTask ,0, 1000);
+	}
+	
+	public void endGame(){
+		//Stop the timer
+		timer.cancel();
 	}
 	
 	/**
