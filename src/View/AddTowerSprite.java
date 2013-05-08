@@ -37,7 +37,7 @@ public class AddTowerSprite  extends Sprite{
 	 * 2 : soutien
 	 */
 	private int towerType;
-	protected MainViews info;
+	private MainViews info;
 
 	/**
 	 * 
