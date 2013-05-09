@@ -29,8 +29,8 @@ public class AddUnitOrder extends ArmyOrder{
 	/**
 	 * 
 	 */
-	public AddUnitOrder(PlayerType srcPlayerType, Point srcPosition, Point dstPosition, int amount) {
-		super(srcPlayerType,srcPosition);
+	public AddUnitOrder(int id, PlayerType srcPlayerType, Point srcPosition, Point dstPosition, int amount) {
+		super(id, srcPlayerType,srcPosition);
 		
 		this.dstPosition = new Point(dstPosition);
 		this.amount = amount;

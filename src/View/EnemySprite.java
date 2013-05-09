@@ -34,7 +34,7 @@ public class EnemySprite extends Sprite{
 	 * 
 	 */
 	public EnemySprite(PlayMenu menu, Point position, boolean clickable, PlayerType playerType, int width, int height) {
-		super(menu, position,clickable,playerType,width,height);
+		super(menu, -1, position,clickable,playerType,width,height);
 		
 		//Loading the tower image (different one according the tower type and player)
 		String fileName ="img/";

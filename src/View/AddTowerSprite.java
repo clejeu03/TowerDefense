@@ -23,7 +23,7 @@ import GameEngine.TowerManager.TowerTypes;
 /**
  * Project - TowerDefense</br>
  * <b>Class - AddTowerSprite</b></br>
- * <p>The AddTowerSprite class represents the AddTower button displayed on the ScenView</p>
+ * <p>The AddTowerSprite class represents the AddTower button displayed on the GameInfoMenu</p>
  * <b>Creation :</b> 30/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MainViews
@@ -44,7 +44,7 @@ public class AddTowerSprite  extends Sprite{
 	 * 
 	 */
 	public AddTowerSprite(SceneView scene, GameInfoMenu info, Point position, boolean clickable, PlayerType playerType, int width, int height, TowerTypes towerType) {
-		super(scene, position,clickable,playerType,width,height);
+		super(scene, -1, position,clickable,playerType,width,height);
 		
 		this.towerType = towerType;
 		this.info = info;

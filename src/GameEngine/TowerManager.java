@@ -68,15 +68,15 @@ public class TowerManager {
   * @param towerType
   * @param position
   */
-  public void createTower(Player.PlayerType playerType, TowerTypes towerType, Point position) {
+  public void createTower(int id, Player.PlayerType playerType, TowerTypes towerType, Point position) {
 	  Tower tower = null;
 	  
 	  switch(towerType){
 	  	case ATTACKTOWER:
-	  		tower = new AttackTower(position, playerType);
+	  		tower = new AttackTower(id, position, playerType);
 	  		break;
 	  	case SUPPORTTOWER :
-	  		tower = new SupportTower(position, playerType);
+	  		tower = new SupportTower(id, position, playerType);
 	  		break;
 	  	default :
 	  		break;

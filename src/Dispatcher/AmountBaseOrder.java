@@ -30,8 +30,8 @@ public class AmountBaseOrder extends ArmyOrder{
 	/**
 	 * 
 	 */
-	public AmountBaseOrder(PlayerType playerType, Point position, int amount) {
-		super(playerType,position);
+	public AmountBaseOrder(int id, PlayerType playerType, Point position, int amount) {
+		super(id, playerType,position);
 		this.amount = amount;
 	}
 	

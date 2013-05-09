@@ -38,14 +38,14 @@ public class BaseSprite extends Sprite{
 	/**
 	 * 
 	 */
-	public BaseSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int amount) {
-		super(scene, position,clickable,playerType,width,height);
+	public BaseSprite(SceneView scene, int id, Point position, boolean clickable, PlayerType playerType, int width, int height, int amount) {
+		super(scene, id, position,clickable,playerType,width,height);
 		
 		this.amount = amount;
 		
 		//The amount will be display under the base
 		Point textPosition = new Point(position.x, position.y + 5 +(height/2));
-		textAmount = new TextInfoSprite(scene, textPosition, false, playerType, 20, 25);
+		textAmount = new TextInfoSprite(scene, this.id +1, textPosition, false, playerType, 20, 25);
 		textAmount.setText(""+amount);
 		
 		//Loading the base image (different one according the tower type and player)
@@ -111,7 +111,7 @@ public class BaseSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).baseClicked(position, playerType);
+			((SceneView) view).baseClicked(id, position, playerType);
 	}
 	private void myMouseReleased(MouseEvent me) {
 		((SceneView) view).attackBase(position, playerType);

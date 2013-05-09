@@ -54,8 +54,8 @@ public class DispatcherManager {
 	 * @param bases 
 	 * @see GameEngine.GameManager#initiateGame()
 	 */	
-	public void initiateGameView(ArrayList<Tower> towerList, ArrayList<Base> bases){
-		view.initiateGameView(towerList, bases);	
+	public void initiateGameView(ArrayList<Base> bases){
+		view.initiateGameView(bases);	
 	}
 
 	/**

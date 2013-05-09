@@ -42,7 +42,7 @@ public class StarterSprite extends Sprite{
 	 * 
 	 */
 	public StarterSprite(PlayMenu menu, Point position, boolean clickable, PlayerType playerType, int width, int height) {
-		super(menu, position,clickable,playerType,width,height);
+		super(menu, -1,  position,clickable,playerType,width,height);
 		
 		over = false;
 		chosen = false;

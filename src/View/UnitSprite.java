@@ -37,15 +37,15 @@ public class UnitSprite  extends Sprite{
 	/**
 	 * 
 	 */
-	public UnitSprite(SceneView scene, Point position, PlayerType playerType, int width, int height, int amount) {
-		super(scene, position,false,playerType,width,height);
+	public UnitSprite(SceneView scene, int id, Point position, PlayerType playerType, int width, int height, int amount) {
+		super(scene, id, position,false,playerType,width,height);
 		
 		this.amount = amount;
 		flipped = false;
 		
 		//The amount will be display above the Unit
 		Point textPosition = new Point(position.x, position.y - 5 -(height/2));
-		textAmount = new TextInfoSprite(scene, textPosition, false, playerType, 25, 25);
+		textAmount = new TextInfoSprite(scene, this.id +1, textPosition, false, playerType, 25, 25);
 		textAmount.setText(""+amount);
 	
 		
@@ -65,7 +65,7 @@ public class UnitSprite  extends Sprite{
 			fileName +="Fire/";
 		}
 		
-		fileName += "starter.png";
+		fileName += "unit.png";
 		try {	
 		      image = ImageIO.read(new File(fileName));
 		  

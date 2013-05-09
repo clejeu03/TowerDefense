@@ -174,42 +174,18 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @param bases 
 	 * @see Dispatcher.DispatcherManager#initiateGameView(ArrayList)
 	 */	
-    public void initiateGameView(ArrayList<Tower> towers, ArrayList<Base> bases){
+    public void initiateGameView(ArrayList<Base> bases){
 
 		//Clear the Sprites list of the scene
 		sceneView.initiate();
 		gameInfoMenu.initiate(sceneView);
-		
-		//TODO : suppress => temporary !!
-		Iterator<Tower> it = towers.iterator();
-		while (it.hasNext()) {
-			//Retrieve the tower
-			Tower tower = it.next();
-			
-			//Create the corresponding TowerSprite
-			boolean clickable = false;
-			TowerTypes towerType = TowerTypes.NOTOWER;
-			
-			//If the tower's owner is the human player, the Sprite needs to be clickable
-			if(tower.getPlayerType() == sceneView.getHumanType()){
-				clickable = true;
-			}
-			//TODO Choose the the type of the tower
-			if(tower instanceof SupportTower){
-				
-			}
-			TowerSprite ts = new TowerSprite(sceneView, tower.getPosition(),clickable, tower.getPlayerType(), 64, 64, towerType, tower.getRange());
-				
-			//Add the towerSprite in the sceneView list of Sprites
-			sceneView.addSprite(ts);
-		}
 		
 		Iterator<Base> iter = bases.iterator();
 		while (iter.hasNext()) {
 			//Retrieve the tower
 			Base base = iter.next();
 			//Create the corresponding TowerSprit
-			BaseSprite bs = new BaseSprite(sceneView, base.getPosition(),true, base.getPlayerType(), 36, 36,  base.getAmount());
+			BaseSprite bs = new BaseSprite(sceneView, base.getId(), base.getPosition(),true, base.getPlayerType(), 36, 36,  base.getAmount());
 
 			//Add the baseSprite in the sceneView list of Sprites
 			sceneView.addSprite(bs);
@@ -299,8 +275,8 @@ public class ViewManager extends JFrame implements Runnable{
     * @param playerType
     * @see SceneView#towerToSupress(Point, int)
     */
-   public void towerToSupress(Point position, PlayerType playerType){
-	   dispatcher.addOrderToEngine(new SuppressTowerOrder(playerType, position));
+   public void towerToSupress(int id, Point position, PlayerType playerType){
+	   dispatcher.addOrderToEngine(new SuppressTowerOrder(id, playerType, position));
    }
    
 	/**
@@ -311,7 +287,7 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @see SceneView#myMousePressed()
 	 */
 	public void towerToAdd(Point position, PlayerType playerType, TowerTypes towerTypes) {
-		   dispatcher.addOrderToEngine(new AddTowerOrder(playerType, position, towerTypes));
+		   dispatcher.addOrderToEngine(new AddTowerOrder(-1, playerType, position, towerTypes));
 	}
 	/**
 	 * Tell the dispatcher a player want to attack an other base
@@ -320,8 +296,8 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @param towerType
 	 * @see SceneView#myMousePressed()
 	 */
-	public void baseToAttack(Point srcPosition, PlayerType srcPlayerType,Point dstPosition, int amount) {
-		   dispatcher.addOrderToEngine(new AddUnitOrder(srcPlayerType, srcPosition, dstPosition, amount));
+	public void baseToAttack(int idBaseSrc, Point srcPosition, PlayerType srcPlayerType,Point dstPosition, int amount) {
+		   dispatcher.addOrderToEngine(new AddUnitOrder(idBaseSrc, srcPlayerType, srcPosition, dstPosition, amount));
 	}
     
 	
@@ -351,15 +327,14 @@ public class ViewManager extends JFrame implements Runnable{
 				}
 				//If the order is an AddUnitOrder one
 				if(o instanceof AddUnitOrder) {
-					//TODO 
-					sceneView.addSprite(new UnitSprite(sceneView, ((AddUnitOrder) o).getPosition(),o.getPlayerType(),64,64,((AddUnitOrder) o).getAmount()));
+					UnitSprite unit = new UnitSprite(sceneView,((AddUnitOrder) o).getId(), ((AddUnitOrder) o).getPosition(),o.getPlayerType(),64,64,((AddUnitOrder) o).getAmount());
+					sceneView.addSprite(unit);
+					//TODO : add label sceneView.addSprite(unit.getTextAmount());
 					System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" "+o.getPlayerType()+" units at "+((AddUnitOrder) o).getPosition());
 				}
 				//If the order is an MoveUnitOrder one
 				if(o instanceof MoveUnitOrder) {
-					//TODO 
 					sceneView.moveUnit(o.getPlayerType(), ((ArmyOrder) o).getPosition(), ((MoveUnitOrder) o).getNewPosition());
-					//System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" "+o.getPlayerType()+" units at "+((AddUnitOrder) o).getPosition());
 				}
 				//If the order is an AmountBaseOrder one
 				if(o instanceof AmountBaseOrder){

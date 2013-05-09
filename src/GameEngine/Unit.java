@@ -22,6 +22,8 @@ import java.awt.Point;
  */
 
 public class Unit {
+	
+  private int id;
   /**
    * Holds the number of soldier the Unit contains (soldier is a abstract notion).
    */
@@ -38,8 +40,9 @@ public class Unit {
   /**
    * Constructor of the Unit class
    */
-  public Unit(Base origin, int amount) {
+  public Unit(int id, Base origin, int amount) {
 	  super();
+	  this.id = id;
 	  setAmount(amount);
 	  setPosition(origin.getPosition());
 	  //Temporary !
@@ -48,8 +51,9 @@ public class Unit {
   /**
    * Constructor of the Unit class
    */
-  public Unit(Point position, int amount) {
+  public Unit(int id, Point position, int amount) {
 	  super();
+	  this.id = id;
 	  setAmount(amount);
 	  this.position = position;
 	  //Temporary !
@@ -98,5 +102,9 @@ public class Unit {
    */
   public Point getPosition(){
 	  return this.position;
+  }
+  
+  public int getId() {
+	return id;
   }
 }

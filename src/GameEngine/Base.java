@@ -24,6 +24,8 @@ import GameEngine.Player.PlayerType;
  */
 
 public class Base {
+
+  private int id;
   /**
    * Represents the number of soldier currently in the Base. A soldier is only a notion
    * and has no existence on itself. The amount increments with time.
@@ -64,8 +66,9 @@ public class Base {
    * his type (small, medium or large). If the base is active, it will be a medium one.
    * @see ArmyManager.createBase(Point pos, Boolean neutral, BaseType type, Map proxMap);
    */
-  public Base(Point position, PlayerType playerType, Boolean neutral, BaseType type, Map proximityTab) {
+  public Base(int id, Point position, PlayerType playerType, Boolean neutral, BaseType type, Map proximityTab) {
 	  super();
+	  this.id = id;
 	  this.playerType = playerType;
 	  if(position != null){
 	 	setPosition(position);
@@ -87,8 +90,9 @@ public class Base {
   }
   /**Constructor of the active base only called from the ArmyManager
    * @see ArmyManager.createBase(Point pos, Boolean neutral, Map proxMap)*/
-  public Base(Point position, PlayerType playerType, Boolean neutral, Map proximityTab) {
+  public Base(int id,Point position, PlayerType playerType, Boolean neutral, Map proximityTab) {
 	  super();
+	  this.id = id;
 	  this.playerType = playerType;
 	  setPosition(position);
 	  setProximityTab(proximityTab);
@@ -145,7 +149,12 @@ public class Base {
 	  setSizeMax(200);
   }
   
-  /**
+  
+  
+  public int getId() {
+	return id;
+  }
+/**
    * Return the current amount of soldier produced by Base.
    * @return amount - number of soldier into the Base
    */

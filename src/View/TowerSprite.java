@@ -49,8 +49,8 @@ public class TowerSprite extends Sprite{
 	 * @param towerType2
 	 * @param range
 	 */
-	public TowerSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, TowerTypes towerType2, int range) {
-		super(scene, position,clickable,playerType,width,height);
+	public TowerSprite(SceneView scene, int id, Point position, boolean clickable, PlayerType playerType, int width, int height, TowerTypes towerType2, int range) {
+		super(scene, id, position,clickable,playerType,width,height);
 		
 		towerType = towerType2;
 		this.range = range;

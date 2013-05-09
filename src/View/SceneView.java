@@ -51,6 +51,7 @@ public class SceneView extends MainViews implements Runnable{
     private boolean attackBase;
     private int attackAmountPercent;
     private JLabel jAttackAmountPercent;
+    private int idBaseSrc;
     private Point basePosition;
     private Point baseToAttackPosition;
     private Point mousePosition;
@@ -297,7 +298,8 @@ public class SceneView extends MainViews implements Runnable{
 		positionSprite.translate((50/2) + (16/2),(50/2) + (16/2));
 		
 		//Add the TowerInfoSprite
-		sprites.add(new TowerInfoSprite(this, positionSprite, true, playerType, 16,16, 0, position));	
+		//TODO !Metre les sprites d'info des tours dans les tours elle-meme...
+		sprites.add(new TowerInfoSprite(this,-1, positionSprite, true, playerType, 16,16, 0, position));	
 		
 		//Retrieve the clicked tower position
 		Iterator<Sprite> it = sprites.iterator();
@@ -352,7 +354,8 @@ public class SceneView extends MainViews implements Runnable{
 			addTowerClicked = true;
 			addTowerPosition = new Point(position.x+1, position.y+1);
 			
-			TowerSprite ts = new TowerSprite(this, addTowerPosition, false, humanType, 64, 64, towerType, 90);
+			//TODO : change the id of the tower if it's add by the engine...
+			TowerSprite ts = new TowerSprite(this, -1, addTowerPosition, false, humanType, 64, 64, towerType, 90);
 			
 			//Add the towerSprite in the sceneView list of Sprites
 			addSprite(ts);	
@@ -390,6 +393,7 @@ public class SceneView extends MainViews implements Runnable{
 			
 		}
 	}
+	
 	
 	/**
 	 * Add the tower the player wanted to add
@@ -441,7 +445,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see BaseSprite#myMousePressed(MouseEvent)
 	 */
-	public void baseClicked(Point position, PlayerType playerType){
+	public void baseClicked(int idBaseSrc, Point position, PlayerType playerType){
 		if (towerClicked){
 			hideTowerInfo();
 		}
@@ -452,6 +456,7 @@ public class SceneView extends MainViews implements Runnable{
 		
 		//If the player has clicked on one of his base
 		if((!baseClicked)&&(playerType == humanType)){
+			this.idBaseSrc = idBaseSrc;
 			basePosition = new Point(position);
 			baseClicked = true;
 			mousePosition = new Point(position);
@@ -502,7 +507,7 @@ public class SceneView extends MainViews implements Runnable{
 			//Stop the thread
 			attackBase = false;
 			//Tell the engine that the player want to attack an other base
-			view.baseToAttack(basePosition, humanType,baseToAttackPosition, attackAmountPercent);
+			view.baseToAttack(idBaseSrc, basePosition, humanType,baseToAttackPosition, attackAmountPercent);
 			
 			//TODO TEMPORARY create a unit 
 			/*UnitSprite test = new UnitSprite(this, new Point (100,100), false, humanType, 50,50, 10);
@@ -550,8 +555,8 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see TowerInfoSprite#myMousePressed(MouseEvent)
 	 */
-	 public void towerToSupress(Point position, PlayerType playerType){
-		   view.towerToSupress(position, playerType);
+	 public void towerToSupress(int id, Point position, PlayerType playerType){
+		   view.towerToSupress(id, position, playerType);
 	   }
 	 
 	/**
@@ -602,12 +607,16 @@ public class SceneView extends MainViews implements Runnable{
 	 */
 	public void moveUnit(PlayerType playerType, Point position, Point newPosition){
 		Iterator<Sprite> it = sprites.iterator();
+		
+		Point unitLabelPosition = new Point(-1,-1);
 
 		while (it.hasNext()) {
 			Sprite element = it.next();
 			//Set the baseSprite amount
 			if(element.getPosition().equals(position)){
 				((UnitSprite)element).setPosition(newPosition);
+				unitLabelPosition = ((UnitSprite)element).getTextAmount(). getPosition();
+				
 				remove(element);
 				element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
 				add(element);
@@ -615,6 +624,25 @@ public class SceneView extends MainViews implements Runnable{
 				repaint();
 			}
 		}
+		/*
+		TODO : move the label !!!!!!!!
+		if(!unitLabelPosition.equals(new Point(-1,-1))){
+			Iterator<Sprite> iter = sprites.iterator();
+			while (iter.hasNext()) {
+				Sprite elt = iter.next();
+				//Set the baseSprite amount
+				if(elt.getPosition().equals(position)){
+					((TextInfoSprite)elt).setPosition(newPosition);
+					//unitLabelPosition = ((UnitSprite)element).getTextAmount(). getPosition();
+					
+					remove(elt);
+					elt.setBounds(elt.getPosition().x -(elt.getWidth()/2), elt.getPosition().y -(elt.getHeight()/2), elt.getWidth(),elt.getHeight());
+					add(elt);
+					revalidate();
+					repaint();
+				}
+			}
+		}*/
 	}
 	
     /**

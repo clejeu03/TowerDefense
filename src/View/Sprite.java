@@ -29,6 +29,7 @@ public abstract class Sprite extends JLabel{
 	protected boolean clickable;
 	protected PlayerType playerType;
 	protected MainViews view;
+	protected int id;
 	
 	/**
 	 * Constructor of the Sprite class
@@ -38,10 +39,11 @@ public abstract class Sprite extends JLabel{
 	 * @param width - Sprite width
 	 * @param height - Sprite height
 	 */
-	public Sprite(MainViews view, Point position, boolean clickable, PlayerType playerType, int width, int height){ 
+	public Sprite(MainViews view, int id, Point position, boolean clickable, PlayerType playerType, int width, int height){ 
 		super();
 		
 		this.view = view;
+		this.id = id;
 		this.position = new Point(position);
 		this.clickable = clickable;
 		this.playerType = playerType;
@@ -81,7 +83,11 @@ public abstract class Sprite extends JLabel{
 		return position;
 	}
 	
-    /**
+    public int getId() {
+		return id;
+	}
+
+	/**
      * Setter - set the position of the center of the Sprite
      * @param newPosition - Point
      */	

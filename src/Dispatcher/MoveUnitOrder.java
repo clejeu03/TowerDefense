@@ -32,8 +32,8 @@ public class MoveUnitOrder extends ArmyOrder{
 	 * @param position
 	 * @param newPosition
 	 */
-	public MoveUnitOrder(PlayerType playerType, Point position, Point newPosition) {
-		super(playerType,position);
+	public MoveUnitOrder(int id, PlayerType playerType, Point position, Point newPosition) {
+		super(id, playerType,position);
 		this.newPosition = newPosition; 
 	}
 	

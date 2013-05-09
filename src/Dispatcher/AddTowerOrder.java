@@ -32,8 +32,8 @@ public class AddTowerOrder extends ArmyOrder{
 	 * @param idPlayer - player id
 	 * @param position - position of the tower to suppress
 	 */
-	public AddTowerOrder(PlayerType playerType, Point position, TowerTypes towerTypes) {
-		super(playerType,position);
+	public AddTowerOrder(int id, PlayerType playerType, Point position, TowerTypes towerTypes) {
+		super(id, playerType,position);
 		this.towerType = towerTypes;
 	}
 

@@ -69,7 +69,7 @@ public class ArmyManager {
    * @param origin - Base from where the unit is sent
    * @see Base
    */
-  public void launchUnit(Base origin) {
+  /*public void launchUnit(Base origin) {
 	  //Calculates the agents number
 	  int baseAmount = origin.getAmount();
 	  int unitAmount = baseAmount%2;
@@ -80,15 +80,15 @@ public class ArmyManager {
 	  //Adding the unit to the hashMap by finding the owner of the base
 	  units.add(unit);
 	  
-  }
+  }*/
   /**
    * Create a new unit from the base
    * @param origin - base from where the unit is launch
    * @param amount
    * @return unit
    */
-  public Unit createUnit(Base origin, int amount){
-	  Unit unit = new Unit(origin, amount);
+  public Unit createUnit(int id, Base origin, int amount){
+	  Unit unit = new Unit(id, origin, amount);
 	  return unit;
   }
   
@@ -98,8 +98,8 @@ public class ArmyManager {
    * @param amount
    * @return unit
    */
-  public Unit createUnit(Point position, int amount){
-	  Unit unit = new Unit(position, amount);
+  public Unit createUnit(int id, Point position, int amount){
+	  Unit unit = new Unit(id, position, amount);
 	  units.add(unit);
 	  return unit;
   }
@@ -113,8 +113,8 @@ public class ArmyManager {
    * @param proxMap - proximityMap
    * @return base
    */
-  public Base createBase(Point pos, PlayerType playerType, Boolean neutral, BaseType type, Map proxMap) {
-	Base base = new Base(pos, playerType, neutral, type, proxMap);
+  public Base createBase(int id, Point pos, PlayerType playerType, Boolean neutral, BaseType type, Map proxMap) {
+	Base base = new Base(id, pos, playerType, neutral, type, proxMap);
 	bases.add(base);
 	return base;
   }
@@ -126,8 +126,8 @@ public class ArmyManager {
    * @param proxMap the proximityMap
    * @return base
    */
-  public Base createBase(Point pos, PlayerType playerType, Boolean neutral, Map proxMap) {
-	Base base = new Base(pos, playerType, neutral, proxMap);
+  public Base createBase(int id, Point pos, PlayerType playerType, Boolean neutral, Map proxMap) {
+	Base base = new Base(id, pos, playerType, neutral, proxMap);
 	bases.add(base);
 	return base;
   }

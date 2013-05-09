@@ -23,6 +23,7 @@ import GameEngine.Player.PlayerType;
  */
 public abstract class Tower {
 	
+	private int id;
 	private Point position;
 	private PlayerType playerType;
 	private int range;
@@ -49,7 +50,8 @@ public abstract class Tower {
 	 * @param cadency - in milliseconds
 	 * @param speed - speed of the missiles in m/s
 	 */
-	public Tower(Point position, PlayerType playerType, int range, int damage, double cadency, double speed) {
+	public Tower(int id, Point position, PlayerType playerType, int range, int damage, double cadency, double speed) {
+		this.id = id;
 		this.position = position;
 		this.playerType= playerType;
 		this.range = range;
@@ -85,7 +87,11 @@ public abstract class Tower {
 		return range;
 	}
 	
-   /**
+	public int getId() {
+		return id;
+	}
+
+/**
     * Getter - Retrieve the position attribute
     * @return position - position of the center of the tower
     */	
