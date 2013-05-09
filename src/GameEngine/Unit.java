@@ -22,6 +22,8 @@ import java.awt.Point;
  */
 
 public class Unit {
+	
+  private int id;
   /**
    * Holds the number of soldier the Unit contains (soldier/agent is a abstract notion).
    */
@@ -37,16 +39,27 @@ public class Unit {
    * @param origin
    * @param amount
    */
-  public Unit(Base origin, Base destination, int amount) {
+  public Unit(int id, Base origin, Base destination, int amount) {
 	  super();
-	  
+	  this.id = id;
 	  this.destination = destination;
 	  this.origin = origin;
 	  this.amount = amount;
 	  this.position = origin.getPosition();
-	  
 	  //Temporary !
 	  this.speed = 0.5;
+  }
+  
+  /**
+   * Constructor of the Unit class
+   */
+  public Unit(int id, Point position, int amount) {
+	  super();
+	  this.id = id;
+	  this.amount = amount;
+	  this.position = position;
+	  //Temporary !
+	  setSpeed(0.5);
   }
   
   /**
@@ -112,4 +125,10 @@ public Base getDestination() {
 public void setDestination(Base destination) {
 	this.destination = destination;
 }
+
+  
+  public int getId() {
+	return id;
+  }
+
 }

@@ -29,8 +29,8 @@ public class SuppressTowerOrder extends ArmyOrder{
 	 * @param idPlayer - player id
 	 * @param position - position of the tower to suppress
 	 */
-	public SuppressTowerOrder(PlayerType playerType, Point position) {
-		super(playerType,position);
+	public SuppressTowerOrder(int id, PlayerType playerType, Point position) {
+		super(id, playerType,position);
 	}
 
 }

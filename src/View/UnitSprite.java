@@ -29,26 +29,24 @@ import GameEngine.Player.PlayerType;
  * @see GameManager
  */
 @SuppressWarnings("serial")
-public class UnitSprite  extends Sprite  implements Runnable{
+public class UnitSprite  extends Sprite{
 	private boolean flipped;
 	private int amount;
 	private TextInfoSprite textAmount;
-	
-	private Thread thread;
 
 	/**
 	 * 
 	 */
-	public UnitSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int amount) {
-		super(scene, position,clickable,playerType,width,height);
+	public UnitSprite(SceneView scene, int id, Point position, PlayerType playerType, int amount) {
+		super(scene, id, position,false,playerType,32,32);
 		
 		this.amount = amount;
 		flipped = false;
 		
 		//The amount will be display above the Unit
-		Point textPosition = new Point(position.x, position.y - 5 -(height/2));
-		textAmount = new TextInfoSprite(scene, textPosition, false, playerType, 25, 25);
-		textAmount.setText(""+amount);
+		Point textPosition = new Point(position.x, position.y -20);
+		textAmount = new TextInfoSprite(scene, this.id, textPosition, false, playerType, 25, 25);
+		textAmount.setText(""+this.amount);
 	
 		
 		//Loading the unit image (different one according the player)
@@ -67,7 +65,7 @@ public class UnitSprite  extends Sprite  implements Runnable{
 			fileName +="Fire/";
 		}
 		
-		fileName += "starter.png";
+		fileName += "unit.png";
 		try {	
 		      image = ImageIO.read(new File(fileName));
 		  
@@ -81,6 +79,7 @@ public class UnitSprite  extends Sprite  implements Runnable{
 		this.amount = amount;	
 		textAmount.setText(""+amount);
 	}
+	
 	public TextInfoSprite getTextAmount(){
 		return textAmount;
 	}
@@ -101,31 +100,9 @@ public class UnitSprite  extends Sprite  implements Runnable{
 	    //Flip the image horizontally
 		else if(true){
 		g.drawImage (image, 
-				image.getWidth(this), 0, 0, image.getHeight(this),
-	            0, 0, image.getWidth(this), image.getHeight(this),
+				32, 0, 0, 32,
+	            0, 0, 32, 32,
 	            this);
 	    }
-	  }
-
-
-	@Override
-	public void run() {
-		while(true){
-			 try{
-				Thread.sleep(100);
-				setPosition(new Point(position.x+10, position.y));
-				//((SceneView) view).refreshScene();
-		 	}catch(Exception e){e.printStackTrace();}
-		}	
-	}
-
-
-	//TODO TEMPORARY start a thread
-	public void start() {
-		thread = new Thread(this);
-        thread.start();
-		
-	}  
-
-
+    }
 }

@@ -15,7 +15,7 @@ import GameEngine.Player.PlayerType;
 /**
  * Project - TowerDefense</br>
  * <b>Class - ImageInfoSprite</b></br>
- * <p>The ImageInfoSprite class represents the simple, non-cliquable image displayed on the views</p>
+ * <p>The ImageInfoSprite class represents the simple, non-cliquable image displayed around the view</p>
  * <b>Creation :</b> 08/05/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MainViews
@@ -23,6 +23,7 @@ import GameEngine.Player.PlayerType;
  * @see SceneView
  * @see GameManager
  */
+@SuppressWarnings("serial")
 public class ImageInfoSprite extends Sprite{
 
 	
@@ -30,7 +31,7 @@ public class ImageInfoSprite extends Sprite{
 	 * 
 	 */
 	public ImageInfoSprite(MainViews view, Point position, PlayerType playerType, int width, int height) {
-		super(view, position,false,playerType,width,height);
+		super(view, -1, position,false,playerType,width,height);
 	}
 
 }

@@ -48,8 +48,8 @@ public class TowerInfoSprite extends Sprite{
 	 * @param type
 	 * @param positionElt
 	 */
-	public TowerInfoSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int type, Point positionElt) {
-		super(scene, position,clickable,playerType,width,height);
+	public TowerInfoSprite(SceneView scene, int id, Point position, boolean clickable, PlayerType playerType, int width, int height, int type, Point positionElt) {
+		super(scene, id, position,clickable,playerType,width,height);
 		this.type = type;
 		this.positionElt = positionElt;
 		
@@ -83,7 +83,7 @@ public class TowerInfoSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).towerToSupress(positionElt, playerType);
+			((SceneView) view).towerToSupress(id, positionElt, playerType);
 	}
 	
 	/**

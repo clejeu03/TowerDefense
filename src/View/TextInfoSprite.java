@@ -22,8 +22,8 @@ public class TextInfoSprite extends Sprite{
 	/**
 	 * 
 	 */
-	public TextInfoSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height) {
-		super(scene, position,clickable,playerType,width,height);
+	public TextInfoSprite(SceneView scene, int id, Point position, boolean clickable, PlayerType playerType, int width, int height) {
+		super(scene, id, position,clickable,playerType,width,height);
 		setForeground(Color.BLACK);
 		
 	}

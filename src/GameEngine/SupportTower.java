@@ -26,8 +26,8 @@ public class SupportTower extends Tower {
 	 * @param position
 	 * @param playerType
 	 */
-	public SupportTower(Point position, PlayerType playerType) {
-		super(position, playerType, 90, 0, 0, 0);
+	public SupportTower(int id, Point position, PlayerType playerType) {
+		super(id, position, playerType, 90, 0, 0, 0);
 	}
 
 	/**

@@ -32,8 +32,8 @@ public class OwnerBaseOrder extends ArmyOrder{
 	 * @param position
 	 * @param newPlayerType
 	 */
-	public OwnerBaseOrder(PlayerType playerType, Point position, PlayerType newPlayerType) {
-		super(playerType,position);
+	public OwnerBaseOrder(int id, PlayerType playerType, Point position, PlayerType newPlayerType) {
+		super(id, playerType,position);
 		this.newPlayerType = newPlayerType;
 	}
 

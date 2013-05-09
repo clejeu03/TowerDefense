@@ -3,8 +3,6 @@ package GameEngine;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import Dispatcher.ArmyOrder;
-
 /**
  * Project - TowerDefense</br>
  * <b>Class - TowerManager</b></br>
@@ -68,15 +66,15 @@ public class TowerManager {
   * @param towerType
   * @param position
   */
-  public void createTower(Player.PlayerType playerType, TowerTypes towerType, Point position) {
+  public void createTower(int id, Player.PlayerType playerType, TowerTypes towerType, Point position) {
 	  Tower tower = null;
 	  
 	  switch(towerType){
 	  	case ATTACKTOWER:
-	  		tower = new AttackTower(position, playerType);
+	  		tower = new AttackTower(id, position, playerType);
 	  		break;
 	  	case SUPPORTTOWER :
-	  		tower = new SupportTower(position, playerType);
+	  		tower = new SupportTower(id, position, playerType);
 	  		break;
 	  	default :
 	  		break;
@@ -90,11 +88,11 @@ public class TowerManager {
    * @param position
    * @see GameManager#execute()
    */
-  public void suppressTower(Point position){
+  public void suppressTower(int id, Point position){
 	  
 	  //Search the tower by it's position
 	  for(Tower tower: towers){
-		  if(tower.getPosition().equals(position)){
+		  if((tower.getPosition().equals(position))&&(tower.getId()==id)){
 			  towers.remove(tower);
 			  break;
 		  }

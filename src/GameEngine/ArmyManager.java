@@ -57,13 +57,13 @@ public class ArmyManager {
    */
   public ArmyManager(ArrayList<Base> bases) {
 	  super();
-	  
+
 	  //Initializations
 	  units = new ArrayList<Unit>();
 	  this.bases = bases;
-	  
+
 	  System.out.println("Initialization with bases : "+bases.toString());
-	  
+
 	  }
   
   /**
@@ -71,7 +71,7 @@ public class ArmyManager {
    */
   public ArmyManager() {
 	  super();
-	  
+
 	  //Initializations
 	  units = new ArrayList<Unit>();
 	  bases = new ArrayList<Base>();
@@ -84,10 +84,10 @@ public class ArmyManager {
    * @param destination
    * @see WarManager
    */
-  public Unit launchUnit(Point src, Point dst, int attackPercent) {
+  public Unit launchUnit(int id, Point src, Point dst, int attackPercent) {
 	  Base origin = null;
 	  Base destination = null;
-	  
+
 	  //Retrieve source and destinations bases
 	  for(Base base: bases){
 		  if(base.getPosition().equals(src)){
@@ -99,22 +99,22 @@ public class ArmyManager {
 			  System.out.println("find the destination !");
 		  }
 	  }
-	  
+
 	  //Calculates the agents number
 	  int baseAmount = origin.getAmount();
 	  int attackAmount = (attackPercent * baseAmount)/100;
-	  
+
 	  //Creates the new Unit
-	  Unit unit = new Unit(origin, destination, attackAmount);
-	  
+	  Unit unit = new Unit(id, origin, destination, attackAmount);
+
 	  //Changing the base amount
 	  origin.setAmount(baseAmount-attackAmount);
-	  
+
 	  //Adding the unit to the hashMap by finding the owner of the base
 	  units.add(unit);
-	  
+
 	  return unit;
-	  
+
   }
   
   /**
@@ -127,8 +127,8 @@ public class ArmyManager {
    * @see ArmyManager#BaseType
    	*@return base
    	*/
-  public Base createBase(Point pos, PlayerType playerType, Boolean neutral, BaseType type, Map proxMap) {
-	Base base = new Base(pos, playerType, neutral, type, proxMap);
+  public Base createBase(int id, Point pos, PlayerType playerType, Boolean neutral, BaseType type, Map proxMap) {
+	Base base = new Base(id, pos, playerType, neutral, type, proxMap);
 	bases.add(base);
 	return base;
   }
@@ -141,8 +141,8 @@ public class ArmyManager {
    * @param proxMap
    * @return base
    */
-  public Base createBase(Point pos, PlayerType playerType, Boolean neutral, Map proxMap) {
-	Base base = new Base(pos, playerType, neutral, proxMap);
+  public Base createBase(int id, Point pos, PlayerType playerType, Boolean neutral, Map proxMap) {
+	Base base = new Base(id, pos, playerType, neutral, proxMap);
 	bases.add(base);
 	return base;
   }

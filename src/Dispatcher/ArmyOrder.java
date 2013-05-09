@@ -20,16 +20,19 @@ import GameEngine.Player.PlayerType;
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
 public abstract class ArmyOrder extends Order{
-
+	
+	protected int id;
 	protected Point position;
+
 	
 	/**
 	 * Constructor of the TowerOrder class
 	 * @param playerId - player id
 	 * @param position - position of the Tower
 	 */
-	public ArmyOrder(PlayerType playerType, Point position) {
+	public ArmyOrder(int id, PlayerType playerType, Point position) {
 		super(playerType);
+		this.id = id;
 		this.position = new Point(position);
 	}
 	
@@ -41,5 +44,10 @@ public abstract class ArmyOrder extends Order{
 	public Point getPosition(){
 		return position;
 	}
+
+	public int getId() {
+		return id;
+	}
+	
 }
 

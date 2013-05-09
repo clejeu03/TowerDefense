@@ -25,8 +25,8 @@ public class AttackTower extends Tower {
 	 * @param position
 	 * @param playerType
 	 */
-	public AttackTower(Point position, PlayerType playerType) {
-		super(position, playerType, 95, 3, 2000, 0.001);
+	public AttackTower(int id, Point position, PlayerType playerType) {
+		super(id, position, playerType, 95, 3, 2000, 0.001);
 	}
 
 	/**

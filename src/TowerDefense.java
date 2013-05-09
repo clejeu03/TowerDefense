@@ -6,6 +6,8 @@
  * File created on 24 avr. 2013
  */
 
+import javax.swing.SwingUtilities;
+
 import GameEngine.GameManager;
 import View.ViewManager;
 import Dispatcher.DispatcherManager;
@@ -25,12 +27,15 @@ public class TowerDefense {
 	 * @param args - command arguments given to the program when it's executed
 	 */
 	public static void main(String[] args) {
-		GameManager engine= new GameManager();
-		ViewManager view = new ViewManager();
-		
-		DispatcherManager dispatcher = new DispatcherManager(engine,view); 
-		view.setDispatcher(dispatcher);
-		engine.setDispatcher(dispatcher);
+		 SwingUtilities.invokeLater(new Runnable() {
+		 public void run() {
+			GameManager engine= new GameManager();
+			ViewManager view = new ViewManager();
+			
+			DispatcherManager dispatcher = new DispatcherManager(engine,view); 
+			view.setDispatcher(dispatcher);
+			engine.setDispatcher(dispatcher);
+		 }});
 	}
 
 }

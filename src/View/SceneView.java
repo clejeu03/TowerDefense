@@ -13,8 +13,8 @@ import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
-import Dispatcher.ArmyOrder;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 
@@ -51,6 +51,7 @@ public class SceneView extends MainViews implements Runnable{
     private boolean attackBase;
     private int attackAmountPercent;
     private JLabel jAttackAmountPercent;
+    private int idBaseSrc;
     private Point basePosition;
     private Point baseToAttackPosition;
     private Point mousePosition;
@@ -126,20 +127,23 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param sprite
 	 * @see ViewManager#initiateGameView(ArrayList)
 	 */
-	public void addSprite(Sprite sprite){
-		sprites.add(sprite);
-		
-		//TO DO : retrieve the last element added...
-		Iterator<Sprite> it = sprites.iterator();
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
-			add(element);
-		}
-		
-        //Repaint the panel
-    	revalidate();
-    	repaint();	
+	public void addSprite(final Sprite sprite){
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			sprites.add(sprite);
+			
+			//TO DO : retrieve the last element added...
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+				add(element);
+			}
+			
+	        //Repaint the panel
+	    	revalidate();
+	    	repaint();	
+		}});
 	}
 	
 	/**
@@ -162,6 +166,8 @@ public class SceneView extends MainViews implements Runnable{
 			color = new Color(255,0,0,100);
 		}
 		
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
 		//Resetting the attackAmount
 		attackAmountPercent = 50;
 
@@ -200,6 +206,7 @@ public class SceneView extends MainViews implements Runnable{
         //Repaint the panel
     	revalidate();
     	repaint();	
+		}}); 
 	}
 	
 	/**
@@ -241,36 +248,39 @@ public class SceneView extends MainViews implements Runnable{
 	 * Event "the mouse has moved in the zone" handler
 	 * @param e - MouseEvent
 	 */
-	private void myMouseMoved(MouseEvent e) {
-		if (baseClicked){
-			//Retrieve the current mouse position
-			mousePosition = new Point(e.getPoint());
-	    	//Repaint the Panel
-	    	revalidate();
-	    	repaint();	
-		}
-		if(addTowerClicked){
-			//Retrieve the the add tower Sprite
-			Iterator<Sprite> it = sprites.iterator();
-			while (it.hasNext()) {
-				Sprite element = it.next();
-				if(element.getPosition().equals(addTowerPosition)){
-					//Reset the tower Sprite Position according to the mouse one
-					if(e.getPoint().y<(height-10)){
-						addTowerPosition = new Point(e.getPoint());
-						element.setPosition(addTowerPosition);
-						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
-						add(element);
+	private void myMouseMoved(final MouseEvent e) {	
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			if (baseClicked){
+				//Retrieve the current mouse position
+				mousePosition = new Point(e.getPoint());
+		    	//Repaint the Panel
+		    	revalidate();
+		    	repaint();	
+			}
+			if(addTowerClicked){
+				//Retrieve the the add tower Sprite
+				Iterator<Sprite> it = sprites.iterator();
+				while (it.hasNext()) {
+					Sprite element = it.next();
+					if(element.getPosition().equals(addTowerPosition)){
+						//Reset the tower Sprite Position according to the mouse one
+						if(e.getPoint().y<(height-10)){
+							addTowerPosition = new Point(e.getPoint());
+							element.setPosition(addTowerPosition);
+							element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+							add(element);
+						}
+						else {
+							remove(element);
+						}
 					}
-					else {
-						remove(element);
-					}
-				}
-			}		
-			//Repaint the Panel
-	    	revalidate();
-	    	repaint();
-		}
+				}		
+				//Repaint the Panel
+		    	revalidate();
+		    	repaint();
+			}
+		}});
 	}
 	
 	/**
@@ -279,7 +289,8 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType - PlayerType
 	 * @see TowerSprite#myMousePressed(MouseEvent)
 	 */
-	public void towerClicked(Point position, PlayerType playerType){
+	public void towerClicked(int id, Point position, PlayerType playerType){
+
 		if (baseClicked) baseClicked = false;
 		
 		if (addTowerClicked) {
@@ -293,27 +304,32 @@ public class SceneView extends MainViews implements Runnable{
 		//Display the  TowerInfoSprites of the clicked tower on the map
 		clickedTowerPosition = new Point(position);
 		
-		Point positionSprite = new Point(position);
-		positionSprite.translate((50/2) + (16/2),(50/2) + (16/2));
+		final Point positionSprite = new Point(position);
+		//positionSprite.translate((50/2) + (16/2),(50/2) + (16/2));
+		positionSprite.translate(64/2,64/2);
 		
 		//Add the TowerInfoSprite
-		sprites.add(new TowerInfoSprite(this, positionSprite, true, playerType, 16,16, 0, position));	
+		//TODO !Metre les sprites d'info des tours dans les tours elle-meme...
+		sprites.add(new TowerInfoSprite(this,id, positionSprite, true, playerType, 16,16, 0, position));	
 		
-		//Retrieve the clicked tower position
-		Iterator<Sprite> it = sprites.iterator();
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			//Set the Sprite and lay it on the panel
-			if(element.getPosition().equals(positionSprite)){
-				element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
-				add(element);
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			//Retrieve the clicked tower position
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				//Set the Sprite and lay it on the panel
+				if(element.getPosition().equals(positionSprite)){
+					element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+					add(element);
+				}
 			}
-		}		
+		}});	
 		towerClicked = true;
 		
 		//Repaint the panel
     	revalidate();
-    	repaint();		
+    	repaint();
 	}
 	
 	/**
@@ -325,20 +341,23 @@ public class SceneView extends MainViews implements Runnable{
 	 * @see #myMousePressed(MouseEvent)
 	 */
 	public void hideTowerInfo(){
-		//Removing the towerInfoSprite			
-		Iterator<Sprite> it = sprites.iterator();
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			if(element instanceof TowerInfoSprite){
-				it.remove();
-				remove(element);
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			//Removing the towerInfoSprite			
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				if(element instanceof TowerInfoSprite){
+					it.remove();
+					remove(element);
+				}
 			}
-		}
-    	towerClicked = false;
-		
-    	//Repaint the Panel
-    	revalidate();
-    	repaint();	
+	    	towerClicked = false;
+			
+	    	//Repaint the Panel
+	    	revalidate();
+	    	repaint();
+		}});
 	}
 	
 	/**
@@ -352,7 +371,8 @@ public class SceneView extends MainViews implements Runnable{
 			addTowerClicked = true;
 			addTowerPosition = new Point(position.x+1, position.y+1);
 			
-			TowerSprite ts = new TowerSprite(this, addTowerPosition, false, humanType, 64, 64, towerType, 90);
+			//TODO : change the id of the tower if it's add by the engine...
+			TowerSprite ts = new TowerSprite(this, -1, addTowerPosition, false, humanType, 64, 64, towerType, 90);
 			
 			//Add the towerSprite in the sceneView list of Sprites
 			addSprite(ts);	
@@ -372,7 +392,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void addTower(Point position, PlayerType playerType, TowerTypes towerType){
+	public void addTower(int id, Point position, PlayerType playerType, TowerTypes towerType){
 		Point test = new Point(-1,-1);
 		
 		//If the position of the tower is (-1,-1), the tower can't be add :
@@ -383,7 +403,7 @@ public class SceneView extends MainViews implements Runnable{
 		
 			//If the tower to add is owned by the human player 
 			if(position.equals(addTowerPosition)){
-				addTowerSuccess();
+				addTowerSuccess(id);
 			}
 			
 			//TODO If the tower to add is owned by an AI player
@@ -391,11 +411,12 @@ public class SceneView extends MainViews implements Runnable{
 		}
 	}
 	
+	
 	/**
 	 * Add the tower the player wanted to add
 	 * @see #addTower(Point, PlayerType, int)
 	 */
-	public void addTowerSuccess(){
+	public void addTowerSuccess(int id){
 		addTowerClicked = false;
 		
 		//Set the tower Sprite clickable attribute to true
@@ -404,6 +425,7 @@ public class SceneView extends MainViews implements Runnable{
 			Sprite element = it.next();
 			if(element.getPosition().equals(addTowerPosition)){
 				((TowerSprite) element).setClickable(true);
+				((TowerSprite) element).setId(id);
 			}
 		}	
     	//Repaint the Panel
@@ -421,18 +443,21 @@ public class SceneView extends MainViews implements Runnable{
 	public void addTowerFailed(){
 		addTowerClicked = false;
 		
-		//Suppress the tower-to-add Sprite
-		Iterator<Sprite> it = sprites.iterator();
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			if(element.getPosition().equals(addTowerPosition)){
-				it.remove();
-				remove(element);
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			//Suppress the tower-to-add Sprite
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				if(element.getPosition().equals(addTowerPosition)){
+					it.remove();
+					remove(element);
+				}
 			}
-		}
-		//Repaint the panel
-    	revalidate();
-    	repaint();	
+			//Repaint the panel
+	    	revalidate();
+	    	repaint();	
+		}});
 	}
 	
 	/**
@@ -441,7 +466,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see BaseSprite#myMousePressed(MouseEvent)
 	 */
-	public void baseClicked(Point position, PlayerType playerType){
+	public void baseClicked(int idBaseSrc, final Point position, PlayerType playerType){
 		if (towerClicked){
 			hideTowerInfo();
 		}
@@ -452,6 +477,7 @@ public class SceneView extends MainViews implements Runnable{
 		
 		//If the player has clicked on one of his base
 		if((!baseClicked)&&(playerType == humanType)){
+			this.idBaseSrc = idBaseSrc;
 			basePosition = new Point(position);
 			baseClicked = true;
 			mousePosition = new Point(position);
@@ -459,27 +485,29 @@ public class SceneView extends MainViews implements Runnable{
 		
 		//If the player has first clicked on one of his base, then clicked on an enemy base 
 		if((baseClicked)&&(playerType != humanType)){
-			
-			//Set the amont percent
-			attackAmountPercent = 50;
+			SwingUtilities.invokeLater(new Runnable(){
+			public void run() {
+				//Set the amont percent
+				attackAmountPercent = 50;
+	
+				
+				baseToAttackPosition = new Point(position);
+				
+				if(baseToAttackPosition.x<=400){
+					jAttackAmountPercent.setBounds(baseToAttackPosition.x+20, baseToAttackPosition.y-10, 50,25);
+				}
+				else{
+					jAttackAmountPercent.setBounds(baseToAttackPosition.x-50, baseToAttackPosition.y-10, 50,25);
+				}
+				jAttackAmountPercent.setText(attackAmountPercent+"%");
+				jAttackAmountPercent.setVisible(true);
+				add(jAttackAmountPercent);
+			}});
+				//Start the thread
+				thread = new Thread(this);
+		        thread.start();
+				attackBase = true;
 
-			
-			baseToAttackPosition = new Point(position);
-			
-			if(baseToAttackPosition.x<=400){
-				jAttackAmountPercent.setBounds(baseToAttackPosition.x+20, baseToAttackPosition.y-10, 50,25);
-			}
-			else{
-				jAttackAmountPercent.setBounds(baseToAttackPosition.x-50, baseToAttackPosition.y-10, 50,25);
-			}
-			jAttackAmountPercent.setText(attackAmountPercent+"%");
-			jAttackAmountPercent.setVisible(true);
-			add(jAttackAmountPercent);
-			
-			//Start the thread
-			thread = new Thread(this);
-	        thread.start();
-			attackBase = true;
 		}
 		
 		//Repaint the panel
@@ -502,16 +530,18 @@ public class SceneView extends MainViews implements Runnable{
 			//Stop the thread
 			attackBase = false;
 			//Tell the engine that the player want to attack an other base
-			view.baseToAttack(basePosition, humanType,baseToAttackPosition, attackAmountPercent);
+			view.baseToAttack(idBaseSrc, basePosition, humanType,baseToAttackPosition, attackAmountPercent);
 			
 			//TODO TEMPORARY create a unit 
 			/*UnitSprite test = new UnitSprite(this, new Point (100,100), false, humanType, 50,50, 10);
 			test.start();
 			addSprite(test);	
 			addSprite(test.getTextAmount());*/
-			
-			jAttackAmountPercent.setVisible(false);
-			remove(jAttackAmountPercent);
+			SwingUtilities.invokeLater(new Runnable(){
+			public void run() {
+				jAttackAmountPercent.setVisible(false);
+				remove(jAttackAmountPercent);
+			}});
 		}
 		
 		//Repaint the panel
@@ -519,27 +549,17 @@ public class SceneView extends MainViews implements Runnable{
     	repaint();		
 	}
 	
-	/*public void refreshScene(){
-		
-		//TO DO : retrieve the last element added...
-		Iterator<Sprite> it = sprites.iterator();
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
-			add(element);
-		}
-    	revalidate();
-    	repaint();	
-	}*/
-	
 	public void run()
 	{
 		 while(attackBase)
 		 {
 			 try{
-				 Thread.sleep(100);
-				 if((attackAmountPercent+1)<=99)  attackAmountPercent+=1;
-				 jAttackAmountPercent.setText(attackAmountPercent+"%");
+				Thread.sleep(100);
+				SwingUtilities.invokeLater(new Runnable(){
+				public void run() {
+					 if((attackAmountPercent+1)<=99)  attackAmountPercent+=1;
+					 jAttackAmountPercent.setText(attackAmountPercent+"%");
+				}});
 		 	}catch(Exception e){e.printStackTrace();}
 		 }
 	}
@@ -550,8 +570,8 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see TowerInfoSprite#myMousePressed(MouseEvent)
 	 */
-	 public void towerToSupress(Point position, PlayerType playerType){
-		   view.towerToSupress(position, playerType);
+	 public void towerToSupress(int id, Point position, PlayerType playerType){
+		   view.towerToSupress(id, position, playerType);
 	   }
 	 
 	/**
@@ -560,18 +580,20 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void suppressTower(Point position, PlayerType playerType){
-		Iterator<Sprite> it = sprites.iterator();
-
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			//Removing the towerSprite
-			if(element.getPosition().equals(position)){
-				it.remove();
-				remove(element);
-			}
-		}	
-		hideTowerInfo();		
+	public void suppressTower(final int id, final Point position, PlayerType playerType){
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			Iterator<Sprite> it = sprites.iterator();	
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				//Removing the towerSprite
+				if((element.getId()==id)&&(element.getPosition().equals(position))){
+					it.remove();
+					remove(element);
+				}
+			}	
+			hideTowerInfo();
+		}});
 	}
 	
 	/**
@@ -581,16 +603,64 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param newAmount
 	 * @see ViewManager#refresh()
 	 */
-	public void setAmountBase(Point position, PlayerType playerType, int newAmount){
-		Iterator<Sprite> it = sprites.iterator();
-
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			//Set the baseSprite amount
-			if(element.getPosition().equals(position)){
-				((BaseSprite)element).setAmount(newAmount);
+	public void setAmountBase(final int id,final Point position, PlayerType playerType, final int newAmount){
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				//Set the baseSprite amount
+				if((element.getId()==id)&&(element.getPosition().equals(position))){
+					((BaseSprite)element).setAmount(newAmount);
+				}
 			}
-		}	
+		}});
+	}
+	
+	/**
+	 * Reset the unit (and its label) position 
+	 * @param position
+	 * @param playerType
+	 * @param newAmount
+	 * @see ViewManager#refresh()
+	 */
+	public void moveUnit(final int id, PlayerType playerType, final Point position, final Point newPosition){
+		
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			Iterator<Sprite> it = sprites.iterator();
+			
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				//Set the baseSprite amount
+				if(element.getId()==id){
+					if(element instanceof UnitSprite){
+						
+						//If the Sprite have to move to the right, the image need to be flipped
+						if(position.x<newPosition.x) ((UnitSprite)element).setFlipped(true);
+						((UnitSprite)element).setPosition(newPosition);
+									
+						remove(element);
+						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+						add(element);
+					
+						revalidate();
+						repaint();
+					}
+					
+					if(element instanceof TextInfoSprite){
+						Point textPosition = new Point(newPosition.x, newPosition.y - 20);
+						
+						((TextInfoSprite)element).setPosition(textPosition);
+						remove(element);
+						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+						add(element);
+						revalidate();
+						repaint();
+					}
+				}		
+			}
+		}});
 	}
 	
     /**
