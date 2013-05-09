@@ -23,6 +23,7 @@ import GameEngine.Player.PlayerType;
  * @see SceneView
  * @see GameManager
  */
+@SuppressWarnings("serial")
 public class ImageInfoSprite extends Sprite{
 
 	

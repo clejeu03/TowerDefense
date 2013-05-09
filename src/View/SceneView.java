@@ -13,9 +13,8 @@ import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
-import Dispatcher.ArmyOrder;
-import GameEngine.Tower;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 
@@ -296,7 +295,8 @@ public class SceneView extends MainViews implements Runnable{
 		clickedTowerPosition = new Point(position);
 		
 		Point positionSprite = new Point(position);
-		positionSprite.translate((50/2) + (16/2),(50/2) + (16/2));
+		//positionSprite.translate((50/2) + (16/2),(50/2) + (16/2));
+		positionSprite.translate(64/2,64/2);
 		
 		//Add the TowerInfoSprite
 		//TODO !Metre les sprites d'info des tours dans les tours elle-meme...
@@ -526,19 +526,6 @@ public class SceneView extends MainViews implements Runnable{
     	repaint();		
 	}
 	
-	/*public void refreshScene(){
-		
-		//TO DO : retrieve the last element added...
-		Iterator<Sprite> it = sprites.iterator();
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
-			add(element);
-		}
-    	revalidate();
-    	repaint();	
-	}*/
-	
 	public void run()
 	{
 		 while(attackBase)
@@ -588,63 +575,62 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param newAmount
 	 * @see ViewManager#refresh()
 	 */
-	public void setAmountBase(Point position, PlayerType playerType, int newAmount){
+	public void setAmountBase(int id,Point position, PlayerType playerType, int newAmount){
 		Iterator<Sprite> it = sprites.iterator();
 
 		while (it.hasNext()) {
 			Sprite element = it.next();
 			//Set the baseSprite amount
-			if(element.getPosition().equals(position)){
+			if((element.getId()==id)&&(element.getPosition().equals(position))){
 				((BaseSprite)element).setAmount(newAmount);
 			}
 		}	
 	}
 	
 	/**
-	 * Reset the unit position when the base is the source (or the destination) of an attack
+	 * Reset the unit (and its label) position 
 	 * @param position
 	 * @param playerType
 	 * @param newAmount
 	 * @see ViewManager#refresh()
 	 */
-	public void moveUnit(PlayerType playerType, Point position, Point newPosition){
-		Iterator<Sprite> it = sprites.iterator();
+	public void moveUnit(final int id, PlayerType playerType, final Point position, final Point newPosition){
 		
-		Point unitLabelPosition = new Point(-1,-1);
-
-		while (it.hasNext()) {
-			Sprite element = it.next();
-			//Set the baseSprite amount
-			if(element.getPosition().equals(position)){
-				((UnitSprite)element).setPosition(newPosition);
-				unitLabelPosition = ((UnitSprite)element).getTextAmount(). getPosition();
-				
-				remove(element);
-				element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
-				add(element);
-				revalidate();
-				repaint();
-			}
-		}
-		/*
-		TODO : move the label !!!!!!!!
-		if(!unitLabelPosition.equals(new Point(-1,-1))){
-			Iterator<Sprite> iter = sprites.iterator();
-			while (iter.hasNext()) {
-				Sprite elt = iter.next();
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			Iterator<Sprite> it = sprites.iterator();
+			
+			while (it.hasNext()) {
+				Sprite element = it.next();
 				//Set the baseSprite amount
-				if(elt.getPosition().equals(position)){
-					((TextInfoSprite)elt).setPosition(newPosition);
-					//unitLabelPosition = ((UnitSprite)element).getTextAmount(). getPosition();
+				if(element.getId()==id){
+					if(element instanceof UnitSprite){
+						
+						//If the Sprite have to move to the right, the image need to be flipped
+						if(position.x<newPosition.x) ((UnitSprite)element).setFlipped(true);
+						((UnitSprite)element).setPosition(newPosition);
+									
+						remove(element);
+						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+						add(element);
 					
-					remove(elt);
-					elt.setBounds(elt.getPosition().x -(elt.getWidth()/2), elt.getPosition().y -(elt.getHeight()/2), elt.getWidth(),elt.getHeight());
-					add(elt);
-					revalidate();
-					repaint();
-				}
+						revalidate();
+						repaint();
+					}
+					
+					if(element instanceof TextInfoSprite){
+						Point textPosition = new Point(newPosition.x, newPosition.y - 20);
+						
+						((TextInfoSprite)element).setPosition(textPosition);
+						remove(element);
+						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+						add(element);
+						revalidate();
+						repaint();
+					}
+				}		
 			}
-		}*/
+		}});
 	}
 	
     /**

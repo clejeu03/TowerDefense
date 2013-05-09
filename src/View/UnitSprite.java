@@ -37,16 +37,16 @@ public class UnitSprite  extends Sprite{
 	/**
 	 * 
 	 */
-	public UnitSprite(SceneView scene, int id, Point position, PlayerType playerType, int width, int height, int amount) {
-		super(scene, id, position,false,playerType,width,height);
+	public UnitSprite(SceneView scene, int id, Point position, PlayerType playerType, int amount) {
+		super(scene, id, position,false,playerType,32,32);
 		
 		this.amount = amount;
 		flipped = false;
 		
 		//The amount will be display above the Unit
-		Point textPosition = new Point(position.x, position.y - 5 -(height/2));
+		Point textPosition = new Point(position.x, position.y -20);
 		textAmount = new TextInfoSprite(scene, this.id, textPosition, false, playerType, 25, 25);
-		textAmount.setText(""+amount);
+		textAmount.setText(""+this.amount);
 	
 		
 		//Loading the unit image (different one according the player)
@@ -79,6 +79,7 @@ public class UnitSprite  extends Sprite{
 		this.amount = amount;	
 		textAmount.setText(""+amount);
 	}
+	
 	public TextInfoSprite getTextAmount(){
 		return textAmount;
 	}
@@ -99,8 +100,8 @@ public class UnitSprite  extends Sprite{
 	    //Flip the image horizontally
 		else if(true){
 		g.drawImage (image, 
-				image.getWidth(this), 0, 0, image.getHeight(this),
-	            0, 0, image.getWidth(this), image.getHeight(this),
+				32, 0, 0, 32,
+	            0, 0, 32, 32,
 	            this);
 	    }
     }

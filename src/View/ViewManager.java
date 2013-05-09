@@ -65,7 +65,7 @@ public class ViewManager extends JFrame implements Runnable{
      * Constructor of the ViewManager class
      */
     public ViewManager() {
-		super("TowerDefense");
+		super("PokéWars");
 		
 		queue = new ConcurrentLinkedQueue<Order>();
 		running = false;
@@ -276,7 +276,6 @@ public class ViewManager extends JFrame implements Runnable{
     * @see SceneView#towerToSupress(Point, int)
     */
    public void towerToSupress(int id, Point position, PlayerType playerType){
-	   System.out.println("View give Order "+id);
 	   dispatcher.addOrderToEngine(new SuppressTowerOrder(id, playerType, position));
    }
    
@@ -324,23 +323,22 @@ public class ViewManager extends JFrame implements Runnable{
 				
 				//If the order is an AddTowerOrder one
 				if(o instanceof AddTowerOrder) {
-					System.out.println("View Order :"+((ArmyOrder) o).getId());
 					sceneView.addTower(((ArmyOrder) o).getId(),((ArmyOrder) o).getPosition(), o.getPlayerType(), ((AddTowerOrder) o).getTowerType());
 				}
 				//If the order is an AddUnitOrder one
 				if(o instanceof AddUnitOrder) {
-					UnitSprite unit = new UnitSprite(sceneView,((AddUnitOrder) o).getId(), ((AddUnitOrder) o).getPosition(),o.getPlayerType(),64,64,((AddUnitOrder) o).getAmount());
+					UnitSprite unit = new UnitSprite(sceneView,((AddUnitOrder) o).getId(), ((AddUnitOrder) o).getPosition(),o.getPlayerType(),((AddUnitOrder) o).getAmount());
 					sceneView.addSprite(unit);
-					//TODO : add label sceneView.addSprite(unit.getTextAmount());
+					sceneView.addSprite(unit.getTextAmount());
 					System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" "+o.getPlayerType()+" units at "+((AddUnitOrder) o).getPosition());
 				}
 				//If the order is an MoveUnitOrder one
 				if(o instanceof MoveUnitOrder) {
-					sceneView.moveUnit(o.getPlayerType(), ((ArmyOrder) o).getPosition(), ((MoveUnitOrder) o).getNewPosition());
+					sceneView.moveUnit(((MoveUnitOrder) o).getId(),o.getPlayerType(), ((ArmyOrder) o).getPosition(), ((MoveUnitOrder) o).getNewPosition());
 				}
 				//If the order is an AmountBaseOrder one
 				if(o instanceof AmountBaseOrder){
-					sceneView.setAmountBase(((ArmyOrder) o).getPosition(),o.getPlayerType(), ((AmountBaseOrder) o).getAmount());
+					sceneView.setAmountBase(((AmountBaseOrder) o).getId(),((ArmyOrder) o).getPosition(),o.getPlayerType(), ((AmountBaseOrder) o).getAmount());
 				}
 			}
 		}

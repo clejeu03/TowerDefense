@@ -1,8 +1,6 @@
 package GameEngine;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import GameEngine.Player.PlayerType;
 

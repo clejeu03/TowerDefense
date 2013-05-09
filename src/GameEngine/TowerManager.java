@@ -3,8 +3,6 @@ package GameEngine;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import Dispatcher.ArmyOrder;
-
 /**
  * Project - TowerDefense</br>
  * <b>Class - TowerManager</b></br>
@@ -95,7 +93,6 @@ public class TowerManager {
 	  //Search the tower by it's position
 	  for(Tower tower: towers){
 		  if((tower.getPosition().equals(position))&&(tower.getId()==id)){
-			  System.out.println("TowerManager" +tower.getId());
 			  towers.remove(tower);
 			  break;
 		  }
