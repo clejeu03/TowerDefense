@@ -32,6 +32,7 @@ import javax.swing.JButton;
 public class HomeMenu extends MainViews{
 	
     private JButton jButtonPlay;
+    private JButton jButtonEditor;
     private JButton jButtonQuit;
     
     private Image background;
@@ -48,10 +49,12 @@ public class HomeMenu extends MainViews{
 		
 		//Creating the components
 		jButtonPlay = new javax.swing.JButton();
+		jButtonEditor = new javax.swing.JButton();
 		jButtonQuit = new javax.swing.JButton();
 
 		//Setting the components parameters and theirs listeners            
 		jButtonPlay.setText("New game");
+		jButtonEditor.setText("Map Editor");
 		jButtonQuit.setText("Quit");	
 		
 		//Loading the home background
@@ -67,6 +70,12 @@ public class HomeMenu extends MainViews{
 		        jButtonPlayPerformed(evt);
 		    }
 		});
+		jButtonEditor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt){
+				jButtonEditorPerformed(evt);
+			}
+		});
+		
 		jButtonQuit.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent evt) {
 		        jButtonQuitPerformed(evt);
@@ -77,8 +86,10 @@ public class HomeMenu extends MainViews{
 		setLayout(null);
 		setBackground(Color.gray); 
 		jButtonPlay.setBounds(340, 100, 120,25);
-		jButtonQuit.setBounds(340, 150, 120,25);
+		jButtonEditor.setBounds(340,150,120,25);
+		jButtonQuit.setBounds(340, 200, 120,25);
 		add(jButtonPlay);
+		add(jButtonEditor);
 		add(jButtonQuit);
 	}
 	
@@ -88,6 +99,14 @@ public class HomeMenu extends MainViews{
 	 */
     private void jButtonPlayPerformed(ActionEvent evt) {
     	view.createGame();
+    }
+    
+    /**
+     * jButtonEditor Event handler - Time to create our maps !
+     * @param evt - ActionEvent performed by the player
+     */
+    private void jButtonEditorPerformed(ActionEvent evt){
+    	view.launchMapEditor();
     }
     
 	/**

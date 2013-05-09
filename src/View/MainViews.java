@@ -15,7 +15,7 @@ import javax.swing.JPanel;
  * Project - TowerDefense</br>
  * <b>Class - MainMenusView</b></br>
  * <p>The MainMenusView abstract class represents the mains "panels" of the game :
- * HomeMenu, EndGameMenu, OptionsMenu, PlayMenu, SceneView, GameMenuBar
+ * HomeMenu, EndGameMenu, OptionsMenu, PlayMenu, SceneView, GameMenuBar, MapEditor
  * </p> 
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
