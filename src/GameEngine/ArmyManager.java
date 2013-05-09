@@ -1,10 +1,3 @@
-package GameEngine;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import GameEngine.Player.PlayerType;
-
 /**
  * Project - TowerDefense</br>
  * <b>Class - ArmyManager</b></br>
@@ -23,22 +16,25 @@ import GameEngine.Player.PlayerType;
  * 
  */
 
+package GameEngine;
+import java.awt.Point;
+import java.util.ArrayList;
+
+import GameEngine.Player.PlayerType;
+
+
+
 public class ArmyManager {
   /**
-   * Associates in a HashMap thread safe the Bases 
-   * to the Players who own them.
-   * @see Base
-   * @see Player
+   * Save all the bases
    */
-  public ArrayList<Base> bases;
+  private ArrayList<Base> bases;
 
   /**
-   * Associates in a HashMap thread safe the Units
-   * currently on the map to the Players who own them. 
-   * @see Units
-   * @see Player
+   * Save all the units
    */
-  public ArrayList<Unit> units;
+  private ArrayList<Unit> units;
+  
   /**
    * List all the sizes the Bases can take. The size of a base affects 
    * the visual size of the Base and the speed of producing units into itself. 
@@ -56,61 +52,77 @@ public class ArmyManager {
 
   /**
    * Constructor of the ArmyManager class
+   * @param bases - list of bases
+   * @see GameManager#GameManager()
+   */
+  public ArmyManager(ArrayList<Base> bases) {
+	  super();
+	  
+	  //Initializations
+	  units = new ArrayList<Unit>();
+	  this.bases = bases;
+	  
+	  System.out.println("Initialization with bases : "+bases.toString());
+	  
+	  }
+  
+  /**
+   * Constructor of the ArmyManager class
    */
   public ArmyManager() {
 	  super();
+	  
+	  //Initializations
 	  units = new ArrayList<Unit>();
 	  bases = new ArrayList<Base>();
 	  }
+  
+  
   /**
-   * Create a new group, called Unit, from the selected Base with an amount equal 50% from the 
-   * Base amount
+   * Just create the unit and make the agents numbers of both base and unit right
    * @param origin - Base from where the unit is sent
-   * @see Base
+   * @param destination
+   * @see WarManager
    */
-  public void launchUnit(Base origin) {
+  public void launchUnit(Base origin, Base destination) {
+	  
 	  //Calculates the agents number
 	  int baseAmount = origin.getAmount();
 	  int unitAmount = baseAmount%2;
+	  
 	  //Creates the new Unit
-	  Unit unit = createUnit(origin, unitAmount);
+	  Unit unit = new Unit(origin, destination, unitAmount);
+	  
 	  //Changing the base amount
 	  origin.setAmount(baseAmount-unitAmount);
+	  
 	  //Adding the unit to the hashMap by finding the owner of the base
 	  units.add(unit);
 	  
   }
-  /**
-   * Create a new unit from the base
-   * @param origin - base from where the unit is launch
-   * @param amount
-   * @return unit
-   */
-  public Unit createUnit(Base origin, int amount){
-	  Unit unit = new Unit(origin, amount);
-	  return unit;
-  }
   
   /**
-   * Create a new base, neutral or active.
-   * =========> WARNING : And attributes it to a player ?
-   * @param pos - position
-   * @param neutral - is neutral or not ?
-   * @param type - BaseType (small, medium or large)
-   * @param proxMap - proximityMap
-   * @return base
-   */
+   * Create a new Base, with the BaseType parameter, and add it to the global list of bases
+   * @param pos
+   * @param playerType - the owner
+   * @param neutral - true or false
+   * @param type
+   * @param proxMap
+   * @see ArmyManager#BaseType
+   	*@return base
+   	*/
   public Base createBase(Point pos, PlayerType playerType, Boolean neutral, BaseType type, Map proxMap) {
 	Base base = new Base(pos, playerType, neutral, type, proxMap);
 	bases.add(base);
 	return base;
   }
+  
   /**
-   * Create especially an active base.
-   * =========> WARNING : And attributes it to a player ?
-   * @param pos position
-   * @param neutral is it neutral or not ?
-   * @param proxMap the proximityMap
+   * Create a simple Base and add it to the global list of bases
+   * @param pos
+   * @param playerType - the owner
+   * @param neutral - true or false
+   * @param proxMap
    * @return base
    */
   public Base createBase(Point pos, PlayerType playerType, Boolean neutral, Map proxMap) {
@@ -130,12 +142,25 @@ public class ArmyManager {
   
   /**
    * Move a Unit, from its position to a new position, in the path to the Unit's destination.
-   * @param destination - Base to where the unit must go
-   * @see Base
    */
-  public void moveUnit(Base destination) {
-	  	
+  public void moveUnits() {
+	  	//TODO take the array units and move all of it's components
   }
- 
+  
+ /**
+  * Getter - return the list of bases 
+  * @return bases
+  */
+  public ArrayList<Base> getBases(){
+	  return this.bases;
+  }
+  
+  /**
+   * Getter - return the list of units
+   * @return units
+   */
+   public ArrayList<Unit> getUnits(){
+ 	  return this.units;
+   }
 
 }

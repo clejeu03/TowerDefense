@@ -40,7 +40,7 @@ public class GameManager implements Runnable{
 	private TowerManager towerManager;
     
     /**
-     * Constructor of the GameManger class
+     * Constructor of the GameManager class
      */
 	public GameManager() {
 		super();
@@ -97,7 +97,7 @@ public class GameManager implements Runnable{
 		//Adding a mapManager
 		mapManager = new MapManager("Map", playerTypes);
 		
-		armyManager = new ArmyManager();
+		armyManager = new ArmyManager();//TODO
 		towerManager = new TowerManager();
 		
 		//Clear the towers list
@@ -118,7 +118,7 @@ public class GameManager implements Runnable{
 		for(int i=0; i<neutralBasePosition.size();i++){
 			bases.add(armyManager.createBase(neutralBasePosition.get(i),PlayerType.NEUTRAL,true,mapManager.getNeutralProximityMap(i)));
 		}	
-				
+		
 		//Tells the dispatcher that the View need to be initialized
 		dispatcher.initiateGameView(towers, bases);
 	}
