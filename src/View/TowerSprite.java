@@ -140,7 +140,7 @@ public class TowerSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).towerClicked(position, playerType);
+			((SceneView) view).towerClicked(id, position, playerType);
 	}
 	
 	/**
@@ -160,6 +160,5 @@ public class TowerSprite extends Sprite{
 		//Change the cursor aspect
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
-
 
 }

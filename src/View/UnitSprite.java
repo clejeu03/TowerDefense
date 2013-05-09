@@ -45,7 +45,7 @@ public class UnitSprite  extends Sprite{
 		
 		//The amount will be display above the Unit
 		Point textPosition = new Point(position.x, position.y - 5 -(height/2));
-		textAmount = new TextInfoSprite(scene, this.id +1, textPosition, false, playerType, 25, 25);
+		textAmount = new TextInfoSprite(scene, this.id, textPosition, false, playerType, 25, 25);
 		textAmount.setText(""+amount);
 	
 		

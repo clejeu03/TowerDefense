@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
 import Dispatcher.ArmyOrder;
+import GameEngine.Tower;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 
@@ -280,7 +281,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType - PlayerType
 	 * @see TowerSprite#myMousePressed(MouseEvent)
 	 */
-	public void towerClicked(Point position, PlayerType playerType){
+	public void towerClicked(int id, Point position, PlayerType playerType){
 		if (baseClicked) baseClicked = false;
 		
 		if (addTowerClicked) {
@@ -299,7 +300,7 @@ public class SceneView extends MainViews implements Runnable{
 		
 		//Add the TowerInfoSprite
 		//TODO !Metre les sprites d'info des tours dans les tours elle-meme...
-		sprites.add(new TowerInfoSprite(this,-1, positionSprite, true, playerType, 16,16, 0, position));	
+		sprites.add(new TowerInfoSprite(this,id, positionSprite, true, playerType, 16,16, 0, position));	
 		
 		//Retrieve the clicked tower position
 		Iterator<Sprite> it = sprites.iterator();
@@ -375,7 +376,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void addTower(Point position, PlayerType playerType, TowerTypes towerType){
+	public void addTower(int id, Point position, PlayerType playerType, TowerTypes towerType){
 		Point test = new Point(-1,-1);
 		
 		//If the position of the tower is (-1,-1), the tower can't be add :
@@ -386,7 +387,7 @@ public class SceneView extends MainViews implements Runnable{
 		
 			//If the tower to add is owned by the human player 
 			if(position.equals(addTowerPosition)){
-				addTowerSuccess();
+				addTowerSuccess(id);
 			}
 			
 			//TODO If the tower to add is owned by an AI player
@@ -399,7 +400,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * Add the tower the player wanted to add
 	 * @see #addTower(Point, PlayerType, int)
 	 */
-	public void addTowerSuccess(){
+	public void addTowerSuccess(int id){
 		addTowerClicked = false;
 		
 		//Set the tower Sprite clickable attribute to true
@@ -408,6 +409,7 @@ public class SceneView extends MainViews implements Runnable{
 			Sprite element = it.next();
 			if(element.getPosition().equals(addTowerPosition)){
 				((TowerSprite) element).setClickable(true);
+				((TowerSprite) element).setId(id);
 			}
 		}	
     	//Repaint the Panel
@@ -565,13 +567,13 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void suppressTower(Point position, PlayerType playerType){
+	public void suppressTower(int id, Point position, PlayerType playerType){
 		Iterator<Sprite> it = sprites.iterator();
 
 		while (it.hasNext()) {
 			Sprite element = it.next();
 			//Removing the towerSprite
-			if(element.getPosition().equals(position)){
+			if((element.getId()==id)&&(element.getPosition().equals(position))){
 				it.remove();
 				remove(element);
 			}

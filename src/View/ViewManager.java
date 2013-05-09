@@ -276,6 +276,7 @@ public class ViewManager extends JFrame implements Runnable{
     * @see SceneView#towerToSupress(Point, int)
     */
    public void towerToSupress(int id, Point position, PlayerType playerType){
+	   System.out.println("View give Order "+id);
 	   dispatcher.addOrderToEngine(new SuppressTowerOrder(id, playerType, position));
    }
    
@@ -318,12 +319,13 @@ public class ViewManager extends JFrame implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(o instanceof SuppressTowerOrder) {
-					sceneView.suppressTower(((ArmyOrder) o).getPosition(), o.getPlayerType());
+					sceneView.suppressTower(((ArmyOrder) o).getId(), ((ArmyOrder) o).getPosition(), o.getPlayerType());
 				}
 				
 				//If the order is an AddTowerOrder one
-				if(o instanceof AddTowerOrder) {	
-					sceneView.addTower(((ArmyOrder) o).getPosition(), o.getPlayerType(), ((AddTowerOrder) o).getTowerType());
+				if(o instanceof AddTowerOrder) {
+					System.out.println("View Order :"+((ArmyOrder) o).getId());
+					sceneView.addTower(((ArmyOrder) o).getId(),((ArmyOrder) o).getPosition(), o.getPlayerType(), ((AddTowerOrder) o).getTowerType());
 				}
 				//If the order is an AddUnitOrder one
 				if(o instanceof AddUnitOrder) {

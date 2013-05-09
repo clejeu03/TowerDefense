@@ -87,6 +87,10 @@ public abstract class Sprite extends JLabel{
 		return id;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	/**
      * Setter - set the position of the center of the Sprite
      * @param newPosition - Point

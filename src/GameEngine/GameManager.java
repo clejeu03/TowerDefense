@@ -127,19 +127,22 @@ public class GameManager implements Runnable{
 		//Clear the bases list
 		bases.clear();
 		for(int i=0; i<enemiesType.size();i++){
+			System.out.println(idCount);
 			bases.add(armyManager.createBase(idCount, basesPositions[i+1],enemiesType.get(i),false,mapManager.getPlayerProximityMap(i+1)));
-			idCount+=5;
+			++idCount;
 		}
 		//human player base
+		System.out.println(idCount);
 		bases.add(armyManager.createBase(idCount, basesPositions[0],humanType,false,mapManager.getPlayerProximityMap(0)));
+		++idCount;
 		
 		//TODO add different sizes of neutral base
 		ArrayList<Point> neutralBasePosition = mapManager.getNeutralBasePosition();
 		for(int i=0; i<neutralBasePosition.size();i++){
+			System.out.println(idCount);
 			bases.add(armyManager.createBase(idCount, neutralBasePosition.get(i),PlayerType.NEUTRAL,true,mapManager.getNeutralProximityMap(i)));
-			idCount+=5;
+			++idCount;
 		}
-		
 		//Tells the dispatcher that the View need to be initialized
 		dispatcher.initiateGameView(bases);
 		
@@ -194,9 +197,9 @@ public class GameManager implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(order instanceof SuppressTowerOrder) {
-
+					System.out.println("Engine Order : "+((ArmyOrder) order).getId());
 					//Remove the tower from the engine list
-					towerManager.suppressTower(((ArmyOrder) order).getPosition());
+					towerManager.suppressTower(((ArmyOrder) order).getId(), ((ArmyOrder) order).getPosition());
 					//Tell the dispatcher that the tower need to be remove from the view
 					dispatcher.addOrderToView(new SuppressTowerOrder(((SuppressTowerOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition()));
 				}
@@ -224,9 +227,11 @@ public class GameManager implements Runnable{
 								//TODO : Add the good type of tower !
 								
 								//Add the Tower and draw it
+								System.out.println(idCount);
 								towerManager.createTower(idCount, order.getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((ArmyOrder) order).getPosition());
 								dispatcher.addOrderToView(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
-								idCount+=5;
+								++idCount;
+								
 							}else{
 								//Tell the dispatcher that the tower CAN'T be add on the view
 								System.out.println("GameEngine says : You try to add a tower but this is not your territory");
@@ -252,7 +257,7 @@ public class GameManager implements Runnable{
 					Iterator<Base> it = bases.iterator();
 					while (it.hasNext()) {
 						Base element = it.next();
-						if(element.getPosition().equals(((AddUnitOrder) order).getPosition())){
+						if((element.getPosition().equals(((AddUnitOrder) order).getPosition()))&&(element.getId() == ((AddUnitOrder) order).getId())){
 							//Calculate the amount of unit that will be send according to the percent chose by the player
 							int baseAmount = element.getAmount();
 							int attackPercent = ((AddUnitOrder) order).getAmount();
@@ -261,9 +266,10 @@ public class GameManager implements Runnable{
 							
 							//TODO send amount of unit !
 							if(attackAmount>0){
+								System.out.println(idCount);
 								Point unitPosition = new Point(((ArmyOrder) order).getPosition().x+1,((ArmyOrder) order).getPosition().y+1);
 								units.add(new Unit(idCount, unitPosition, attackAmount));
-								idCount+=5;
+								++idCount;
 								System.out.println("Engine - TODO : base : "+unitPosition+" want to send "+attackAmount+" Units to "+((AddUnitOrder) order).getDstPosition());
 								dispatcher.addOrderToView(new AddUnitOrder(idCount, order.getPlayerType(), unitPosition, ((AddUnitOrder) order).getDstPosition(), attackAmount));
 		

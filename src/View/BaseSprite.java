@@ -45,7 +45,7 @@ public class BaseSprite extends Sprite{
 		
 		//The amount will be display under the base
 		Point textPosition = new Point(position.x, position.y + 5 +(height/2));
-		textAmount = new TextInfoSprite(scene, this.id +1, textPosition, false, playerType, 20, 25);
+		textAmount = new TextInfoSprite(scene, this.id, textPosition, false, playerType, 20, 25);
 		textAmount.setText(""+amount);
 		
 		//Loading the base image (different one according the tower type and player)
