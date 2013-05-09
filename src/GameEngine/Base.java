@@ -67,16 +67,8 @@ public class Base {
   public Base(Point position, PlayerType playerType, Boolean neutral, BaseType type, Map proximityTab) {
 	  super();
 	  this.playerType = playerType;
-	  if(position != null){
-	 	setPosition(position);
-	  }else{
-		  //TODO 
-	  }
-	  if(proximityTab != null){
-		  setProximityTab(proximityTab);
-	  }else{
-		  //TODO
-	  }
+	  this.position = position;
+	  this.proximityTab = proximityTab;
 	  if(neutral){
 		  //Specifications if the base is an neutral one
 		  createNeutralBase(type);
@@ -99,8 +91,8 @@ public class Base {
   * @param type
   */
   protected void createNeutralBase(BaseType type){
-	  setBaseType(type);
-	  setNeutral(true);
+	  this.type = type;
+	  this.neutral = true;
 	  switch(type){
 	  case SMALL :
 		  createSmallBase();
@@ -119,8 +111,8 @@ public class Base {
    * Create an active base by default a medium sized one
    */
   protected void createActiveBase(){
-	  setBaseType(BaseType.MEDIUM);
-	  setNeutral(false);
+	  this.type = BaseType.MEDIUM;
+	  this.neutral = false;
 	  createMediumBase();
   }
   /**

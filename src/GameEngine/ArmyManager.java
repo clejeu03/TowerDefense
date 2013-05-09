@@ -84,20 +84,36 @@ public class ArmyManager {
    * @param destination
    * @see WarManager
    */
-  public void launchUnit(Base origin, Base destination) {
+  public Unit launchUnit(Point src, Point dst, int attackPercent) {
+	  Base origin = null;
+	  Base destination = null;
+	  
+	  //Retrieve source and destinations bases
+	  for(Base base: bases){
+		  if(base.getPosition().equals(src)){
+			  origin = base;
+			  System.out.println("find the origin !");
+		  }
+		  if(base.getPosition().equals(dst)){
+			  destination = base;
+			  System.out.println("find the destination !");
+		  }
+	  }
 	  
 	  //Calculates the agents number
 	  int baseAmount = origin.getAmount();
-	  int unitAmount = baseAmount%2;
+	  int attackAmount = (attackPercent * baseAmount)/100;
 	  
 	  //Creates the new Unit
-	  Unit unit = new Unit(origin, destination, unitAmount);
+	  Unit unit = new Unit(origin, destination, attackAmount);
 	  
 	  //Changing the base amount
-	  origin.setAmount(baseAmount-unitAmount);
+	  origin.setAmount(baseAmount-attackAmount);
 	  
 	  //Adding the unit to the hashMap by finding the owner of the base
 	  units.add(unit);
+	  
+	  return unit;
 	  
   }
   
@@ -142,6 +158,7 @@ public class ArmyManager {
   
   /**
    * Move a Unit, from its position to a new position, in the path to the Unit's destination.
+   * @see GameManager#timer()
    */
   public void moveUnits() {
 	  	//TODO take the array units and move all of it's components

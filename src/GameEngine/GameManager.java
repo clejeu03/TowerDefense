@@ -43,6 +43,7 @@ public class GameManager implements Runnable{
 	
 	private Timer timer;
 	private TimerTask timerTask;
+	private TimerTask baseTimerTask;
     private long timeStart;
     private long playingTime;
 	
@@ -141,6 +142,8 @@ public class GameManager implements Runnable{
 	}
 	
 	public void timer(){
+		
+		//Actions each seconds
 		timerTask=new TimerTask(){
             public void run(){
             	//get the current Date 
@@ -151,7 +154,25 @@ public class GameManager implements Runnable{
                
             }
         };
-		timer.schedule(timerTask ,0, 1000);
+		
+		//Actions each 2 seconds
+		baseTimerTask=new TimerTask(){
+            public void run(){
+            	
+            	//Increasing the amount of each base
+            	for(Base base:armyManager.getBases()){
+            		if(base.getPlayerType()!=PlayerType.NEUTRAL){
+            			System.out.println(base.getNeutral());
+            			base.setAmount(base.getAmount()+1);
+            			dispatcher.addOrderToView(new AmountBaseOrder(base.getPlayerType(), base.getPosition(), base.getAmount()));
+            		}
+            	}
+            }
+        };
+        
+        timer.schedule(timerTask ,0, 1000);
+		timer.schedule(baseTimerTask ,0, 2000);
+		
 	}
 	
 	public void endGame(){
@@ -188,35 +209,43 @@ public class GameManager implements Runnable{
 					//Get the owner of the selected pixel in the territoryMap
 					int zoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x, ((ArmyOrder) order).getPosition().y);
 					
-					//Test if the entire sprite is in the same area
-					int supRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+15, ((ArmyOrder) order).getPosition().y+15);
-					int supLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-15, ((ArmyOrder) order).getPosition().y+15);
-					int infRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+15, ((ArmyOrder) order).getPosition().y-15);
-					int infLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-15, ((ArmyOrder) order).getPosition().y-15);
+					//Let half of the sprite height's and half of the sprite's width exceed the limits of territory
+					int spriteQuart = 15; //Size of sprite : 64x64
+					
+					int supRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+spriteQuart, ((ArmyOrder) order).getPosition().y+spriteQuart);
+					int supLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-spriteQuart, ((ArmyOrder) order).getPosition().y+spriteQuart);
+					int infRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+spriteQuart, ((ArmyOrder) order).getPosition().y-spriteQuart);
+					int infLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-spriteQuart, ((ArmyOrder) order).getPosition().y-spriteQuart);
 					
 					if(	supRightZoneId == zoneId && supLeftZoneId == zoneId &&
 							infLeftZoneId == zoneId && infRightZoneId == zoneId){
 						
-						//TODO test with the other towers of the same zone ?
-						
 						//Compare the zone with the order of types in the playerTypes array 
+						
+						//0 : plain
 						if(zoneId !=0){
+							
+							//1 to 5 : territories
 							if(zoneId <6 && order.getPlayerType()== playerTypes.get(zoneId-1)){
-								//TODO : Add the good type of tower !
 								
 								//Add the Tower and draw it
 								towerManager.createTower(order.getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((ArmyOrder) order).getPosition());
 								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
+							
 							}else{
+								
 								//Tell the dispatcher that the tower CAN'T be add on the view
 								System.out.println("GameEngine says : You try to add a tower but this is not your territory");
 								dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 							}
+							
 						}else{
 							//Tell the dispatcher that the tower CAN'T be add on the view
 							System.out.println("GameEngine says : maybe you should try on a hill...");
 							dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 						}
+						
+					//The required part of the sprite is not on the same territory	
 					}else{
 						//Tell the dispatcher that the tower CAN'T be add on the view
 						dispatcher.addOrderToView(new AddTowerOrder(order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
@@ -228,30 +257,20 @@ public class GameManager implements Runnable{
 				//If the order is an AddUnitOrder one
 				if(order instanceof AddUnitOrder) {
 				
-					//Retrieve the source base from the engine list
-					Iterator<Base> it = bases.iterator();
-					while (it.hasNext()) {
-						Base element = it.next();
-						if(element.getPosition().equals(((AddUnitOrder) order).getPosition())){
-							//Calculate the amount of unit that will be send according to the percent chose by the player
-							int baseAmount = element.getAmount();
-							int attackPercent = ((AddUnitOrder) order).getAmount();
-							
-							int attackAmount = (attackPercent * baseAmount)/100;
-							
-							//TODO send amount of unit !
-							System.out.println("Engine - TODO : base : "+((ArmyOrder) order).getPosition()+" want to send "+attackAmount+" Units to "+((AddUnitOrder) order).getDstPosition());
-							dispatcher.addOrderToView(new AddUnitOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddUnitOrder) order).getDstPosition(), attackAmount));
-	
-							//Set the new amount to the base in the engine
-							element.setAmount(baseAmount - attackAmount);
-							
-							//Tell the dispatcher that the sourceBase amount need to be decreased in the view
-							dispatcher.addOrderToView(new AmountBaseOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), baseAmount - attackAmount));
-						}
+					//Create the unit
+					Unit unit = armyManager.launchUnit(((AddUnitOrder) order).getPosition(), ((AddUnitOrder) order).getDstPosition(), ((AddUnitOrder) order).getAmount());
 					
+					System.out.println("Engine - TODO : base : "+((ArmyOrder) order).getPosition()+" want to send "+unit.getAmount()+" Units to "+((AddUnitOrder) order).getDstPosition());
+					dispatcher.addOrderToView(new AddUnitOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddUnitOrder) order).getDstPosition(), unit.getAmount()));
+					
+					//Retrieve the new source base amount
+					for(Base base:armyManager.getBases()){
+						if(base.getPosition().equals(((ArmyOrder) order).getPosition())){
+							dispatcher.addOrderToView(new AmountBaseOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), base.getAmount()));
+							break;
+						}
 					}
-				
+
 				}
 				
 			}
