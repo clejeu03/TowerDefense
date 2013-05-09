@@ -45,6 +45,16 @@ public class Unit {
 	  //Temporary !
 	  setSpeed(0.5);
   }
+  /**
+   * Constructor of the Unit class
+   */
+  public Unit(Point position, int amount) {
+	  super();
+	  setAmount(amount);
+	  this.position = position;
+	  //Temporary !
+	  setSpeed(0.5);
+  }
   
   /**
    * Getter that returns the speed of the Unit

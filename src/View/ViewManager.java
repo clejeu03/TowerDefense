@@ -352,9 +352,15 @@ public class ViewManager extends JFrame implements Runnable{
 				//If the order is an AddUnitOrder one
 				if(o instanceof AddUnitOrder) {
 					//TODO 
+					sceneView.addSprite(new UnitSprite(sceneView, ((AddUnitOrder) o).getPosition(),o.getPlayerType(),64,64,((AddUnitOrder) o).getAmount()));
 					System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" "+o.getPlayerType()+" units at "+((AddUnitOrder) o).getPosition());
-
-				}	
+				}
+				//If the order is an MoveUnitOrder one
+				if(o instanceof MoveUnitOrder) {
+					//TODO 
+					sceneView.moveUnit(o.getPlayerType(), ((ArmyOrder) o).getPosition(), ((MoveUnitOrder) o).getNewPosition());
+					//System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" "+o.getPlayerType()+" units at "+((AddUnitOrder) o).getPosition());
+				}
 				//If the order is an AmountBaseOrder one
 				if(o instanceof AmountBaseOrder){
 					sceneView.setAmountBase(((ArmyOrder) o).getPosition(),o.getPlayerType(), ((AmountBaseOrder) o).getAmount());

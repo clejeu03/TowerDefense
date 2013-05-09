@@ -29,18 +29,16 @@ import GameEngine.Player.PlayerType;
  * @see GameManager
  */
 @SuppressWarnings("serial")
-public class UnitSprite  extends Sprite  implements Runnable{
+public class UnitSprite  extends Sprite{
 	private boolean flipped;
 	private int amount;
 	private TextInfoSprite textAmount;
-	
-	private Thread thread;
 
 	/**
 	 * 
 	 */
-	public UnitSprite(SceneView scene, Point position, boolean clickable, PlayerType playerType, int width, int height, int amount) {
-		super(scene, position,clickable,playerType,width,height);
+	public UnitSprite(SceneView scene, Point position, PlayerType playerType, int width, int height, int amount) {
+		super(scene, position,false,playerType,width,height);
 		
 		this.amount = amount;
 		flipped = false;
@@ -105,27 +103,5 @@ public class UnitSprite  extends Sprite  implements Runnable{
 	            0, 0, image.getWidth(this), image.getHeight(this),
 	            this);
 	    }
-	  }
-
-
-	@Override
-	public void run() {
-		while(true){
-			 try{
-				Thread.sleep(100);
-				setPosition(new Point(position.x+10, position.y));
-				//((SceneView) view).refreshScene();
-		 	}catch(Exception e){e.printStackTrace();}
-		}	
-	}
-
-
-	//TODO TEMPORARY start a thread
-	public void start() {
-		thread = new Thread(this);
-        thread.start();
-		
-	}  
-
-
+    }
 }

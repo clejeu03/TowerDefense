@@ -36,6 +36,7 @@ public class GameManager implements Runnable{
 	//Temporary !!
     private ArrayList<Tower> towers;
     private ArrayList<Base> bases;
+    private ArrayList<Unit> units;
     
 	private MapManager mapManager;
 	private ArmyManager armyManager;
@@ -57,6 +58,7 @@ public class GameManager implements Runnable{
 		
 		towers = new ArrayList<Tower>();
 		bases = new ArrayList<Base>();
+		units = new ArrayList<Unit>();
 	
 		
 		timeStart = 0;
@@ -108,11 +110,13 @@ public class GameManager implements Runnable{
 		//Adding a mapManager
 		mapManager = new MapManager("Map", playerTypes);
 		
+		//Adding the Tower and Army managers
 		armyManager = new ArmyManager();
 		towerManager = new TowerManager();
 		
 		//Clear the towers list
 		towers.clear();
+		units.clear();
 				
 		//Retrieve the bases positions
 		Point[] basesPositions = mapManager.getPlayerBasePosition();
@@ -145,13 +149,22 @@ public class GameManager implements Runnable{
             public void run(){
             	//get the current Date 
             	playingTime = System.currentTimeMillis()-timeStart;
-            	System.out.println("Temps écoulé : " + playingTime);
+            	//System.out.println("Temps écoulé : " + playingTime);
             	
-            	//TODO Move all the Units 
-               
+            	//MoveUnit : temporary !!
+        		Iterator<Unit> iter = units.iterator();
+        		while (iter.hasNext()) {
+        			Unit unit = iter.next();
+        			Point newPosition = new Point(unit.getPosition().x +2, unit.getPosition().y+2);
+        			
+        			//Tell the dispatcher that the unit need to be move
+					dispatcher.addOrderToView(new MoveUnitOrder(PlayerType.ELECTRIC, unit.getPosition(), newPosition));
+        			unit.setPosition(newPosition);
+        		}	
+        	          
             }
         };
-		timer.schedule(timerTask ,0, 1000);
+		timer.schedule(timerTask ,0, 100);
 	}
 	
 	public void endGame(){
@@ -240,16 +253,19 @@ public class GameManager implements Runnable{
 							int attackAmount = (attackPercent * baseAmount)/100;
 							
 							//TODO send amount of unit !
-							System.out.println("Engine - TODO : base : "+((ArmyOrder) order).getPosition()+" want to send "+attackAmount+" Units to "+((AddUnitOrder) order).getDstPosition());
-							dispatcher.addOrderToView(new AddUnitOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddUnitOrder) order).getDstPosition(), attackAmount));
-	
-							//Set the new amount to the base in the engine
-							element.setAmount(baseAmount - attackAmount);
-							
-							//Tell the dispatcher that the sourceBase amount need to be decreased in the view
-							dispatcher.addOrderToView(new AmountBaseOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), baseAmount - attackAmount));
+							if(attackAmount>0){
+								Point unitPosition = new Point(((ArmyOrder) order).getPosition().x+1,((ArmyOrder) order).getPosition().y+1);
+								units.add(new Unit(unitPosition, attackAmount));
+								System.out.println("Engine - TODO : base : "+unitPosition+" want to send "+attackAmount+" Units to "+((AddUnitOrder) order).getDstPosition());
+								dispatcher.addOrderToView(new AddUnitOrder(order.getPlayerType(), unitPosition, ((AddUnitOrder) order).getDstPosition(), attackAmount));
+		
+								//Set the new amount to the base in the engine
+								element.setAmount(baseAmount - attackAmount);
+								
+								//Tell the dispatcher that the sourceBase amount need to be decreased in the view
+								dispatcher.addOrderToView(new AmountBaseOrder(order.getPlayerType(), ((ArmyOrder) order).getPosition(), baseAmount - attackAmount));
+							}
 						}
-					
 					}
 				
 				}

@@ -593,6 +593,30 @@ public class SceneView extends MainViews implements Runnable{
 		}	
 	}
 	
+	/**
+	 * Reset the unit position when the base is the source (or the destination) of an attack
+	 * @param position
+	 * @param playerType
+	 * @param newAmount
+	 * @see ViewManager#refresh()
+	 */
+	public void moveUnit(PlayerType playerType, Point position, Point newPosition){
+		Iterator<Sprite> it = sprites.iterator();
+
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			//Set the baseSprite amount
+			if(element.getPosition().equals(position)){
+				((UnitSprite)element).setPosition(newPosition);
+				remove(element);
+				element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+				add(element);
+				revalidate();
+				repaint();
+			}
+		}
+	}
+	
     /**
      * Draw the SceneView Panel
      */

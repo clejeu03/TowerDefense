@@ -2,6 +2,7 @@ package GameEngine;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import GameEngine.Player.PlayerType;
 
@@ -91,6 +92,18 @@ public class ArmyManager {
 	  return unit;
   }
   
+/**
+   * Create a new unit from the base
+   * @param origin - base from where the unit is launch
+   * @param amount
+   * @return unit
+   */
+  public Unit createUnit(Point position, int amount){
+	  Unit unit = new Unit(position, amount);
+	  units.add(unit);
+	  return unit;
+  }
+  
   /**
    * Create a new base, neutral or active.
    * =========> WARNING : And attributes it to a player ?
@@ -136,6 +149,4 @@ public class ArmyManager {
   public void moveUnit(Base destination) {
 	  	
   }
- 
-
 }
