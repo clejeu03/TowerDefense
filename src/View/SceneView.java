@@ -14,8 +14,9 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 
+import Dispatcher.ArmyOrder;
 import GameEngine.Player.PlayerType;
-import GameEngine.TowerManager;
+import GameEngine.TowerManager.TowerTypes;
 
 /**
  * Project - TowerDefense</br>
@@ -346,7 +347,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @param towerType
 	 */
-	public void addTowerClicked(Point position, PlayerType playerType, TowerManager.TowerTypes towerType){
+	public void addTowerClicked(Point position, PlayerType playerType, TowerTypes towerType){
 		if(!addTowerClicked){
 			addTowerClicked = true;
 			addTowerPosition = new Point(position.x+1, position.y+1);
@@ -371,15 +372,23 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void addTower(Point position, PlayerType playerType, TowerManager.TowerTypes towerType){
+	public void addTower(Point position, PlayerType playerType, TowerTypes towerType){
+		Point test = new Point(-1,-1);
 		
-		//If the tower to add is owned by the human player 
-		if(position.equals(addTowerPosition)){
-			addTowerSuccess();
+		//If the position of the tower is (-1,-1), the tower can't be add :
+		if(position.equals(test)){
+			addTowerFailed();
 		}
+		else{
 		
-		//TODO If the tower to add is owned by an AI player
-		
+			//If the tower to add is owned by the human player 
+			if(position.equals(addTowerPosition)){
+				addTowerSuccess();
+			}
+			
+			//TODO If the tower to add is owned by an AI player
+			
+		}
 	}
 	
 	/**

@@ -79,6 +79,7 @@ public class DispatcherManager {
 	public void stop(){
 		view.setRunning(false);
 		engine.setRunning(false);
+		engine.endGame();
 		threadView.interrupt();
 		threadEngine.interrupt();
 		//System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
