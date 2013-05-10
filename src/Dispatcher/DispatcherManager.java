@@ -10,6 +10,7 @@ package Dispatcher;
 
 import java.util.ArrayList;
 
+import AI.AIManager;
 import GameEngine.*;
 import GameEngine.Player.PlayerType;
 import View.*;
@@ -26,8 +27,10 @@ public class DispatcherManager {
 	
 	private GameManager engine;
 	private ViewManager view;
+	private AIManager ai;
 	private Thread threadEngine;
 	private Thread threadView;
+	private Thread threadAI;
 	
 	/**
 	 * Constructor of the DisptacherManger class
@@ -38,6 +41,7 @@ public class DispatcherManager {
 		super();
 		this.engine = engine;
 		this.view = view;
+		this.ai = new AIManager(this);
 	}
 	
 	/**
@@ -45,7 +49,9 @@ public class DispatcherManager {
 	 * @see View.ViewManager#play()
 	 */	
 	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
+		ai.setType(enemiesType.get(0));
 		engine.initiateGame(humanType, nbEnemies, enemiesType);	
+		
 	}
 	
 	/**
@@ -56,6 +62,7 @@ public class DispatcherManager {
 	 */	
 	public void initiateGameView(ArrayList<Base> bases){
 		view.initiateGameView(bases);	
+		ai.initiateGameView(bases);
 	}
 
 	/**
@@ -67,8 +74,10 @@ public class DispatcherManager {
 		engine.setRunning(true);
 		threadView = new Thread(this.view);
 		threadEngine = new Thread(this.engine);
+		threadAI = new Thread(this.ai);
 		threadView.start();
 		threadEngine.start();
+		threadAI.start();
 		//System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	
@@ -79,9 +88,11 @@ public class DispatcherManager {
 	public void stop(){
 		view.setRunning(false);
 		engine.setRunning(false);
+		ai.stop();
 		engine.endGame();
 		threadView.interrupt();
 		threadEngine.interrupt();
+		threadAI.interrupt();
 		//System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	
@@ -101,5 +112,13 @@ public class DispatcherManager {
 	 */
 	public void addOrderToView(Order order){
 		view.addOrder(order);
+	}
+	
+	/**
+	 * Add an Order to all ai LinkedList.
+	 * @param order - Order
+	 */
+	public void addOrderToAI(Order order){
+		ai.addOrder(order);
 	}
 }

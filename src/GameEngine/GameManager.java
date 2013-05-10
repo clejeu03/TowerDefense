@@ -218,6 +218,7 @@ public class GameManager implements Runnable{
 					towerManager.suppressTower(((ArmyOrder) order).getId(), ((ArmyOrder) order).getPosition());
 					//Tell the dispatcher that the tower need to be remove from the view
 					dispatcher.addOrderToView(new SuppressTowerOrder(((SuppressTowerOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition()));
+					
 				}
 				
 				//If the order is a AddTowerOrder one
@@ -248,6 +249,7 @@ public class GameManager implements Runnable{
 								//Add the Tower and draw it
 								towerManager.createTower(idCount, order.getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((ArmyOrder) order).getPosition());
 								dispatcher.addOrderToView(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
+								dispatcher.addOrderToAI(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
 								++idCount;
 								
 							}else{
@@ -286,6 +288,7 @@ public class GameManager implements Runnable{
 					for(Base base:armyManager.getBases()){
 						if(base.getPosition().equals(((ArmyOrder) order).getPosition())){
 							dispatcher.addOrderToView(new AmountBaseOrder(((AddUnitOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition(), base.getAmount()));
+							dispatcher.addOrderToAI(new AmountBaseOrder(((AddUnitOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition(), base.getAmount()));
 							break;
 						}
 					}
