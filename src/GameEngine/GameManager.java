@@ -151,7 +151,7 @@ public class GameManager implements Runnable{
 	
 	public void timer(){
 		
-		//Actions each seconds
+		//Actions each 100 milliseconds
 		timerTask=new TimerTask(){
             public void run(){
             	//get the current Date 
@@ -159,7 +159,7 @@ public class GameManager implements Runnable{
             	//System.out.println("Temps écoulé : " + playingTime);
             	
             	//TODO MoveUnit (following lines are temporary !!)
-        		Iterator<Unit> iter = armyManager.getUnits().iterator();
+        		/*Iterator<Unit> iter = armyManager.getUnits().iterator();
         		while (iter.hasNext()) {
         			Unit unit = iter.next();
         			//int random = 2 + (int)(Math.random() * ((10 - 2) + 1));
@@ -168,6 +168,139 @@ public class GameManager implements Runnable{
         			//Tell the dispatcher that the unit need to be move
 					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),PlayerType.ELECTRIC, unit.getPosition(), newPosition));
         			unit.setPosition(newPosition);
+        		}*/
+        		
+        		for(Unit unit:armyManager.getUnits()){
+        			
+        			//Will tore the new position of the unit
+        			Point newPos = new Point(unit.getPosition());
+        			
+        			//Get the value, in the proximityMap of it's destination, of the unit's position
+        			int current = unit.getDestination().getProximitytab().getPixel(unit.getPosition().x, unit.getPosition().y);
+        			
+        			//Make him go out of the base
+        			if(current == -1){
+        				System.out.println("plop");
+        				
+            			//Tell the dispatcher that the unit need to be move : x+2 and y+2
+    					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),PlayerType.ELECTRIC, unit.getPosition(), new Point(unit.getPosition().x+2, unit.getPosition().y+2)));
+    					unit.setPosition(new Point(unit.getPosition().x +2, unit.getPosition().y+2));
+    					
+    					//Updating the value of the new unit's position
+    					current = unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+2, unit.getPosition().y+2);
+            			newPos = unit.getPosition();
+            			System.out.println("After plop -> Unit position : "+unit.getPosition().toString()+" New current : "+current);
+        			}
+        			
+        			//Find the way ! For each pixel until the unit's speed, find the smallest value and go on....
+        			for(int i=0; i<(unit.getSpeed()*10);++i){
+        				
+        				//Temporary !
+        				System.out.println("Distance : "+i);
+        				System.out.println("current : "+current);
+            			System.out.println("Droite : "+unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+1, unit.getPosition().y));
+            			System.out.println("Down : "+unit.getDestination().getProximitytab().getPixel(unit.getPosition().x, unit.getPosition().y+1));
+            			System.out.println("Up : "+unit.getDestination().getProximitytab().getPixel(unit.getPosition().x, unit.getPosition().y-1));
+            			System.out.println("Left : "+unit.getDestination().getProximitytab().getPixel(unit.getPosition().x-1, unit.getPosition().y));
+            			
+            			
+            			
+            			//Searching the minimum among neighborhood
+            			Point min = new Point();
+            			
+            			if(unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+1, unit.getPosition().y) <= 
+            					unit.getDestination().getProximitytab().getPixel(unit.getPosition().x, unit.getPosition().y+1) ){
+            				//Check if obstacle
+            				if(unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+1, unit.getPosition().y) != 9999){
+            					//Left is min
+            					min.x = unit.getPosition().x+1;
+            					min.y = unit.getPosition().y;
+            				}else{
+            					//Down is min
+                				min.x = unit.getPosition().x;
+                				min.y = unit.getPosition().y+1;
+            				}
+            		
+            			}else{
+            				if(unit.getDestination().getProximitytab().getPixel(unit.getPosition().x, unit.getPosition().y+1) != 9999){
+            				//Down is min
+            				min.x = unit.getPosition().x;
+            				min.y = unit.getPosition().y+1;
+            				}else{
+            					//Left is min
+            					min.x = unit.getPosition().x+1;
+            					min.y = unit.getPosition().y;
+            				}
+            			}
+            			
+            			if(unit.getDestination().getProximitytab().getPixel(min.x, min.y)>=
+            					unit.getDestination().getProximitytab().getPixel(unit.getPosition().x, unit.getPosition().y-1)){
+        					
+            				if(unit.getDestination().getProximitytab().getPixel(unit.getPosition().x, unit.getPosition().y-1) != 9999){
+            					//Up is min
+            					min.x = unit.getPosition().x;
+            					min.y = unit.getPosition().y-1;
+            				}
+            			}
+            			if(unit.getDestination().getProximitytab().getPixel(min.x, min.y) >=
+            						unit.getDestination().getProximitytab().getPixel(unit.getPosition().x-1, unit.getPosition().y)){
+            				if(unit.getDestination().getProximitytab().getPixel(unit.getPosition().x-1, unit.getPosition().y) !=9999){
+	            				//Right is min;
+	            				min.x = unit.getPosition().x-1;
+	            				min.y = unit.getPosition().y;
+            				}
+            			}
+            			
+            			System.out.println("Min values : x="+min.x+" / y="+min.y);
+            			
+            			//Updating values
+            			newPos = min;
+            			current = unit.getDestination().getProximitytab().getPixel(newPos.x, newPos.y);
+            			unit.setPosition(newPos);
+            			
+            			/*
+        				//Left
+        				if(current >= unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i+1, unit.getPosition().y+i) && 
+        						unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i+1, unit.getPosition().y+i) != 9999){
+        					System.out.println(">Left>");
+        					current = unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+1+i, unit.getPosition().y+i);
+        					newPos.x = unit.getPosition().x+1;
+        					newPos.y = unit.getPosition().y;
+        				}
+        				
+        				//Down
+        				if(current >= unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i, unit.getPosition().y+i+1) && 
+        						unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i, unit.getPosition().y+i+1) != 9999){
+        					System.out.println(">Up>");
+        					current = unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i, unit.getPosition().y+1+i);
+        					newPos.x = unit.getPosition().x;
+        					newPos.y = unit.getPosition().y+1;
+
+        				}
+        				
+        				//Up
+        				if(current >= unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i, unit.getPosition().y+i-1) &&
+        						unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i, unit.getPosition().y+i-1) != 9999){
+        					System.out.println(">Down>");
+        					current = unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i, unit.getPosition().y-1+i);
+        					newPos.x = unit.getPosition().x;
+        					newPos.y = unit.getPosition().y-1;
+        				}
+        				
+        				//Right
+        				if(current >= unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i-1, unit.getPosition().y+i) &&
+        						unit.getDestination().getProximitytab().getPixel(unit.getPosition().x+i-1, unit.getPosition().y+i) != 9999){
+        					System.out.println(">Right>");
+        					current = unit.getDestination().getProximitytab().getPixel(unit.getPosition().x-1+i, unit.getPosition().y+i);
+        					newPos.x = unit.getPosition().x-1;
+        					newPos.y = unit.getPosition().y;
+        				}
+        				*/
+        			}
+        			
+        			//Tell the dispatcher that the unit need to be move
+					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),PlayerType.ELECTRIC, unit.getPosition(), newPos));
+        			unit.setPosition(newPos);
         		}
         	          
             }
