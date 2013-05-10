@@ -82,7 +82,7 @@ public class ViewManager extends JFrame implements Runnable{
 		playMenu = new PlayMenu(this, new Point(0,0), WIDTH, HEIGHT);	
 		
 		editorScene = new EditorScene(this, new Point(0,0), 800, 400);
-		editorToolBar = new EditorToolBar(this, new Point(0,400), 800, 200);
+		editorToolBar = new EditorToolBar(this, new Point(0,400), 800, 200, editorScene);
 
 		
 		sceneView = new SceneView(this,new Point(0,25), 800,400);
