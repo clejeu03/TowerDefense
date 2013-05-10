@@ -62,8 +62,6 @@ public class ArmyManager {
 	  units = new ArrayList<Unit>();
 	  this.bases = bases;
 	  
-	  System.out.println("Initialization with bases : "+bases.toString());
-	  
 	  }
   
   /**
@@ -92,11 +90,9 @@ public class ArmyManager {
 	  for(Base base: bases){
 		  if(base.getPosition().equals(src)){
 			  origin = base;
-			  System.out.println("find the origin !");
 		  }
 		  if(base.getPosition().equals(dst)){
 			  destination = base;
-			  System.out.println("find the destination !");
 		  }
 	  }
 	  

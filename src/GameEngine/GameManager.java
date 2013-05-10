@@ -162,7 +162,6 @@ public class GameManager implements Runnable{
             	//Increasing the amount of each base
             	for(Base base:armyManager.getBases()){
             		if(base.getPlayerType()!=PlayerType.NEUTRAL){
-            			System.out.println(base.getNeutral());
             			base.setAmount(base.getAmount()+1);
             			dispatcher.addOrderToView(new AmountBaseOrder(base.getPlayerType(), base.getPosition(), base.getAmount()));
             		}
