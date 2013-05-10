@@ -20,12 +20,8 @@ import java.awt.Point;
  * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
+@SuppressWarnings("serial")
 public class EditorScene extends MainViews{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor of the Editor Scene Class
@@ -37,7 +33,7 @@ public class EditorScene extends MainViews{
 	public EditorScene(ViewManager view, Point position, int width, int height) {
 		super(view,position,width,height);
 		setLayout(null);
-		setBackground(Color.green); 
+		setBackground(Color.white); 
 	}
 
 }
