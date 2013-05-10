@@ -7,35 +7,74 @@
  */
 package AI;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 import Dispatcher.AddTowerOrder;
-import Dispatcher.AddUnitOrder;
 import Dispatcher.AmountBaseOrder;
 import Dispatcher.DispatcherManager;
 import Dispatcher.Order;
-import Dispatcher.SuppressTowerOrder;
+import GameEngine.AttackTower;
+import GameEngine.Base;
+import GameEngine.Player.PlayerType;
+import GameEngine.SupportTower;
+import GameEngine.Tower;
+import GameEngine.TowerManager.TowerTypes;
 
 
 public class AIManager implements Runnable {
 
 	private DispatcherManager dispatcher;
-	private boolean running;
-	private int timeToSleep;
-	//private ArrayList<Integer> aiBasesID;
-	//private ArrayList<Integer> enemyBasesID;
+	
+	private ArrayList<Base> bases;
+	private ArrayList<Base> enemyBases;
+	private ArrayList<Tower> towers;
+	
 	private LinkedList<Order> orderQueue;
+	
+	private PlayerType aiType;
+	private int timeToSleep;
+	private int money;
+	private boolean running;
 
 	public AIManager(DispatcherManager dispatcher) {
 		this.dispatcher = dispatcher;
-		timeToSleep = 2000;
-		//aiBasesID = new ArrayList<Integer>();
-		//enemyBasesID = new ArrayList<Integer>();
+		this.timeToSleep = 2000;
+		
+		bases = new ArrayList<Base>();
+		enemyBases = new ArrayList<Base>();
+		towers = new ArrayList<Tower>();
+		
 		orderQueue = new LinkedList<Order>();
 	}
-
 	
+	/**
+	 * Set the type of the AI
+	 * @param aiType - AI's type
+	 */
+	public void setType(PlayerType aiType){
+		this.aiType = aiType;
+	}
+	
+	/**
+	 * Get the initial bases on screen
+	 * @param bases
+	 */
+	public void initiateGameView(ArrayList<Base> bases){
+		for (Base b:bases){
+			if (b.getPlayerType().equals(aiType)){
+				this.bases.add(b);
+			}
+			else{
+				enemyBases.add(b);
+			}
+		}
+	}
+
+	/**
+	 * Main loop of the thread
+	 */
 	@Override
 	public void run() {
 		running = true;
@@ -43,11 +82,11 @@ public class AIManager implements Runnable {
 			try {
 				Thread.sleep(timeToSleep);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 				running = false;
 			}
 			refreshInfo();
-			System.out.println("Je suis une IA et je t'emmerde");
+			//printInfo();
+			behavior();
 		}
 	}
 
@@ -64,19 +103,18 @@ public class AIManager implements Runnable {
 				//Retrieve and remove the head of the queue
 				Order o = orderQueue.poll();
 				
-				if(o instanceof SuppressTowerOrder){
-					//TODO Retirer la tour dans la liste de l'AI
-					System.out.println("AI: Je vois que tu as supprimé une tour");
-				}
-				
 				if(o instanceof AddTowerOrder){
-					//TODO Ajouter la tour dans la liste de l'AI
-					System.out.println("AI : Je vois que tu ajoutes une tour");
-				}
-				
-				if (o instanceof AddUnitOrder){
-					//TODO Que faire ?
-					System.out.println("AI : Je vois que tu envoies des unités");
+					//If a ai tower is correctly added in the GameEngine
+					if (((AddTowerOrder) o).getPlayerType()==aiType){
+						//We add it in the ai list
+						if(((AddTowerOrder) o).getTowerType()==TowerTypes.ATTACKTOWER){
+							towers.add(new AttackTower(((AddTowerOrder) o).getId(), new Point(0,0), aiType));
+						}
+						
+						else if (((AddTowerOrder) o).getTowerType()==TowerTypes.SUPPORTTOWER){
+							towers.add(new SupportTower(((AddTowerOrder) o).getId(), new Point(0,0), aiType));
+						}
+					}
 				}
 				
 				if (o instanceof AmountBaseOrder){
@@ -89,10 +127,47 @@ public class AIManager implements Runnable {
 	}
 	
 	/**
+	 * Print the infos of the GameEngine the AI can access
+	 */
+	private void printInfo(){
+		if (!bases.isEmpty() || !enemyBases.isEmpty() || !towers.isEmpty()){
+			System.out.println("-----------------AI "+aiType+"--------------------");
+			if(!bases.isEmpty()){
+				for(Base b:bases){
+					System.out.println("AI : AIBase ID="+b.getId()+" Amount="+b.getAmount());
+				}
+			}
+			
+			if(!enemyBases.isEmpty()){
+				for(Base b:enemyBases){
+					System.out.println("AI : EnemyBase ID="+b.getId()+" Type="+b.getPlayerType()+" Amount="+b.getAmount());
+				}
+			}
+			
+			if(!towers.isEmpty()){
+				for(Tower t:towers){
+					System.out.println("AI : Tower ID="+t.getId());
+				}
+			}
+			System.out.println("---------------------------------------------");
+		}
+	}
+	
+	/**
+	 * Principal behavior of the AI 
+	 */
+	private void behavior(){
+		
+	}
+	
+	/**
 	 * Stop the loop in the Thread
 	 * @see #run()
 	 */
 	public void stop(){
+		bases.clear();
+		towers.clear();
+		enemyBases.clear();
 		this.running = false;
 	}
 	
@@ -105,8 +180,31 @@ public class AIManager implements Runnable {
 		orderQueue.add(order);
 	}
 	
+	/**
+	 * Send unit toward an enemy base
+	 * @param idBaseSrc - unit's starting point
+	 * @param idBaseDst - unit's destination
+	 * @param amount - troops sent
+	 */
 	private void sendUnit(int idBaseSrc, int idBaseDst, int amount){
-		//TODO Changer constructeur AddUnitOrder ou créer nouvel order AddAIUnitOrder
+		//TODO Changer constructeur AddUnitOrder
 		//dispatcher.addOrderToEngine(new AddUnitOrder(idBaseSrc, idBaseDst, amount));	
+	}
+	
+	/**
+	 * Create an AI Tower at a specific position
+	 * @param position - Tower's position
+	 * @param type - Tower's type
+	 */
+	private void placeTower(Point position, TowerTypes type){
+		dispatcher.addOrderToEngine(new AddTowerOrder(-1, aiType, position, type));
+	}
+	
+	/**
+	 * Upgrate an AI Tower 
+	 * @param idTower - ID's tower
+	 */
+	private void upgradeTower(int idTower){
+		//dispatcher.addOrderToEngine(new ......)
 	}
 }

@@ -41,9 +41,6 @@ public class DispatcherManager {
 		super();
 		this.engine = engine;
 		this.view = view;
-		
-		//TODO Creer AI suivant nombre de joueur
-		//Mais est-ce vraiment au dispatcher de créer les IA ?
 		this.ai = new AIManager(this);
 	}
 	
@@ -52,7 +49,9 @@ public class DispatcherManager {
 	 * @see View.ViewManager#play()
 	 */	
 	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
+		ai.setType(enemiesType.get(0));
 		engine.initiateGame(humanType, nbEnemies, enemiesType);	
+		
 	}
 	
 	/**
@@ -63,6 +62,7 @@ public class DispatcherManager {
 	 */	
 	public void initiateGameView(ArrayList<Base> bases){
 		view.initiateGameView(bases);	
+		ai.initiateGameView(bases);
 	}
 
 	/**

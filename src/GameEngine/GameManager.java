@@ -218,7 +218,6 @@ public class GameManager implements Runnable{
 					towerManager.suppressTower(((ArmyOrder) order).getId(), ((ArmyOrder) order).getPosition());
 					//Tell the dispatcher that the tower need to be remove from the view
 					dispatcher.addOrderToView(new SuppressTowerOrder(((SuppressTowerOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition()));
-					dispatcher.addOrderToAI(new SuppressTowerOrder(((SuppressTowerOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition()));
 					
 				}
 				
@@ -283,7 +282,6 @@ public class GameManager implements Runnable{
 					
 					System.out.println("Engine - TODO : base : "+((ArmyOrder) order).getPosition()+" want to send "+unit.getAmount()+" Units to "+((AddUnitOrder) order).getDstPosition());
 					dispatcher.addOrderToView(new AddUnitOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddUnitOrder) order).getDstPosition(), unit.getAmount()));
-					dispatcher.addOrderToAI(new AddUnitOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddUnitOrder) order).getDstPosition(), unit.getAmount()));
 					++idCount;
 					
 					//Retrieve the new source base amount
