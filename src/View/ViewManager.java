@@ -59,7 +59,8 @@ public class ViewManager extends JFrame implements Runnable{
     private GameMenuBar gameMenuBar;
     private GameInfoPlayer gameInfoPlayer;
     private GameInfoMenu gameInfoMenu;
-    private MapEditor mapEditor;
+    private EditorScene editorScene;
+    private EditorToolBar editorToolBar;
 	
     /**
      * Constructor of the ViewManager class
@@ -72,13 +73,14 @@ public class ViewManager extends JFrame implements Runnable{
 		
 		homeMenu = new HomeMenu(this, new Point(0,0), WIDTH, HEIGHT);	
 		playMenu = new PlayMenu(this, new Point(0,0), WIDTH, HEIGHT);	
-		mapEditor = new MapEditor(this, new Point(0,0), WIDTH, HEIGHT);
 
 		
 		sceneView = new SceneView(this,new Point(0,25), 800,400);
 		gameMenuBar = new GameMenuBar(this,new Point(0,0),800, 25);
 		gameInfoPlayer = new GameInfoPlayer(this, new Point(0,425), 185,175);
 		gameInfoMenu = new GameInfoMenu(this, new Point(195,425), 605 ,175);
+		editorScene = new EditorScene(this, new Point(0,0), 800, 400);
+		editorToolBar = new EditorToolBar(this, new Point(0,400), 800, 200);
 		
 		
 		//Loading the map icon
@@ -110,12 +112,14 @@ public class ViewManager extends JFrame implements Runnable{
     public void  initComponents(){
 		homeMenu.setPreferredSize(new Dimension(homeMenu.getWidth(), homeMenu.getHeight()));
 		playMenu.setPreferredSize(new Dimension(playMenu.getWidth(), playMenu.getHeight()));
-		mapEditor.setPreferredSize(new Dimension(mapEditor.getWidth(), mapEditor.getHeight()));
+		
 		
         sceneView.setPreferredSize(new Dimension(sceneView.getWidth(), sceneView.getHeight()));
         gameMenuBar.setPreferredSize(new Dimension(gameMenuBar.getWidth(), gameMenuBar.getHeight()));
         gameInfoPlayer.setPreferredSize(new Dimension(gameInfoPlayer.getWidth(), gameInfoPlayer.getHeight()));
         gameInfoMenu.setPreferredSize(new Dimension(gameInfoMenu.getWidth(), gameInfoMenu.getHeight()));
+        editorScene.setPreferredSize(new Dimension(editorScene.getWidth(), editorScene.getHeight()));
+        editorToolBar.setPreferredSize(new Dimension(editorToolBar.getWidth(), editorToolBar.getHeight()));
     }
 
     /**
@@ -130,14 +134,14 @@ public class ViewManager extends JFrame implements Runnable{
         //Move and Resize the components
 		homeMenu.setBounds(homeMenu.getPosition().x, homeMenu.getPosition().y,homeMenu.getWidth(), homeMenu.getHeight());	   	
 		playMenu.setBounds(playMenu.getPosition().x, playMenu.getPosition().y,playMenu.getWidth(), playMenu.getHeight());	   	
-		mapEditor.setBounds(mapEditor.getPosition().x, mapEditor.getPosition().y,mapEditor.getWidth(), mapEditor.getHeight());	   	
-		
 		
 		sceneView.setBounds(sceneView.getPosition().x, sceneView.getPosition().y,sceneView.getWidth(), sceneView.getHeight());	
         gameMenuBar.setBounds(gameMenuBar.getPosition().x, gameMenuBar.getPosition().y,gameMenuBar.getWidth(), gameMenuBar.getHeight());	
         gameInfoPlayer.setBounds(gameInfoPlayer.getPosition().x, gameInfoPlayer.getPosition().y,gameInfoPlayer.getWidth(), gameInfoPlayer.getHeight());	
         gameInfoMenu.setBounds(gameInfoMenu.getPosition().x, gameInfoMenu.getPosition().y,gameInfoMenu.getWidth(), gameInfoMenu.getHeight());	
-
+        editorScene.setBounds(editorScene.getPosition().x, editorScene.getPosition().y,editorScene.getWidth(), editorScene.getHeight());	   	
+        editorToolBar.setBounds(editorToolBar.getPosition().x, editorToolBar.getPosition().y,editorToolBar.getWidth(), editorToolBar.getHeight());	   	
+		
         //add the homeMenu panel on the window
         add(homeMenu);
     }
@@ -178,8 +182,9 @@ public class ViewManager extends JFrame implements Runnable{
     	//Remove the homeMenu panel from the window
     	remove(homeMenu);
     	
-    	//Add the play panels on the window
-    	add(mapEditor);
+    	//Add the editor panels on the window
+    	add(editorScene);
+    	add(editorToolBar);
         
         //Repaint the window
     	validate();
