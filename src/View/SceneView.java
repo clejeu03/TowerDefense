@@ -692,5 +692,5 @@ public class SceneView extends MainViews implements Runnable{
 	    	//g.setColor(Color.blue);
     		g.drawLine(basePosition.x, basePosition.y, mousePosition.x, mousePosition.y);
 	    }
-	  }              
+	 }              
 }

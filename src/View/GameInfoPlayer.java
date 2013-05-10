@@ -8,7 +8,18 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
+
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -24,6 +35,10 @@ import java.awt.Point;
  */
 @SuppressWarnings("serial")
 public class GameInfoPlayer extends MainViews{
+    private ArrayList<Sprite> sprites;
+    private PlayerType humanType;
+   
+    private Image img;
 	
 	/**
 	 * Constructor of the GameInfoPlayer class
@@ -34,9 +49,76 @@ public class GameInfoPlayer extends MainViews{
 	 */
 	public GameInfoPlayer(ViewManager view, Point position, int width, int height) {
 		super(view, position, width,height);
+		
+		sprites = new ArrayList<Sprite>();
+		
 		//Laying the components on the Panel
 		setLayout(null);
 		setBackground(Color.gray); 
 	}
+	
+	/**
+	 * Reset the SceneView
+	 * @see ViewManager#initiateGameView(ArrayList)
+	 */
+	public void initiate(SceneView scene){
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {	
+			//Removing all the Sprites		
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				it.remove();
+				remove(element);
+			}
+			
+			String fileName ="img/";
+			
+			if(humanType == PlayerType.ELECTRIC){
+				fileName +="Electric/";
+			}
+			else if(humanType == PlayerType.WATER){
+				fileName +="Water/";
+			}
+			else if(humanType == PlayerType.GRASS){
+				fileName +="Grass/";
+			}
+			else if(humanType == PlayerType.FIRE){
+				fileName +="Fire/";
+			}
+			
+			fileName += "playerInfo.png";
+			
+			//Loading the background
+			try {
+				 img = ImageIO.read(new File(fileName));
+			  
+			} catch (IOException e) {
+			      e.printStackTrace();
+			}
+		
+	        //Repaint the panel
+	    	revalidate();
+	    	repaint();	
+		}});
+	}
+	
+	/**
+	 * Setter - humanType
+	 * @param humanType - id of the human player
+	 * @see ViewManager#play(int)
+	 */
+	public void setHumanType(PlayerType humanType) {
+		this.humanType = humanType;
+	}
+	
+    /**
+     * Draw the SceneView Panel
+     */
+    @Override
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+	    g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+	 }   
 
 }
