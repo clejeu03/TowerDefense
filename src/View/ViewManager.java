@@ -76,8 +76,8 @@ public class ViewManager extends JFrame implements Runnable{
 		
 		sceneView = new SceneView(this,new Point(0,25), 800,400);
 		gameMenuBar = new GameMenuBar(this,new Point(0,0),800, 25);
-		gameInfoPlayer = new GameInfoPlayer(this, new Point(0,425), 185,175);
-		gameInfoMenu = new GameInfoMenu(this, new Point(195,425), 605 ,175);
+		gameInfoPlayer = new GameInfoPlayer(this, new Point(0,425), 185,150);
+		gameInfoMenu = new GameInfoMenu(this, new Point(185,425), 605 ,150);
 
 		//Loading the map icon
 		try {
@@ -179,6 +179,7 @@ public class ViewManager extends JFrame implements Runnable{
 		//Clear the Sprites list of the scene
 		sceneView.initiate();
 		gameInfoMenu.initiate(sceneView);
+		gameInfoPlayer.initiate(sceneView);
 		
 		Iterator<Base> iter = bases.iterator();
 		while (iter.hasNext()) {
@@ -225,6 +226,7 @@ public class ViewManager extends JFrame implements Runnable{
 		//tell the scene and the gameInfoMenu the id of the human player
 		sceneView.setHumanType(humanType);
 		gameInfoMenu.setHumanType(humanType);
+		gameInfoPlayer.setHumanType(humanType);
     	
     	//Tell the engine (via the dispatcher) to initiate the game
     	dispatcher.initiateGame(humanType,nbEnemies, enemiesType);
