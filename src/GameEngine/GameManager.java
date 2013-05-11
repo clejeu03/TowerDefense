@@ -287,7 +287,6 @@ public class GameManager implements Runnable{
 					for(Base base:armyManager.getBases()){
 						if(base.getPosition().equals(((ArmyOrder) order).getPosition())){
 							dispatcher.addOrderToView(new AmountBaseOrder(((AddUnitOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition(), base.getAmount()));
-							dispatcher.addOrderToAI(new AmountBaseOrder(((AddUnitOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition(), base.getAmount()));
 							break;
 						}
 					}
