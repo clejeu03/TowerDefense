@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import Dispatcher.AddTowerOrder;
-import Dispatcher.AmountBaseOrder;
 import Dispatcher.DispatcherManager;
 import Dispatcher.Order;
 import GameEngine.AttackTower;
@@ -86,7 +85,7 @@ public class AIManager implements Runnable {
 			}
 			refreshInfo();
 			//printInfo();
-			behavior();
+			attackBehavior();
 		}
 	}
 
@@ -116,12 +115,6 @@ public class AIManager implements Runnable {
 						}
 					}
 				}
-				
-				if (o instanceof AmountBaseOrder){
-					//TODO Réactualiser les infos sur les bases
-					System.out.println("AI : Je vois que qu'il y a des changements dans les bases");
-				}
-				
 			}
 		}
 	}
@@ -154,10 +147,46 @@ public class AIManager implements Runnable {
 	}
 	
 	/**
-	 * Principal behavior of the AI 
+	 * How the AI choose who to attack 
 	 */
-	private void behavior(){
-		
+	private void attackBehavior(){
+		//Search which ai base have the most amount of units
+		if (!bases.isEmpty() && !enemyBases.isEmpty()){
+			Base baseAttacking = null;
+			int amountOfAiUnit=0;
+			for (Base b:bases){
+				if (b.getAmount()>amountOfAiUnit){
+					baseAttacking = b;
+					amountOfAiUnit = b.getAmount();
+				}
+			}
+			
+			//Search which enemy base is the closest to his
+			Base baseAttacked = null;
+			double distance=Double.MAX_VALUE;
+			for (Base b:enemyBases){
+				if (distanceBetween(baseAttacking,b)<distance){
+					baseAttacked = b;
+					distance = distanceBetween(baseAttacking,b);
+				}
+			}
+			
+			//Test if there are enough units to get it
+			if ((baseAttacking.getAmount()*0.7)>baseAttacked.getAmount()){
+				sendUnit(baseAttacking.getId(),baseAttacked.getId(),80);
+			}
+		}
+	}
+	
+	/**
+	 * Returns the distance between two bases
+	 * @param b1 - First base
+	 * @param b2 - Second base
+	 * @return distance between them in double
+	 */
+	private double distanceBetween(Base b1, Base b2){
+		//TODO Utiliser les map de proximity !
+		return Math.sqrt(Math.pow((b2.getPosition().x - b1.getPosition().x), 2) + Math.pow((b2.getPosition().y - b1.getPosition().y), 2));
 	}
 	
 	/**
@@ -189,6 +218,7 @@ public class AIManager implements Runnable {
 	private void sendUnit(int idBaseSrc, int idBaseDst, int amount){
 		//TODO Changer constructeur AddUnitOrder
 		//dispatcher.addOrderToEngine(new AddUnitOrder(idBaseSrc, idBaseDst, amount));	
+		System.out.println("Order send : attack from="+idBaseSrc+" to="+idBaseDst+" with "+amount+"% of his power");
 	}
 	
 	/**
