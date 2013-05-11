@@ -8,15 +8,15 @@
 package View;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -25,32 +25,41 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import GameEngine.HeightMap;
+import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 
 
 /**
  * Project - TowerDefense</br>
- * <b>Class - MainMenusView</b></br>
- * <p>The MainMenusView abstract class represents the mains "panels" of the game :
- * HomeMenu, EndGameMenu, OptionsMenu, PlayMenu, SceneView, GameMenuBar, MapEditor
+ * <b>Class - EditorToolBar</b></br>
+ * <p>The EditorToolBar class represents the editor tool bar
  * </p> 
- * <b>Creation :</b> 22/04/2013</br>
+ * <b>Creation :</b> 10/05/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
+ * @see MainViews
+ * @see EditorScene
+ * @see ViewManager
  */
 @SuppressWarnings("serial")
 public class EditorToolBar extends MainViews{
 	private EditorScene editorScene;
 	
 	static private final String newline = "\n";
+	
     private JButton jButtonOpen;
     private JButton jButtonSave;
     private JButton jButtonBack;
+    private JButton jButtonPaint;
+  
+    private boolean mapChosen;
   
     private  JTextArea log;
     private  JScrollPane logScrollPane;
     
     private JFileChooser fileChooser;
     private FileNameExtensionFilter fileFilter;
+    
+    private ArrayList<Sprite> sprites;
 
 	/**
 	 * Constructor of the Editor Toolbar class
@@ -61,13 +70,15 @@ public class EditorToolBar extends MainViews{
 	 */
 	public EditorToolBar(ViewManager view, Point position, int width, int height, EditorScene editorScene) {
 		super(view,position,width,height);
-		
+		setLayout(null);
 		this.editorScene = editorScene;
+		mapChosen = false;
 		
 		//Creating the components
 		jButtonOpen = new javax.swing.JButton();
 		jButtonSave = new javax.swing.JButton();
 		jButtonBack = new javax.swing.JButton();
+		jButtonPaint = new javax.swing.JButton();
 	 
 		//Log : 5 lines, 20 column
         log = new JTextArea(5,200);
@@ -97,33 +108,75 @@ public class EditorToolBar extends MainViews{
 		    }
 		});
 		
-		setLayout(null);
+		jButtonBack.setText("Home");
+		jButtonBack.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent evt) {
+		        jButtonBackPerformed(evt);
+		    }
+		});
+		
+		jButtonPaint.setText("Paint Relief");
+		jButtonPaint.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent evt) {
+		    	paintRelief();
+		    }
+		});
+		
 		setBackground(Color.DARK_GRAY); 
 		jButtonOpen.setBounds(10, 10, 100,25);
 		jButtonSave.setBounds(10, 50, 100,25);
 		jButtonBack.setBounds(10, 90, 100,25);
+		jButtonPaint.setBounds(140, 50, 150,25);
 		logScrollPane.setBounds(140,80, 650,85);
+		
+		sprites = new ArrayList<Sprite>();
+		//Add the AddTower Attack Sprite on the panel
+		addSprite(new EditorAddBaseSprite(editorScene, this, new Point(320,50),PlayerType.FIRE, 36, 36));
+		addSprite(new EditorAddBaseSprite(editorScene, this, new Point(360,50),PlayerType.NEUTRAL, 36, 36));
+		
 		add(jButtonOpen);
 		add(jButtonSave);
 		add(jButtonBack);
+		add(jButtonPaint);
 		add(logScrollPane);
 	}
 	
 	/**
-	 * jButtonBack Event handler - Back to the home menu !
+	 * Add a Sprite in the EditorToolBar ArrayList
+	 * @param sprite
+	 * @see
+	 */
+	public void addSprite(Sprite sprite){
+		sprites.add(sprite);
+		
+		//TO DO : retrieve the last element added...
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+			add(element);
+		}
+		
+        //Repaint the panel
+    	revalidate();
+    	repaint();	
+	}
+	
+	/**
+	 * jButtonOpen Event handler - Launch the fileChooser to let the user choose a file !
 	 * @param evt - ActionEvent performed by the player
 	 */
     private void jButtonOpenPerformed(ActionEvent evt) {
-    	showChooseFile();
+    	if(!mapChosen) showChooseFile();
+    	//TODO else reinitialiser tout ! : Nouvelle map remettre  mapChosen à false et le texte  à Open
     }
     
 	/**
-	 * jButtonBack Event handler - Back to the home menu !
+	 * jButtonSave Event handler - Save the map and its mapView !
 	 * @param evt - ActionEvent performed by the player
 	 */
     private void jButtonSavePerformed(ActionEvent evt) {
     	System.out.println("Editor - I need to save the user mapView and map");
-    	
     }
 	
 	/**
@@ -135,9 +188,25 @@ public class EditorToolBar extends MainViews{
     	view.homeMenu();
     }
     
+	/**
+	 * jButtonPaint Event handler - Tell the EditorScene that the user want to paint the relief !
+	 * @see #openImage(String, String)
+	 */
+    private void paintRelief() {
+    	if(mapChosen){
+	    	editorScene.setEditHeight(true);
+			log.append("_________________________________________________"+newline);
+			log.append("PAINT INSTRUCTIONS : "+newline);
+			log.append("Drag the mouse to paint the relief (mouse left button) or erase it  (mouse right button) "+newline);
+    	}
+    }
+    
 
 	/**
+	 * Launch a file chooser to let the user choose a map
 	 * @param editorScene
+	 * @see #jButtonOpenPerformed(ActionEvent)
+	 * @see ViewManager#launchMapEditor()
 	 */
 	public void showChooseFile() {
 		log.append("Open a 800x400 jpg or png map"+newline);
@@ -156,29 +225,43 @@ public class EditorToolBar extends MainViews{
 		else log.append("Open a damn map ! "+newline);
 	}
     
+	/**
+	 * Try to open the selected file
+	 * @param fileName
+	 * @param filePath
+	 * @see #showChooseFile()
+	 */
 	public void openImage(String fileName, String filePath){
 		
 		log.append("Checking the "+filePath+" map format..."+newline);
 		
-		//Trying to load the image and 		
-		BufferedImage img = null;//Local image containment
+	
+		BufferedImage img = null;
 		
+		//Trying to load the image
 		try {
 			img = ImageIO.read(new File(filePath)); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
 		
-		//Checking the format
-		if((img.getWidth()!= 800)||(img.getHeight()!=400)){
-			log.append("The image size need to be 800x400 instead of "+img.getWidth()+"x"+img.getHeight()+".Try again ! "+newline);
+		if(img==null){
+			log.append ("ERROR : The "+filePath+" map can't be load. The file might be corrupted. Try an other map ! "+newline);
 		}
 		else{
-			log.append ("Loading the "+filePath+" map..."+newline);
-			editorScene.initiate(img);
-			log.append("_________________________________________________"+newline);
-			log.append("INSTRUCTIONS : "+newline);
-			log.append("Drag the mouse to paint the relief (mouse left button) or erase it  (mouse right button) "+newline);
+			//Checking the format
+			if((img.getWidth()!= 800)||(img.getHeight()!=400)){
+				log.append("ERROR : The image size need to be 800x400 instead of "+img.getWidth()+"x"+img.getHeight()+".Try an other map ! "+newline);
+			}
+			else{
+				log.append ("Loading the "+filePath+" map..."+newline);
+				
+				mapChosen = true;
+				jButtonOpen.setText("New");
+				
+				editorScene.initiate(img);	
+				paintRelief();
+			}
 		}
 		
 	}

@@ -49,7 +49,7 @@ public class GameInfoMenu extends MainViews{
 	}
 	
 	/**
-	 * Add a Sprite in the ScenView ArrayList
+	 * Add a Sprite in the GameInfoMenu ArrayList
 	 * @param sprite
 	 * @see ViewManager#initiateGameView(ArrayList)
 	 */
