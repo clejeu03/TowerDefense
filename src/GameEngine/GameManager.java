@@ -47,7 +47,7 @@ public class GameManager implements Runnable{
 	private Timer timer;
 	private TimerTask timerTask;
 	private TimerTask baseTimerTask;
-    private long timeStart;
+    private static long timeStart;
 	
     /**
      * Constructor of the GameManager class
@@ -65,6 +65,10 @@ public class GameManager implements Runnable{
 		idCount = 0;
 		
 		timeStart = 0;
+	}
+	
+	public static long getTime(){
+		return System.currentTimeMillis()-timeStart;
 	}
 	
 	/**
@@ -116,6 +120,7 @@ public class GameManager implements Runnable{
 		//Adding the Tower and Army managers
 		armyManager = new ArmyManager();
 		towerManager = new TowerManager();
+		warManager = new WarManager();
 		
 		//Clear the towers list
 		towers.clear();
@@ -172,32 +177,29 @@ public class GameManager implements Runnable{
         			}
         		}
             	
-            	//warManager.makeWar(armyManager, towerManager);
-            	if(armyManager.getUnits().isEmpty() == false && towerManager.getTowers().isEmpty() == false){
-	            	for(Unit unit:armyManager.getUnits()){
+            	//Move Missiles
+            	for(Missile missile:towerManager.getMissiles()){
+            		if(warManager.moveMissile(missile) == true){
+            			
+            			//TODO order move missile
+            			//dispatcher.addOrderToView(new MoveMissileOrder());
+            			
+            		}else{
 
-	           		 //Browse all towers
-	           		 for(Tower tower:towerManager.getTowers()){
-	           			 
-	           			 int x = unit.getPosition().x;
-	           			 int y = unit.getPosition().y;
-	           			 int centerX = tower.getPosition().x;
-	           			 int centerY = tower.getPosition().y;
-	           			 int range = tower.getRange();
-	           			 
-	           			 //The unit (x,y) is the area of the tower(centerX, centerY) if : (x - centerX)^2 + (y - centerY)^2 < range^2
-	           			 if(((x - centerX)*(x - centerX) + (y - centerY)*(y - centerY)) < range*range){
-	           				 
-	           				 //So active the tower
-	           				 towerManager.activeTower(tower, unit);
-	           			 }
-	           		 }
-	           	 	}
+            			//TODO order move missile that suppress the missile from the view
+            			//TODO order that change the mount of a unit
+            			
+            			towerManager.getMissiles().remove(missile);
+            		}
             	}
-       	          
+            	
+            	//Battles
+            	warManager.war(armyManager, towerManager, playingTime);
+            	
             }
         };
 		
+      
 		//Actions each 2 seconds
 		baseTimerTask=new TimerTask(){
             public void run(){

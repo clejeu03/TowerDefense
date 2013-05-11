@@ -1,4 +1,7 @@
 package GameEngine;
+
+import java.awt.Point;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - Missile</b></br>
@@ -16,30 +19,58 @@ public class Missile {
   /**
    * Define the current x position of the missile
    */
-  public int position_x;
-  /**
-   * Define the current y position of the missile
-   */
-  public int position_y;
+ private Point position;
+// private int id;
+ private Unit target;
+ private int damages;
+ private double speed;
 
   /**
    * Constructor of the Missile class
    */
-  public Missile() {
+  public Missile(Point position, Unit target, double speed, int damages) {
+	  System.out.println("Creation of a new missile !");
+	  this.position = position;
+	  this.target = target;
+	  this.speed = speed;
+	  this.damages = damages;
   }
 
   /**
    * Getter that returns the current position of the selected missile
    * @return position
    */
-  public void getPosition() {
+  public Point getPosition() {
+	  return this.position;
   }
-
+  /**
+   * Getter returns the current position of the target
+   * @return
+   */
+  public Point getDestination(){
+	  return this.target.getPosition();
+  }
+  
+  /**
+   * Getter return the damages
+   * @return
+   */
+  public int getDamages(){
+	  return this.damages;
+  }
+  /**
+   * Getter - return the speed
+   * @return
+   */
+  public double getSpeed(){
+	  return this.speed;
+  }
   /**
    * Setter that changes the current position of the selected missile
    * @param position - the new position to apply
    */
-  public void setPosition() {
+  public void setPosition(Point point) {
+	  this.position = point;
   }
 
 }

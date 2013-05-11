@@ -33,8 +33,11 @@ public class AttackTower extends Tower {
 	 * @see GameEngine.Tower#shoot()
 	 */
 	@Override
-	public void shoot(Unit unit) {
+	public Missile shoot(Unit unit, long date) {
 		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
+		this.lastShootingTime = date;
+		return new Missile(this.getPosition(), unit,this.getSpeed(), this.getDamage());
+		
 	}
 
 	/**
@@ -42,7 +45,7 @@ public class AttackTower extends Tower {
 	 */
 	@Override
 	public void stop() {
-		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
+		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says STOP !!!");
 	}
 
 }

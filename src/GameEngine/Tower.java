@@ -41,6 +41,8 @@ public abstract class Tower {
 	   */
 	private double speed;
 	
+	protected long lastShootingTime;
+	
 	/**
 	 * Constructor of the Tower class
 	 * @param position - position of the center of the tower
@@ -58,6 +60,7 @@ public abstract class Tower {
 		this.damage = damage;
 		this.cadency = cadency;
 		this.speed = speed;
+		this.lastShootingTime = 0;
 	}
 	
 	/**
@@ -65,7 +68,7 @@ public abstract class Tower {
 	 * @see TowerManager#activeTower()
 	 * @param unit - target
 	 */
-	public abstract void shoot(Unit unit);
+	public abstract Missile shoot(Unit unit, long date);
 	/**
 	 * Function called by the TowerManager when no more units are in the tower range
 	 * @see TowerManager#desactiveTower()
@@ -122,5 +125,12 @@ public abstract class Tower {
 	 */
 	public double getSpeed() {
 		return speed;
+	}
+	/**
+	 * Getter - return the last date at wich the tower created a missile
+	 * @return
+	 */
+	public long getLastShootingTime(){
+		return this.lastShootingTime;
 	}
 }

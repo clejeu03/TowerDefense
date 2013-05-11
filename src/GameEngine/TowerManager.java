@@ -26,6 +26,8 @@ public class TowerManager {
   private ArrayList<Tower> towers;
   
   private ArrayList<Tower> activatedTowers;
+  
+  private ArrayList<Missile> missiles;
 
   /**
    * List all the the types of towers. There are two families of towers :
@@ -51,6 +53,8 @@ public class TowerManager {
   public TowerManager() {
 	  super();
 	  towers = new ArrayList<Tower>();
+	  activatedTowers = new ArrayList<Tower>();
+	  missiles = new ArrayList<Missile>();
   }
   /**
    * Set the selected tower active because of the proximity of a enemy Unit.
@@ -58,14 +62,19 @@ public class TowerManager {
    * @param unit - target
    * @see WarManager
    */
-  public void activeTower(Tower toActiveTower, Unit unit) {
+  public void activeTower(Tower toActiveTower, Unit unit, Long date) {
 	  for(Tower tower:towers){
 		  if(tower.getId() == toActiveTower.getId()){
-			  /*if(!activatedTowers.isEmpty() && activatedTowers.contains(tower)){
-				  //TODO multiple targets
-			  }else{*/
-				  toActiveTower.shoot(unit);
-			 // }
+
+			  //TODO multiple targets
+			  long currentTime = GameManager.getTime();
+			  
+			  //Temporary !
+			  System.out.println("currentTime : "+currentTime+" - date : "+date+" cadency : "+toActiveTower.getCadency()*10);
+			  
+			  if(currentTime - date == toActiveTower.getCadency()*10){
+				  missiles.add(toActiveTower.shoot(unit, date));
+			  }
 		  }
 	  }
   }
@@ -134,5 +143,12 @@ public class TowerManager {
    */
   public ArrayList<Tower> getActivatedTowers(){
 	  return this.activatedTowers;
+  }
+  /**
+   * Getter - return the missiles list
+   * @return
+   */
+  public ArrayList<Missile> getMissiles(){
+	  return this.missiles;
   }
 }
