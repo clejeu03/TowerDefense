@@ -21,11 +21,34 @@ public class WarManager {
   public WarManager() {
   }
   /**
-   * Function that transmit damages of a Tower to a Unit or a group of Units
-   * =====>WARNING : Maybe....
+   * Function that tell the meeting of a unit and a tower
    */
-  public void attack() {
-	  //TODO
-  }
+  public void makeWar(ArmyManager armyManager, TowerManager towerManager) {
+	  System.out.println("plop");
+	  
+	  //Browse all the units
+	 for(Unit unit:armyManager.getUnits()){
+		 System.out.println("plop2");
+		 //Browse all towers
+		 for(Tower tower:towerManager.getTowers()){
+			
+			 System.out.println("plop3");
+			 
+			 int x = unit.getPosition().x;
+			 int y = unit.getPosition().y;
+			 int centerX = tower.getPosition().x;
+			 int centerY = tower.getPosition().y;
+			 int range = tower.getRange();
+			 
+			 //The unit (x,y) is the area of the tower(centerX, centerY) if : (x - centerX)^2 + (y - centerY)^2 < range^2
+			 if(((x - centerX)*(x - centerX) + (y - centerY)*(y - centerY)) < range*range){
+				 
+				 //So active the tower
+				 towerManager.activeTower(tower, unit);
+			 }
+		 }
+	 }
 
+  }
+ 
 }
