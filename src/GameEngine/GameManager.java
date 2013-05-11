@@ -157,36 +157,35 @@ public class GameManager implements Runnable{
             	//get the current Date 
             	long playingTime = System.currentTimeMillis()-timeStart;
             	//System.out.println("Temps écoulé : " + playingTime);
-            	
-            	//TODO MoveUnit (following lines are temporary !!)
-        		/*Iterator<Unit> iter = armyManager.getUnits().iterator();
-        		while (iter.hasNext()) {
-        			Unit unit = iter.next();
-        			//int random = 2 + (int)(Math.random() * ((10 - 2) + 1));
-        			Point newPosition = new Point(unit.getPosition().x +2, unit.getPosition().y+2);
-        			
-        			//Tell the dispatcher that the unit need to be move
-					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),PlayerType.ELECTRIC, unit.getPosition(), newPosition));
-        			unit.setPosition(newPosition);
-        		}*/
-        		
-        		for(Unit unit:armyManager.getUnits()){
 
-	        			//Find the way ! For each pixel until the unit's speed, find the smallest value and go on....
-	        			for(int i=0; i<(unit.getSpeed()*10);++i){
-	        				
-	        				//Temporary !
-	        				System.out.println("Distance : "+i);
-	            			
-	            			//Updating values
-	            			unit.setPosition(mapManager.proximityMapFindMin(unit.getDestination().getProximitytab(), unit.getPosition()));
-	        			}
-        			
-        			//Tell the dispatcher that the unit need to be move
-					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),PlayerType.ELECTRIC, unit.getPosition(), unit.getPosition()));
-        			unit.setPosition(unit.getPosition());
+            	//Move units
+            	for(Unit unit:armyManager.getUnits()){
+	        		//If the unit is NOT on the base
+        			if(unit.getPosition().x != unit.getDestination().getPosition().x && unit.getPosition().y != unit.getDestination().getPosition().y ){
+        				
+        				//Find the way ! For each pixel until the unit's speed, find the smallest value and go on....
+    	        		for(int i=0; i<(unit.getSpeed()*10);++i){	
+    	            		unit.setPosition(mapManager.proximityMapFindMin(unit.getDestination().getProximitytab(), unit.getPosition()));
+    	        		}
+        				
+        				//Else tell the dispatcher that the unit need to be move
+    					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),PlayerType.ELECTRIC, unit.getPosition(), unit.getPosition()));
+            			unit.setPosition(unit.getPosition());
+        				
+        			}else{
+        				
+            			//Updating the base amount
+        				unit.getDestination().setAmount(unit.getDestination().getAmount() - unit.getAmount());
+
+        				//Tell the dispatcher to suppress the unit and to change the base amount
+        				dispatcher.addOrderToView(new AmountBaseOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType(), unit.getDestination().getPosition(), unit.getDestination().getAmount()));
+        				armyManager.getUnits().remove(unit);
+        				//dispatcher.addOrderToView(new AddUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getOrigin().getPosition(), unit.getDestination().getPosition(), unit.getAmount()));
+        				
+            			break;
+        			}
         		}
-        	          
+       	          
             }
         };
 		
