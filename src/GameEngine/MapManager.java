@@ -635,19 +635,11 @@ public class MapManager implements Serializable{
 	 */
 	public Point proximityMapFindMin(Map proximityMap, Point position){
 		HashMap<Integer, Point> tab = new HashMap<Integer, Point>();
-		
-		int current = proximityMap.getPixel(position.x, position.y);
+
 		int up = proximityMap.getPixel(position.x, position.y-1);
 		int down = proximityMap.getPixel(position.x, position.y+1);
 		int left = proximityMap.getPixel(position.x-1, position.y);
 		int right = proximityMap.getPixel(position.x+1, position.y);
-		
-		//Temporary !
-		System.out.println("current : "+current);
-		System.out.println("Up : "+up);
-		System.out.println("Left : "+left);
-		System.out.println("Down : "+down);
-		System.out.println("Right : "+right);
 		
 		//Suppressing all obstacles
 		if(up!=9999){
@@ -670,8 +662,6 @@ public class MapManager implements Serializable{
 				vmin = value;
 			}
 		}
-		
-		System.out.println("Min : "+vmin);;
 		
 		return tab.get(vmin);
 	}
