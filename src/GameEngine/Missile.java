@@ -34,7 +34,7 @@ public class Missile {
 	  this.target = target;
 	  this.speed = speed;
 	  this.damages = damages;
-  }
+}
 
   /**
    * Getter that returns the current position of the selected missile

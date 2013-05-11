@@ -44,6 +44,7 @@ public class WarManager {
    * @see GameManager#timer()
    */
   public void beginEncounters(ArmyManager armyManager, TowerManager towerManager, Long playingTime) {
+
 	  if(armyManager.getUnits().isEmpty() == false && towerManager.getTowers().isEmpty() == false){
       	for(Unit unit:armyManager.getUnits()){
 
@@ -58,6 +59,8 @@ public class WarManager {
      			 
      			 //The unit (x,y) is the area of the tower(centerX, centerY) if : (x - centerX)^2 + (y - centerY)^2 < range^2
      			 if(((x - centerX)*(x - centerX) + (y - centerY)*(y - centerY)) < range*range){
+
+     				 
      				 
      				 //So active the tower
      				 towerManager.activeTower(tower, unit, playingTime);
@@ -110,7 +113,7 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 		System.out.println("Missile target : "+missile.getDestination());
 		
 		if(missile.getPosition() != missile.getDestination()){
-			System.out.println("Missile = move !");
+			//System.out.println("Missile = move !");
 			
 			//For each pixel until the speed value, find the following pixel
 			for(int i=0; i< ( missile.getSpeed()*10 ); ++i){
@@ -126,16 +129,20 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 				
 				//Projection on the tallest component's axe and updating the missile position
 				if(factorX > factorY){
-					missile.setPosition(new Point(missile.getPosition().x+1, missile.getPosition().y));
+					missile.setPosition(new Point(missile.getPosition().x-1, missile.getPosition().y));
 				}else if(factorY > factorX){
-					missile.setPosition(new Point(missile.getPosition().x, missile.getPosition().y+1));
+					missile.setPosition(new Point(missile.getPosition().x, missile.getPosition().y-1));
 				}else if(factorX - factorY < 0.0001){
-					missile.setPosition(new Point(missile.getPosition().x+1, missile.getPosition().y+1));
+					missile.setPosition(new Point(missile.getPosition().x-1, missile.getPosition().y-1));
 				}
+				
+				//Handle errors of positonning
+				
+				
 			}
 			return true;
 		}else{
-			System.out.println("Missile = reach target!");
+			//System.out.println("Missile = reach target!");
 			return false;
 		}
 	}

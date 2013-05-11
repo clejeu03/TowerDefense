@@ -133,4 +133,5 @@ public abstract class Tower {
 	public long getLastShootingTime(){
 		return this.lastShootingTime;
 	}
+
 }
