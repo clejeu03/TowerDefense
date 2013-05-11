@@ -27,15 +27,15 @@ public class SupportTower extends Tower {
 	 * @param playerType
 	 */
 	public SupportTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 90, 0, 0, 0);
+		super(id, position, playerType, 35, 0, 0, 0);
 	}
 
 	/**
 	 * @see GameEngine.Tower#shoot()
 	 */
 	@Override
-	public void shoot() {
-
+	public void shoot(Unit unit) {
+		System.out.println("Support Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class SupportTower extends Tower {
 	 */
 	@Override
 	public void stop() {
-
+		System.out.println("Support Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says STOP !!!");
 	}
 
 }

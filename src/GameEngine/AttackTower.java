@@ -26,15 +26,15 @@ public class AttackTower extends Tower {
 	 * @param playerType
 	 */
 	public AttackTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 95, 3, 2000, 0.001);
+		super(id, position, playerType, 45, 3, 2000, 0.001);
 	}
 
 	/**
 	 * @see GameEngine.Tower#shoot()
 	 */
 	@Override
-	public void shoot() {
-
+	public void shoot(Unit unit) {
+		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class AttackTower extends Tower {
 	 */
 	@Override
 	public void stop() {
-
+		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
 	}
 
 }

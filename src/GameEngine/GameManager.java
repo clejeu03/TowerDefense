@@ -2,7 +2,6 @@ package GameEngine;
 
 import Dispatcher.*;
 import GameEngine.Player.PlayerType;
-import GameEngine.TowerManager.TowerTypes;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -43,6 +42,7 @@ public class GameManager implements Runnable{
 	private MapManager mapManager;
 	private ArmyManager armyManager;
 	private TowerManager towerManager;
+	private WarManager warManager;
 	
 	private Timer timer;
 	private TimerTask timerTask;
@@ -151,25 +151,50 @@ public class GameManager implements Runnable{
 	
 	public void timer(){
 		
-		//Actions each seconds
+		//Actions each 100 milliseconds
 		timerTask=new TimerTask(){
             public void run(){
             	//get the current Date 
             	long playingTime = System.currentTimeMillis()-timeStart;
             	//System.out.println("Temps écoulé : " + playingTime);
-            	
-            	//TODO MoveUnit (following lines are temporary !!)
-        		Iterator<Unit> iter = armyManager.getUnits().iterator();
-        		while (iter.hasNext()) {
-        			Unit unit = iter.next();
-        			//int random = 2 + (int)(Math.random() * ((10 - 2) + 1));
-        			Point newPosition = new Point(unit.getPosition().x +2, unit.getPosition().y+2);
-        			
-        			//Tell the dispatcher that the unit need to be move
-					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),PlayerType.ELECTRIC, unit.getPosition(), newPosition));
-        			unit.setPosition(newPosition);
+
+            	//Move units
+            	for(Unit unit:armyManager.getUnits()){
+        			if(armyManager.moveUnit(unit, mapManager)){
+        				//Tell the dispatcher that the unit need to be move
+    					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),unit.getOrigin().getPlayerType(), unit.getPosition(), unit.getPosition()));
+        			}else{
+        				//Tell the dispatcher to suppress the unit and to change the base amount
+        				dispatcher.addOrderToView(new AmountBaseOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType(), unit.getDestination().getPosition(), unit.getDestination().getAmount()));
+        				//dispatcher.addOrderToView(new AddUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getOrigin().getPosition(), unit.getDestination().getPosition(), unit.getAmount()));
+        				armyManager.getUnits().remove(unit);
+        				break;
+        			}
         		}
-        	          
+            	
+            	//warManager.makeWar(armyManager, towerManager);
+            	if(armyManager.getUnits().isEmpty() == false && towerManager.getTowers().isEmpty() == false){
+	            	for(Unit unit:armyManager.getUnits()){
+
+	           		 //Browse all towers
+	           		 for(Tower tower:towerManager.getTowers()){
+	           			 
+	           			 int x = unit.getPosition().x;
+	           			 int y = unit.getPosition().y;
+	           			 int centerX = tower.getPosition().x;
+	           			 int centerY = tower.getPosition().y;
+	           			 int range = tower.getRange();
+	           			 
+	           			 //The unit (x,y) is the area of the tower(centerX, centerY) if : (x - centerX)^2 + (y - centerY)^2 < range^2
+	           			 if(((x - centerX)*(x - centerX) + (y - centerY)*(y - centerY)) < range*range){
+	           				 
+	           				 //So active the tower
+	           				 towerManager.activeTower(tower, unit);
+	           			 }
+	           		 }
+	           	 	}
+            	}
+       	          
             }
         };
 		
@@ -247,27 +272,29 @@ public class GameManager implements Runnable{
 								
 								//Add the Tower and draw it
 								towerManager.createTower(idCount, order.getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((ArmyOrder) order).getPosition());
-								dispatcher.addOrderToView(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
-								dispatcher.addOrderToAI(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
+								dispatcher.addOrderToView(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddTowerOrder) order).getTowerType()));
+								dispatcher.addOrderToAI(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddTowerOrder) order).getTowerType()));
 								++idCount;
+								
+								System.out.println("Towers : "+towerManager.getTowers().toString());
 								
 							}else{
 								
 								//Tell the dispatcher that the tower CAN'T be add on the view
 								System.out.println("GameEngine says : You try to add a tower but this is not your territory");
-								dispatcher.addOrderToView(new AddTowerOrder(-1, order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
+								dispatcher.addOrderToView(new AddTowerOrder(-1, order.getPlayerType(), new Point(-1, -1), ((AddTowerOrder) order).getTowerType()));
 							}
 							
 						}else{
 							//Tell the dispatcher that the tower CAN'T be add on the view
 							System.out.println("GameEngine says : maybe you should try on a hill...");
-							dispatcher.addOrderToView(new AddTowerOrder(-1, order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
+							dispatcher.addOrderToView(new AddTowerOrder(-1, order.getPlayerType(), new Point(-1, -1), ((AddTowerOrder) order).getTowerType()));
 						}
 						
 					//The required part of the sprite is not on the same territory	
 					}else{
 						//Tell the dispatcher that the tower CAN'T be add on the view
-						dispatcher.addOrderToView(new AddTowerOrder(-1, order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
+						dispatcher.addOrderToView(new AddTowerOrder(-1, order.getPlayerType(), new Point(-1, -1), ((AddTowerOrder) order).getTowerType()));
 					}
 					
 				}

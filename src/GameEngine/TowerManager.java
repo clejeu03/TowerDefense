@@ -24,6 +24,8 @@ public class TowerManager {
    * Associate all the Towers in game to the Players that owns them in thread safe Map. 
    */
   private ArrayList<Tower> towers;
+  
+  private ArrayList<Tower> activatedTowers;
 
   /**
    * List all the the types of towers. There are two families of towers :
@@ -52,13 +54,32 @@ public class TowerManager {
   }
   /**
    * Set the selected tower active because of the proximity of a enemy Unit.
+   * @param toActiveTower
+   * @param unit - target
+   * @see WarManager
    */
-  public void activeTower() {
+  public void activeTower(Tower toActiveTower, Unit unit) {
+	  for(Tower tower:towers){
+		  if(tower.getId() == toActiveTower.getId()){
+			  /*if(!activatedTowers.isEmpty() && activatedTowers.contains(tower)){
+				  //TODO multiple targets
+			  }else{*/
+				  toActiveTower.shoot(unit);
+			 // }
+		  }
+	  }
   }
   /**
    * Set the selected Tower inactive because no Unit's in the neighborhood.
+   * @param toDesactiveTower
+   * @see WarManager
    */
-  public void desactiveTower() {
+  public void desactiveTower(Tower toDesactiveTower) {
+	  for(Tower tower:activatedTowers){
+		  if(tower.getId() == toDesactiveTower.getId()){
+			  toDesactiveTower.stop();
+		  }
+	  }
   }
  /**
   * Create a Tower of the given type
@@ -99,4 +120,19 @@ public class TowerManager {
 	  }
   }
 
+  /**
+   * Getter - return the current tower list
+   * @return
+   */
+  public ArrayList<Tower> getTowers(){
+	  return this.towers;
+  }
+  
+  /**
+   * Getter - return the current activated tower list
+   * @return
+   */
+  public ArrayList<Tower> getActivatedTowers(){
+	  return this.activatedTowers;
+  }
 }

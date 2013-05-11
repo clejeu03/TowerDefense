@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
@@ -627,6 +628,44 @@ public class MapManager implements Serializable{
 		}
 	}
 
+	/**
+	 * Find the smallest value around a position
+	 * @param proximityMap
+	 * @param position
+	 */
+	public Point proximityMapFindMin(Map proximityMap, Point position){
+		HashMap<Integer, Point> tab = new HashMap<Integer, Point>();
+
+		int up = proximityMap.getPixel(position.x, position.y-1);
+		int down = proximityMap.getPixel(position.x, position.y+1);
+		int left = proximityMap.getPixel(position.x-1, position.y);
+		int right = proximityMap.getPixel(position.x+1, position.y);
+		
+		//Suppressing all obstacles
+		if(up!=9999){
+			tab.put(up, new Point(position.x, position.y-1));
+		}
+		if(down !=9999){
+			tab.put(down, new Point(position.x, position.y+1));
+		}
+		if(left != 9999){
+			tab.put(left, new Point(position.x-1, position.y));
+		}
+		if(right != 9999){
+			tab.put(right, new Point(position.x+1, position.y));
+		}		
+		
+		//Find the minimum of the stored values
+		int vmin = 999999;
+		for(Integer value:tab.keySet()){
+			if(value <= vmin){
+				vmin = value;
+			}
+		}
+		
+		return tab.get(vmin);
+	}
+	
 	/**
 	 * Change the territory of the owner of a base and refresh the global TerritoryMap
 	 * @param tm

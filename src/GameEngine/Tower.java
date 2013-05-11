@@ -63,8 +63,9 @@ public abstract class Tower {
 	/**
 	 * Function called by the TowerManager when a unit go trough the tower range
 	 * @see TowerManager#activeTower()
+	 * @param unit - target
 	 */
-	public abstract void shoot();
+	public abstract void shoot(Unit unit);
 	/**
 	 * Function called by the TowerManager when no more units are in the tower range
 	 * @see TowerManager#desactiveTower()

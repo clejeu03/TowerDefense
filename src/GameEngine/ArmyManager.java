@@ -154,9 +154,30 @@ public class ArmyManager {
   /**
    * Move a Unit, from its position to a new position, in the path to the Unit's destination.
    * @see GameManager#timer()
+   * @return true if the unit need to be move / false if the unit have reached it's destination
    */
-  public void moveUnits() {
-	  	//TODO take the array units and move all of it's components
+  public Boolean moveUnit(Unit unit, MapManager mapManager) {
+	  	
+	  //The unit need to be move
+	  if(unit.getPosition().x != unit.getDestination().getPosition().x && unit.getPosition().y != unit.getDestination().getPosition().y ){
+		
+		  //Find the way ! For each pixel until the unit's speed, find the smallest value and go on....
+  		  for(int i=0; i<(unit.getSpeed()*10);++i){	
+  			  unit.setPosition(mapManager.proximityMapFindMin(unit.getDestination().getProximitytab(), unit.getPosition()));
+  		  }
+  		  unit.setPosition(unit.getPosition());
+ 
+  		  return true;
+			
+  	  //The unit have reached it's destination
+	  }else{
+		  
+		  //Updating the base amount
+		  unit.getDestination().setAmount(unit.getDestination().getAmount() - unit.getAmount());
+	
+		  return false;
+	  }
+	  
   }
   
  /**
