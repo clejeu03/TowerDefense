@@ -24,8 +24,10 @@ import GameEngine.TowerManager.TowerTypes;
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
-public class AddTowerOrder extends ArmyOrder{
+public class AddTowerOrder extends Order{
+	private PlayerType playerType;
 	private TowerTypes towerType;
+	private Point position;
 
 	/**
 	 * Constructor of the AddTowerOrder class
@@ -33,9 +35,22 @@ public class AddTowerOrder extends ArmyOrder{
 	 * @param position - position of the tower to suppress
 	 */
 	public AddTowerOrder(int id, PlayerType playerType, Point position, TowerTypes towerTypes) {
-		super(id, playerType,position);
+		super(id);
+		this.playerType = playerType;
+		this.position = position;
 		this.towerType = towerTypes;
 	}
+	
+
+	public PlayerType getPlayerType() {
+		return playerType;
+	}
+
+
+	public Point getPosition() {
+		return position;
+	}
+
 
 	public TowerTypes getTowerType() {
 		return towerType;

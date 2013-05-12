@@ -23,7 +23,7 @@ import GameEngine.Player.PlayerType;
  * <b>Creation :</b> 07/05/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
-public class MoveUnitOrder extends ArmyOrder{
+public class MoveUnitOrder extends Order{
 	private Point newPosition;
 
 	/**
@@ -32,8 +32,8 @@ public class MoveUnitOrder extends ArmyOrder{
 	 * @param position
 	 * @param newPosition
 	 */
-	public MoveUnitOrder(int id, PlayerType playerType, Point position, Point newPosition) {
-		super(id, playerType,position);
+	public MoveUnitOrder(int id, Point newPosition) {
+		super(id);
 		this.newPosition = newPosition; 
 	}
 	

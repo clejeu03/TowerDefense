@@ -81,16 +81,16 @@ public class ArmyManager {
    * @param destination
    * @see ArmyManager#moveUnit(Unit, MapManager)
    */
-  public Unit launchUnit(int id, Point src, Point dst, int attackPercent) {
+  public Unit launchUnit(int id, int srcId, int dstId, int attackPercent) {
 	  Base origin = null;
 	  Base destination = null;
 
 	  //Retrieve source and destinations bases
 	  for(Base base: bases){
-		  if(base.getPosition().equals(src)){
+		  if(base.getId() == srcId){
 			  origin = base;
 		  }
-		  if(base.getPosition().equals(dst)){
+		  if(base.getId() == dstId){
 			  destination = base;
 		  }
 	  }

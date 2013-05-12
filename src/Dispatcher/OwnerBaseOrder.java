@@ -23,7 +23,7 @@ import GameEngine.Player.PlayerType;
  * <b>Creation :</b> 07/05/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
-public class OwnerBaseOrder extends ArmyOrder{
+public class OwnerBaseOrder extends Order{
 	private PlayerType newPlayerType;
 
 	/**
@@ -32,8 +32,8 @@ public class OwnerBaseOrder extends ArmyOrder{
 	 * @param position
 	 * @param newPlayerType
 	 */
-	public OwnerBaseOrder(int id, PlayerType playerType, Point position, PlayerType newPlayerType) {
-		super(id, playerType,position);
+	public OwnerBaseOrder(int id, PlayerType newPlayerType) {
+		super(id);
 		this.newPlayerType = newPlayerType;
 	}
 

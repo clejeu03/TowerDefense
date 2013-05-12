@@ -3,7 +3,7 @@
  * By Aurélie Beauprez, Thomas Demenat, Keven Akyurek and Cecilia Lejeune
  * Copyright IMAC 2013 - All Rights Reserved
  *
- * File created on 24 avr. 2013
+ * File created on 11 mai 2013
  */
 package View;
 
@@ -21,51 +21,52 @@ import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
- * <b>Class - InfoSprite</b></br>
- * <p>The InfoSprite class represents the informative images displayed around an tower of the 
- * Sceneview when the user click on this tower</p>
- * <b>Creation :</b> 22/04/2013</br>
+ * <b>Class - EditorBaseSprite</b></br>
+ * <p>The EditorBaseSprite class represents the base images displayed on the EditorScene</p>
+ * <b>Creation :</b> 11/05/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MainViews
  * @see GameMenuBar
  * @see SceneView
  * @see GameManager
  */
-
 @SuppressWarnings("serial")
-public class TowerInfoSprite extends Sprite{
-	private  int type;
-	private Point positionElt;
-	
+public class EditorBaseSprite extends Sprite{
+
 	/**
-	 * Constructor of the TowerInfoSprite class
-	 * @param scene
-	 * @param position
-	 * @param clickable
-	 * @param playerId
-	 * @param width
-	 * @param height
-	 * @param type
-	 * @param positionElt
+	 * 
 	 */
-	public TowerInfoSprite(SceneView scene, int id, Point position, boolean clickable, PlayerType playerType, int width, int height, int type, Point positionElt) {
-		super(scene, id, position,clickable,playerType,width,height);
-		this.type = type;
-		this.positionElt = positionElt;
+	public EditorBaseSprite(EditorScene scene, int id, boolean clickable, Point position,PlayerType playerType, int width, int height) {
+		super(scene, -1, position, clickable,playerType,width,height);
 		
-		//Loading the image according to the type (TODO)
-		try {
-		      image = ImageIO.read(new File("img/delete.png"));
+		//Loading the base image (different one according the tower type and player)
+		String fileName ="img/";
+		
+		if(playerType == PlayerType.NEUTRAL){
+			fileName +="Neutral/";
+		}
+		else {
+			fileName +="Fire/";
+		}
+		
+		fileName += "base.png";
+		
+		try {	
+		      image = ImageIO.read(new File(fileName));
 		  
 		} catch (IOException e) {
 		      e.printStackTrace();
 		}
+			
+	}
+	
+	public void setClickable(boolean clickable){
+		this.clickable = clickable;
 		
-		//Adding listeners if the InfoSprite is clickable
 		if(clickable){
 			addMouseListener(new MouseAdapter() {
 				public void mousePressed(MouseEvent me) { 
-		             myMousePressed(me);
+		             //myMousePressed(me);
 		            } 
 		       public void mouseEntered(MouseEvent me) { 
 		    	   myMouseEntered(me);
@@ -75,15 +76,6 @@ public class TowerInfoSprite extends Sprite{
 	           } 
 	         });
 		}
-
-	}
-
-	/**
-	 * Event "the mouse has been pressed in the zone" handler
-	 * @param me - MouseEvent
-	 */
-	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).towerToSupress(id);
 	}
 	
 	/**
@@ -91,7 +83,7 @@ public class TowerInfoSprite extends Sprite{
 	 * @param me : MouseEvent
 	 */
 	private void myMouseEntered(MouseEvent me) {
-		//Changing the cursor aspect
+		//Change the cursor aspect
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 	
@@ -100,9 +92,8 @@ public class TowerInfoSprite extends Sprite{
 	 * @param me : MouseEvent
 	 */
 	private void myMouseExited(MouseEvent me) {
-		//Changing the cursor aspect
+		//Change the cursor aspect
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
-
 
 }

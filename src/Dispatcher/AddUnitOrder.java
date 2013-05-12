@@ -22,24 +22,32 @@ import GameEngine.Player.PlayerType;
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
-public class AddUnitOrder extends ArmyOrder{
+public class AddUnitOrder extends Order{
 
-	private Point dstPosition;
+	private int srcId;
+	private int dstId;
 	private int amount;
 	/**
 	 * 
 	 */
-	public AddUnitOrder(int id, PlayerType srcPlayerType, Point srcPosition, Point dstPosition, int amount) {
-		super(id, srcPlayerType,srcPosition);
+	public AddUnitOrder(int id, int srcId, int dstId, int amount) {
+		super(id);
 		
-		this.dstPosition = new Point(dstPosition);
+		this.srcId = srcId;
+		this.dstId = dstId;
 		this.amount = amount;
 	}
 	
-	public Point getDstPosition() {
-		return dstPosition;
-	}
 	
+	public int getSrcId() {
+		return srcId;
+	}
+
+
+	public int getDstId() {
+		return dstId;
+	}
+
 	public int getAmount() {
 		return amount;
 	}
