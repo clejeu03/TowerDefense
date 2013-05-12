@@ -25,17 +25,19 @@ public class Missile {
  private int damages;
  private double speed;
  private Vector2D direction;
+ private Tower origin;
 
   /**
    * Constructor of the Missile class
    */
-  public Missile(long id, Point position, Unit target, double speed, int damages) {
+  public Missile(long id, Tower origin, Point position, Unit target, double speed, int damages) {
 	  System.out.println("Creation of a new missile !");
 	  this.id = id;
 	  this.position = position;
 	  this.target = target;
 	  this.speed = speed;
 	  this.damages = damages;
+	  this.origin = origin;
 	  this.direction = new Vector2D(this.target.getPosition().x - this.position.x, this.target.getPosition().y - this.position.y);
 }
 
@@ -129,6 +131,13 @@ public class Missile {
    */
   public long getId(){
 	  return this.id;
+  }
+  /**
+   * Getter
+   * @return
+   */
+  public Tower getOrigin(){
+	  return this.origin;
   }
   /**
    * Getter - return the vector direction from the beginning of the missile movement

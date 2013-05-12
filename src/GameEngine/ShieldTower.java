@@ -37,7 +37,7 @@ public class ShieldTower extends Tower {
 	public Missile shoot(Unit unit, long date) {
 		this.lastShootingTime = date;
 		//TODO personalize this attack
-		return new Missile(date, this.getPosition(), unit,this.getSpeed(), this.getDamage());
+		return new Missile(date, this, this.getPosition(), unit,this.getSpeed(), this.getDamage());
 	}
 
 	/** 
