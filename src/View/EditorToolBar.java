@@ -184,6 +184,9 @@ public class EditorToolBar extends MainViews{
 	 * @param evt - ActionEvent performed by the player
 	 */
     private void jButtonBackPerformed(ActionEvent evt) {
+    	mapChosen = false;
+		jButtonOpen.setText("Open");
+		
     	editorScene.quitEditor();
     	view.homeMenu();
     }
