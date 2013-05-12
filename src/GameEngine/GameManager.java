@@ -171,6 +171,7 @@ public class GameManager implements Runnable{
     					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),unit.getOrigin().getPlayerType(), unit.getPosition(), unit.getPosition()));
         			}else{
         				//Tell the dispatcher to suppress the unit and to change the base amount
+        				dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getPosition(), new Point(-1, -1)));
         				dispatcher.addOrderToView(new AmountBaseOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType(), unit.getDestination().getPosition(), unit.getDestination().getAmount()));
         				//dispatcher.addOrderToView(new AddUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getOrigin().getPosition(), unit.getDestination().getPosition(), unit.getAmount()));
         				armyManager.suppressUnit(unit);
@@ -196,7 +197,7 @@ public class GameManager implements Runnable{
             			dispatcher.addOrderToView(new AmountUnitOrder(missile.getTarget().getId(), missile.getTarget().getOrigin().getPlayerType(), missile.getTarget().getPosition(), newAmount));
             			
             			//Tell the view to suppress the missile
-            			dispatcher.addOrderToView(new SuppressMissileOrder(missile.getId(), missile.getOrigin().getPlayerType(), missile.getPosition()));
+            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getOrigin().getPlayerType(), missile.getPosition(), new Point(-1, -1)));
             			towerManager.suppressMissile(missile);
             			break;
             		}

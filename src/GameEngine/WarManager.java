@@ -146,13 +146,13 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 					if(missile.getTarget().getId() == unit.getId()){
 						
 						//Tell the view to suppress the missile
-						dispatcher.addOrderToView(new SuppressMissileOrder(missile.getId(), missile.getOrigin().getPlayerType(), missile.getPosition() ));
+						dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getOrigin().getPlayerType(), missile.getPosition(), new Point(-1, -1) ));
 						towerManager.suppressMissile(missile);
 						break;
 					}
 				}
 				//Tell the view to suppress the unit
-				dispatcher.addOrderToView(new SuppressUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getPosition()));
+				dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getPosition(), new Point(-1, -1)));
 				armyManager.suppressUnit(unit);
 				break;
 			}
