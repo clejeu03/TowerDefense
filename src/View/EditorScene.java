@@ -9,28 +9,31 @@ package View;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
+
+import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 
 
 /**
  * Project - TowerDefense</br>
- * <b>Class - MainMenusView</b></br>
- * <p>The MainMenusView abstract class represents the mains "panels" of the game :
- * HomeMenu, EndGameMenu, OptionsMenu, PlayMenu, SceneView, GameMenuBar, MapEditor
+ * <b>Class - EditorScene</b></br>
+ * <p>The ditorScene class represents the editor scene, displaying the user MapView and its edit
  * </p> 
- * <b>Creation :</b> 22/04/2013</br>
+ * <b>Creation :</b> 10/05/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
+ * @see MainViews
+ * @see EditorToolBar
+ * @see ViewManager
  */
 @SuppressWarnings("serial")
 public class EditorScene extends MainViews{
@@ -38,8 +41,16 @@ public class EditorScene extends MainViews{
 	
 	private boolean edit;
 	private boolean editHeight;
+	private boolean addBaseClicked;
+	
+	private Point addBasePosition;
+	private int playerBaseCount;
+	private int neutralBaseCount;
 	
 	private boolean heightGrid[];
+	
+    private ArrayList<Sprite> sprites;
+	
 	/**
 	 * Constructor of the Editor Scene Class
 	 * @param view
@@ -51,8 +62,13 @@ public class EditorScene extends MainViews{
 		super(view,position,width,height);
 		
 		edit = false;
-		//TODO : mettre un bouton => modification de la map quand on clique dessus
-		editHeight = true;
+		editHeight = false;
+		addBaseClicked = false;
+		
+		neutralBaseCount = 0;
+		playerBaseCount = 0;
+		
+		sprites = new ArrayList<Sprite>();
 		
 		int nb = (width/16)*(height/16);
 		heightGrid = new boolean[nb];
@@ -72,7 +88,7 @@ public class EditorScene extends MainViews{
     	//Add a mouse motion listener on the map
     	addMouseMotionListener(new MouseAdapter() {
 			public void mouseMoved(MouseEvent e) {
-				//myMouseMoved(e);
+				myMouseMoved(e);
 			}
 			//TODO : 
 			public void mouseDragged(MouseEvent e) {
@@ -88,12 +104,82 @@ public class EditorScene extends MainViews{
 	 * Event "the mouse has been pressed in the zone" handler
 	 * @param me - MouseEvent
 	 */
-	private void myMousePressed(MouseEvent me) {		
+	private void myMousePressed(MouseEvent me) {
+		
+		//Click on the map to add the tower
+		if (addBaseClicked) {
+			//Retrieve the add tower Sprite
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				if(element.getPosition().equals(addBasePosition)){
+					addBaseSuccess();
+				}
+			}		
+		
+		
+		//Click on the map when a base is selected
+		/*if (baseClicked){
+	    	baseClicked = false;*/
+			
 	    	//Repaint the Panel
-	    	revalidate();
-	    	repaint();	
+
+		}
+	}
+
+	/**
+	 * Event "the mouse has moved in the zone" handler
+	 * @param e - MouseEvent
+	 */
+	private void myMouseMoved(final MouseEvent e) {	
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			if(addBaseClicked){
+				//Retrieve the the add tower Sprite
+				Iterator<Sprite> it = sprites.iterator();
+				while (it.hasNext()) {
+					Sprite element = it.next();
+					if(element.getPosition().equals(addBasePosition)){
+						//Reset the tower Sprite Position according to the mouse one
+						if(e.getPoint().y<(height-10)){
+							addBasePosition = new Point(e.getPoint());
+							element.setPosition(addBasePosition);
+							element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+							add(element);
+						}
+						else {
+							remove(element);
+						}
+					}
+				}		
+				//Repaint the Panel
+		    	revalidate();
+		    	repaint();
+			}
+		}});
 	}
 	
+	
+	/**
+	 * Add a Sprite in the EditorToolBar ArrayList
+	 * @param sprite
+	 * @see
+	 */
+	public void addSprite(Sprite sprite){
+		sprites.add(sprite);
+		
+		//TO DO : retrieve the last element added...
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+			add(element);
+		}
+		
+        //Repaint the panel
+    	revalidate();
+    	repaint();	
+	}
 	/**
 	 * Event "the mouse has been moved or dragged in the zone" handler
 	 * @param e - MouseEvent
@@ -132,7 +218,11 @@ public class EditorScene extends MainViews{
 	}
 	
 	
-	
+	/**
+	 * Initiate the EditorScene
+	 * @param img
+	 * @see EditorToolBar#openImage(String, String)
+	 */
 	public void initiate(BufferedImage img){
 		//Loading the image map
 		mapView = img;
@@ -144,10 +234,16 @@ public class EditorScene extends MainViews{
 		repaint();
 	}
 
+	/**
+	 * Prepare the Editor to be quitted
+	 * @see EditorToolBar#jButtonBackPerformed(ActionEvent)
+	 */
 	public void quitEditor() {
 		//Reseting
 		edit = false;
-		//TODO editHeight = false;
+		if (addBaseClicked) {
+			addBaseFailed();
+		}
 		
 		//Clear the heightGrid map
 		int nb = (width/16)*(height/16);
@@ -156,8 +252,98 @@ public class EditorScene extends MainViews{
 		}
 	}
 	
-    /**
-     * Draw the SceneView Panel
+	/**
+	 * Setter EditHeight
+	 * @param editHeight
+	 * @see EditorToolBar#paintRelief()
+	 */
+    public void setEditHeight(boolean editHeight) {
+		this.editHeight = editHeight;
+		if (addBaseClicked) {
+			addBaseFailed();
+		}
+	}
+    
+	/**
+	 * Display the territory map when the player want to add a tower
+	 * @param position - Position of the center of the AddTower button clicked
+	 * @param playerType
+	 * @param towerType
+	 */
+	public void addBaseClicked(Point position, PlayerType playerType){
+		if((edit)&&(!addBaseClicked)){
+			editHeight = false;
+			addBaseClicked = true;
+			
+			System.out.println("Add base clicked");
+			
+			addBasePosition = new Point(position.x+1, position.y+1);
+			
+			//TODO : change the id of the tower if it's add by the engine...
+			EditorBaseSprite bs = new EditorBaseSprite(this, -1, false, addBasePosition, playerType, 36, 36);
+			
+			//Add the baseSprite in the EditorScene list of Sprites
+			addSprite(bs);
+		}
+		else{
+			addBaseFailed();
+		}
+		
+		//if (baseClicked) baseClicked = false;	
+	}
+	
+	/**
+	 * Add the tower the player wanted to add
+	 * @see #addTower(Point, PlayerType, int)
+	 */
+	public void addBaseSuccess(){
+		addBaseClicked = false;
+		
+		//Set the base Sprite clickable attribute to true
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			if(element.getPosition().equals(addBasePosition)){
+				((EditorBaseSprite) element).setClickable(true);
+			}
+		}
+    	//Repaint the Panel
+    	revalidate();
+    	repaint();	
+	}
+	
+	/**
+	 * Remove the tower-to-add Sprite
+	 * @see #baseClicked(Point, PlayerType)
+	 * @see #initiate()
+	 * @see #towerClicked(Point, PlayerType)
+	 * @see #addTowerClicked(Point, PlayerType, int)
+	 */
+	public void addBaseFailed(){
+		addBaseClicked = false;
+		
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			//Suppress the base-to-add Sprite
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				if(element.getPosition().equals(addBasePosition)){
+					it.remove();
+					remove(element);
+				}
+			}
+			//Repaint the panel
+	    	revalidate();
+	    	repaint();	
+		}});
+	}
+	
+	
+
+	/**
+     * Draw the EditorScene Panel
+     * @param g Graphics
      */
     @Override
 	public void paintComponent(Graphics g){

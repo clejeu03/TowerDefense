@@ -22,7 +22,7 @@ import GameEngine.Player.PlayerType;
 /**
  * Project - TowerDefense</br>
  * <b>Class - BaseSprite</b></br>
- * <p>The BaseSprite class represents the base images displayed on the ScenView</p>
+ * <p>The BaseSprite class represents the base images displayed on the SceneView</p>
  * <b>Creation :</b> 26/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MainViews
