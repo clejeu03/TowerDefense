@@ -17,6 +17,7 @@ package GameEngine;
 import java.awt.Point;
 
 import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 
 public class AttackTower extends Tower {
 
@@ -26,7 +27,8 @@ public class AttackTower extends Tower {
 	 * @param playerType
 	 */
 	public AttackTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 45, 3, 2000, 5);
+		super(id, position, playerType, 60, 2, 2000, 5);
+		this.setEvolutions(TowerTypes.GUNTOWER, TowerTypes.FROSTTOWER);
 	}
 
 	/**
