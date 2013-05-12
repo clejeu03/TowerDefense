@@ -252,6 +252,21 @@ public class GameManager implements Runnable{
 					
 				}
 				
+				//If the order is a EvolveTowerOrder one
+				if(order instanceof EvolveTowerOrder){
+					System.out.println("Engine - Evolution order : "+((ArmyOrder) order).getId());
+					
+					//Tell the engine to make the tower evolve
+					towerManager.evolveTower(((ArmyOrder)order).getId(), ((ArmyOrder)order).getPosition(), ((EvolveTowerOrder) order).getType(), idCount);
+					
+					//Tell the view to erase the ancient tower and to draw the new one
+					dispatcher.addOrderToView(new SuppressTowerOrder(((ArmyOrder)order).getId(), order.getPlayerType(), ((ArmyOrder) order).getPosition()));
+					dispatcher.addOrderToView(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((EvolveTowerOrder) order).getType()));
+					
+					++idCount;
+					
+				}
+				
 				//If the order is a AddTowerOrder one
 				if(order instanceof AddTowerOrder) {
 					
