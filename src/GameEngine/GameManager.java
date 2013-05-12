@@ -183,7 +183,6 @@ public class GameManager implements Runnable{
             		if(warManager.moveMissile(missile) == true){
             			
             			System.out.println("Missile in movement...");
-            			//TODO creation of missile ?
             			//Tell the view to move the missile
             			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getOrigin().getPlayerType(), missile.getPosition(), missile.getPosition()));
             			
@@ -204,7 +203,7 @@ public class GameManager implements Runnable{
             	}
             	
             	//Battles
-            	warManager.war(armyManager, towerManager, playingTime);
+            	warManager.war(armyManager, towerManager, dispatcher, playingTime);
             }
         };
 		
@@ -301,8 +300,6 @@ public class GameManager implements Runnable{
 								dispatcher.addOrderToView(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddTowerOrder) order).getTowerType()));
 								dispatcher.addOrderToAI(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddTowerOrder) order).getTowerType()));
 								++idCount;
-								
-								System.out.println("Towers : "+towerManager.getTowers().toString());
 								
 							}else{
 								

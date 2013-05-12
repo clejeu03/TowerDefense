@@ -1,10 +1,10 @@
 /**
  * Project - TowerDefense</br>
  * <b>Class - MoveMissileOrder</b></br>
- * <p>The MoveMissileOrder class actualize the position of the missile and can create it if it's not existing in the View :</p>
+ * <p>The MoveMissileOrder class actualize the position of the missile :</p>
  * <ul>
  * <li>View -> Engine : none</li>
- * <li>Engine -> View : The engine tell the view that the missile must be moved. If the missile is not known from the View, then it create it.</li>
+ * <li>Engine -> View : The engine tell the view that the missile must be moved.</li>
  * </ul>
  * <b>Creation :</b> 11/05/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>

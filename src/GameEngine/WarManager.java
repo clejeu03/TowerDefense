@@ -3,6 +3,8 @@ package GameEngine;
 import java.awt.Point;
 import java.util.Vector;
 
+import Dispatcher.*;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - WarManager</b></br>
@@ -26,16 +28,16 @@ public class WarManager {
 	  
   }
   /**
-   * Fonction that handle the meetings between towers and units
+   * Function that handle the meetings between towers and units
    * @param armyManager
    * @param towerManager
    * @see WarManager#beginEncounters(ArmyManager, TowerManager)
    * @see WarManager#terminateEncounters(ArmyManager, TowerManager)
    */
-  public void war(ArmyManager armyManager, TowerManager towerManager, Long playingTime){
-	  beginEncounters(armyManager, towerManager, playingTime);
+  public void war(ArmyManager armyManager, TowerManager towerManager, DispatcherManager dispatcher, Long playingTime){
+	  beginEncounters(armyManager, towerManager, dispatcher, playingTime);
 	  terminateEncounters(armyManager, towerManager);
-	  cleanUpBattlefield(armyManager, towerManager);
+	  cleanUpBattlefield(armyManager, towerManager, dispatcher);
   }
   
   /**
@@ -44,7 +46,7 @@ public class WarManager {
    * @param ArmyManager
    * @see GameManager#timer()
    */
-  public void beginEncounters(ArmyManager armyManager, TowerManager towerManager, Long playingTime) {
+  public void beginEncounters(ArmyManager armyManager, TowerManager towerManager, DispatcherManager dispatcher, Long playingTime) {
 
 	  if(armyManager.getUnits().isEmpty() == false && towerManager.getTowers().isEmpty() == false){
       	for(Unit unit:armyManager.getUnits()){
@@ -61,10 +63,10 @@ public class WarManager {
      			 //The unit (x,y) is the area of the tower(centerX, centerY) if : (x - centerX)^2 + (y - centerY)^2 < range^2
      			 if(((x - centerX)*(x - centerX) + (y - centerY)*(y - centerY)) < range*range){
 
-     				 
-     				 
      				 //So active the tower
      				 towerManager.activeTower(tower, unit, playingTime);
+     				 //Tell the view to create a missile
+     				 dispatcher.addOrderToView(new AddMissileOrder(playingTime, tower.getPlayerType(), tower.getPosition()));
      			 }
      		 }
      	 }
@@ -133,7 +135,7 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 	 * @see WarManager#war(ArmyManager, TowerManager, Long)
 	 * @see GameManager#timer()
 	 */
-	public void cleanUpBattlefield(ArmyManager armyManager, TowerManager towerManager){
+	public void cleanUpBattlefield(ArmyManager armyManager, TowerManager towerManager, DispatcherManager dispatcher){
 		
 		//Browse units to find those who are dead
 		for(Unit unit:armyManager.getUnits()){
@@ -142,11 +144,15 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 				//Suppress the missiles that targeted this unit
 				for(Missile missile:towerManager.getMissiles()){
 					if(missile.getTarget().getId() == unit.getId()){
+						
+						//Tell the view to suppress the missile
+						dispatcher.addOrderToView(new SuppressMissileOrder(missile.getId(), missile.getOrigin().getPlayerType(), missile.getPosition() ));
 						towerManager.suppressMissile(missile);
 						break;
 					}
 				}
-				
+				//Tell the view to suppress the unit
+				dispatcher.addOrderToView(new SuppressUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getPosition()));
 				armyManager.suppressUnit(unit);
 				break;
 			}
