@@ -124,6 +124,8 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 		else return true;
 		
 	}
+	
+	
 	/**
 	 * Suppress units that have taken too much damages and suppress missiles that targeted suppressed units
 	 * @param towerManager
@@ -132,13 +134,14 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 	 * @see GameManager#timer()
 	 */
 	public void cleanUpBattlefield(ArmyManager armyManager, TowerManager towerManager){
-		//Browse unit to find those who are dead
+		
+		//Browse units to find those who are dead
 		for(Unit unit:armyManager.getUnits()){
 			if(unit.getAmount()<=0){
 				
 				//Suppress the missiles that targeted this unit
 				for(Missile missile:towerManager.getMissiles()){
-					if(missile.getTarget() == unit){
+					if(missile.getTarget().getId() == unit.getId()){
 						towerManager.suppressMissile(missile);
 						break;
 					}

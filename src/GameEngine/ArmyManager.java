@@ -79,7 +79,7 @@ public class ArmyManager {
    * Just create the unit and make the agents numbers of both base and unit right
    * @param origin - Base from where the unit is sent
    * @param destination
-   * @see WarManager
+   * @see ArmyManager#moveUnit(Unit, MapManager)
    */
   public Unit launchUnit(int id, Point src, Point dst, int attackPercent) {
 	  Base origin = null;
@@ -153,6 +153,7 @@ public class ArmyManager {
   
   /**
    * Move a Unit, from its position to a new position, in the path to the Unit's destination.
+   * @see ArmyManager#launchUnit(int, Point, Point, int)
    * @see GameManager#timer()
    * @return true if the unit need to be move / false if the unit have reached it's destination
    */

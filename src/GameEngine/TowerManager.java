@@ -126,12 +126,14 @@ public class TowerManager {
 		  }
 	  }
   }
-  
+  /**
+   * Suppress the given missile
+   * @param toSuppressMissile
+   */
   public void suppressMissile(Missile toSuppressMissile){
 	  
 	  for(Missile missile:missiles){
-		  if(missile.getId() == toSuppressMissile.getId() 
-				  && missile.getTarget() == toSuppressMissile.getTarget()){
+		  if(missile.getTarget() == toSuppressMissile.getTarget()){
 			  missiles.remove(missile);
 			  break;
 		  }

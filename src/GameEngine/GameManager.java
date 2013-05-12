@@ -191,8 +191,9 @@ public class GameManager implements Runnable{
             			missile.getTarget().setAmount(newAmount);
             			System.out.println("IMPACT Unit amount now :"+newAmount);
 
+            			
             			//TODO order suppress the missile from the view
-            			towerManager.getMissiles().remove(missile);
+            			towerManager.suppressMissile(missile);
             			break;
             		}
             	}
