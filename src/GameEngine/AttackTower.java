@@ -17,6 +17,7 @@ package GameEngine;
 import java.awt.Point;
 
 import GameEngine.Player.PlayerType;
+import GameEngine.TowerManager.TowerTypes;
 
 public class AttackTower extends Tower {
 
@@ -26,15 +27,18 @@ public class AttackTower extends Tower {
 	 * @param playerType
 	 */
 	public AttackTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 45, 3, 2000, 0.001);
+		super(id, position, playerType, 60, 2, 2000, 5);
+		this.setEvolutions(TowerTypes.GUNTOWER, TowerTypes.FROSTTOWER);
 	}
 
 	/**
 	 * @see GameEngine.Tower#shoot()
 	 */
 	@Override
-	public void shoot(Unit unit) {
-		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
+	public Missile shoot(Unit unit, long date) {
+		//System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
+		this.lastShootingTime = date;
+		return new Missile(date, this, this.getPosition(), unit,this.getSpeed(), this.getDamage());
 	}
 
 	/**
@@ -42,7 +46,7 @@ public class AttackTower extends Tower {
 	 */
 	@Override
 	public void stop() {
-		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
+		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says STOP !!!");
 	}
 
 }

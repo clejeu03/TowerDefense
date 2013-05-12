@@ -79,7 +79,7 @@ public class ArmyManager {
    * Just create the unit and make the agents numbers of both base and unit right
    * @param origin - Base from where the unit is sent
    * @param destination
-   * @see WarManager
+   * @see ArmyManager#moveUnit(Unit, MapManager)
    */
   public Unit launchUnit(int id, Point src, Point dst, int attackPercent) {
 	  Base origin = null;
@@ -153,14 +153,15 @@ public class ArmyManager {
   
   /**
    * Move a Unit, from its position to a new position, in the path to the Unit's destination.
+   * @see ArmyManager#launchUnit(int, Point, Point, int)
    * @see GameManager#timer()
    * @return true if the unit need to be move / false if the unit have reached it's destination
    */
-  public Boolean moveUnit(Unit unit, MapManager mapManager) {
-	  	
+  public boolean moveUnit(Unit unit, MapManager mapManager) {
+	 
 	  //The unit need to be move
-	  if(unit.getPosition().x != unit.getDestination().getPosition().x && unit.getPosition().y != unit.getDestination().getPosition().y ){
-		
+	  if(!unit.getPosition().equals(unit.getDestination().getPosition())){
+
 		  //Find the way ! For each pixel until the unit's speed, find the smallest value and go on....
   		  for(int i=0; i<(unit.getSpeed()*10);++i){	
   			  unit.setPosition(mapManager.proximityMapFindMin(unit.getDestination().getProximitytab(), unit.getPosition()));
@@ -179,6 +180,32 @@ public class ArmyManager {
 	  }
 	  
   }
+  /**
+   * Suppress a unit from the current game
+   * @param id
+   * @param position
+   */
+  public void suppressUnit(int id, Point position){
+	  for(Unit unit:this.getUnits()){
+		  if(unit.getPosition().equals(position) && unit.getId() == id){
+			  units.remove(unit);
+			  break;
+		  }
+	  }
+  }
+  /**
+   * Suppress a unit from the current game
+   * @param toSuppressUnit
+   */
+  public void suppressUnit(Unit toSuppressUnit){
+	  for(Unit unit:this.getUnits()){
+		  if(unit.getPosition().equals(toSuppressUnit.getPosition()) && unit.getId() == toSuppressUnit.getId()){
+			  units.remove(unit);
+			  break;
+		  }
+	  }
+  }
+  
   
  /**
   * Getter - return the list of bases 

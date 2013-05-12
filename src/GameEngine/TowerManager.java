@@ -26,6 +26,8 @@ public class TowerManager {
   private ArrayList<Tower> towers;
   
   private ArrayList<Tower> activatedTowers;
+  
+  private ArrayList<Missile> missiles;
 
   /**
    * List all the the types of towers. There are two families of towers :
@@ -51,6 +53,8 @@ public class TowerManager {
   public TowerManager() {
 	  super();
 	  towers = new ArrayList<Tower>();
+	  activatedTowers = new ArrayList<Tower>();
+	  missiles = new ArrayList<Missile>();
   }
   /**
    * Set the selected tower active because of the proximity of a enemy Unit.
@@ -58,14 +62,17 @@ public class TowerManager {
    * @param unit - target
    * @see WarManager
    */
-  public void activeTower(Tower toActiveTower, Unit unit) {
+  public void activeTower(Tower toActiveTower, Unit unit, Long date) {
 	  for(Tower tower:towers){
 		  if(tower.getId() == toActiveTower.getId()){
-			  /*if(!activatedTowers.isEmpty() && activatedTowers.contains(tower)){
-				  //TODO multiple targets
-			  }else{*/
-				  toActiveTower.shoot(unit);
-			 // }
+			  
+			  //TODO multiple targets
+			  long currentTime = GameManager.getTime();
+			  //long diff = currentTime-date;
+
+			  if(toActiveTower.getLastShootingTime() == 0 || (currentTime-toActiveTower.getLastShootingTime())>=toActiveTower.getCadency()){
+				  missiles.add(toActiveTower.shoot(unit, date));
+			  }
 		  }
 	  }
   }
@@ -97,13 +104,54 @@ public class TowerManager {
 	  	case SUPPORTTOWER :
 	  		tower = new SupportTower(id, position, playerType);
 	  		break;
+	  	case GUNTOWER :
+	  		tower = new GunTower(id, position, playerType);
+	  		break;
+	  	case FROSTTOWER :
+	  		tower = new FrostTower(id, position, playerType);
+	  		break;
+	  	case BOMBTOWER :
+	  		tower = new BombTower(id, position,playerType);
+	  		break;
+	  	case LAZERTOWER :
+	  		tower = new LazerTower(id, position, playerType);
+	  		break;
+	  	case MEDICALTOWER :
+	  		tower = new MedicalTower(id, position, playerType);
+	  		break;
+	  	case SHIELDTOWER :
+	  		tower = new ShieldTower(id, position, playerType);
+	  		break;
 	  	default :
 	  		break;
 	  }  
 	  
 	  towers.add(tower);
   }
+/**
+ * Make the tower evolve if it is permitted, create the evolution and suppress the ancient tower
+ * @param towerToEvolve
+ * @param type
+ * @param idCount
+ * @see GameManager#execute()
+ */
+  public void evolveTower(int id, Point position, TowerTypes type, int idCount){
+	  //Browse all the towers
+	  for(Tower tower:towers){
+		  if(tower.getId() == id){
+			  //Test if the evolution type is allowed
+			  if(tower.getFirstEvolution() == type || tower.getSecondEvolution() == type){
+				  
+				  //Create a new Tower with a new ID
+				  createTower(idCount, tower.getPlayerType(), type, tower.getPosition());
 
+				  //Suppress the ancient one
+				  towers.remove(tower);
+				  break;
+			  }
+		  }
+	  }
+  }
   /**
    * Remove a tower from the game
    * @param position
@@ -115,6 +163,19 @@ public class TowerManager {
 	  for(Tower tower: towers){
 		  if((tower.getPosition().equals(position))&&(tower.getId()==id)){
 			  towers.remove(tower);
+			  break;
+		  }
+	  }
+  }
+  /**
+   * Suppress the given missile
+   * @param toSuppressMissile
+   */
+  public void suppressMissile(Missile toSuppressMissile){
+	  
+	  for(Missile missile:missiles){
+		  if(missile.getTarget() == toSuppressMissile.getTarget()){
+			  missiles.remove(missile);
 			  break;
 		  }
 	  }
@@ -134,5 +195,12 @@ public class TowerManager {
    */
   public ArrayList<Tower> getActivatedTowers(){
 	  return this.activatedTowers;
+  }
+  /**
+   * Getter - return the missiles list
+   * @return
+   */
+  public ArrayList<Missile> getMissiles(){
+	  return this.missiles;
   }
 }

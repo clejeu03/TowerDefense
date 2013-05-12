@@ -1,6 +1,7 @@
 package GameEngine;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import GameEngine.Player.PlayerType;
 
@@ -27,6 +28,7 @@ public abstract class Tower {
 	private Point position;
 	private PlayerType playerType;
 	private int range;
+	private ArrayList<TowerManager.TowerTypes> evolutions;
 	/**
 	 * Define the effects of the Tower. Can be positive (to the player) or negative (to his enemies). Represents a different quantity following
 	 * the type of tower
@@ -40,6 +42,8 @@ public abstract class Tower {
 	   * Define at what speed the Tower can make an action : define the speed of the missile
 	   */
 	private double speed;
+	
+	protected long lastShootingTime;
 	
 	/**
 	 * Constructor of the Tower class
@@ -58,6 +62,8 @@ public abstract class Tower {
 		this.damage = damage;
 		this.cadency = cadency;
 		this.speed = speed;
+		this.lastShootingTime = 0;
+		this.evolutions = new ArrayList<TowerManager.TowerTypes>();
 	}
 	
 	/**
@@ -65,7 +71,7 @@ public abstract class Tower {
 	 * @see TowerManager#activeTower()
 	 * @param unit - target
 	 */
-	public abstract void shoot(Unit unit);
+	public abstract Missile shoot(Unit unit, long date);
 	/**
 	 * Function called by the TowerManager when no more units are in the tower range
 	 * @see TowerManager#desactiveTower()
@@ -90,6 +96,15 @@ public abstract class Tower {
 	
 	public int getId() {
 		return id;
+	}
+	/**
+	 * Setter that determine the evolutions of a tower. If there's no evolutions, the two types must be NOTOWER.
+	 * @param type1
+	 * @param type2
+	 */
+	public void setEvolutions(TowerManager.TowerTypes type1, TowerManager.TowerTypes type2){
+		this.evolutions.add(type1);
+		this.evolutions.add(type2);
 	}
 
 /**
@@ -123,4 +138,41 @@ public abstract class Tower {
 	public double getSpeed() {
 		return speed;
 	}
+	/**
+	 * Getter - return the last date at which the tower created a missile
+	 * @return
+	 */
+	public long getLastShootingTime(){
+		return this.lastShootingTime;
+	}
+
+	/**
+	 * Getter - Array with one or two elements the two types of evolution
+	 * @return the evolutions
+	 */
+	public ArrayList<TowerManager.TowerTypes> getEvolutions() {
+		return evolutions;
+	}
+	
+	/**
+	 * Getter that return the first type instead of the complete array
+	 * @return
+	 */
+	public TowerManager.TowerTypes getFirstEvolution(){
+		if(!evolutions.isEmpty())
+			return evolutions.get(0);
+		else
+			return TowerManager.TowerTypes.NOTOWER;
+	}
+	/**
+	 * Getter that return the second type of evolution instead of the complete array
+	 * @return
+	 */
+	public TowerManager.TowerTypes getSecondEvolution(){
+		if(!evolutions.isEmpty() && evolutions.size()>1)
+			return evolutions.get(1);
+		else
+			return TowerManager.TowerTypes.NOTOWER;
+	}
+
 }
