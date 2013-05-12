@@ -36,7 +36,7 @@ public class GunTower extends Tower {
 	@Override
 	public Missile shoot(Unit unit, long date) {
 		this.lastShootingTime = date;
-		return new Missile(this.getPosition(), unit,this.getSpeed(), this.getDamage());
+		return new Missile(date, this.getPosition(), unit,this.getSpeed(), this.getDamage());
 	}
 
 	/**

@@ -19,6 +19,7 @@ public class Missile {
   /**
    * Define the current x position of the missile
    */
+ private long id; //The missile id is it's creation's date
  private Point position;
  private Unit target;
  private int damages;
@@ -28,8 +29,9 @@ public class Missile {
   /**
    * Constructor of the Missile class
    */
-  public Missile(Point position, Unit target, double speed, int damages) {
+  public Missile(long id, Point position, Unit target, double speed, int damages) {
 	  System.out.println("Creation of a new missile !");
+	  this.id = id;
 	  this.position = position;
 	  this.target = target;
 	  this.speed = speed;
@@ -121,7 +123,13 @@ public class Missile {
   public void setPosition(Point point) {
 	  this.position = point;
   }
-  
+  /**
+   * Getter
+   * @return
+   */
+  public long getId(){
+	  return this.id;
+  }
   /**
    * Getter - return the vector direction from the beginning of the missile movement
    * @return
