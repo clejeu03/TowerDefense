@@ -34,8 +34,9 @@ public class SupportTower extends Tower {
 	 * @see GameEngine.Tower#shoot()
 	 */
 	@Override
-	public Missile shoot(Unit unit) {
+	public Missile shoot(Unit unit, long date) {
 		System.out.println("Support Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
+		this.lastShootingTime = date;
 		return new Missile(this.getPosition(), unit, this.getSpeed(), this.getDamage());
 	}
 

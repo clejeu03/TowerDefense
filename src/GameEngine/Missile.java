@@ -24,6 +24,7 @@ public class Missile {
  private Unit target;
  private int damages;
  private double speed;
+ private Vector2D direction;
 
   /**
    * Constructor of the Missile class
@@ -34,6 +35,7 @@ public class Missile {
 	  this.target = target;
 	  this.speed = speed;
 	  this.damages = damages;
+	  this.direction = new Vector2D(this.target.getPosition().x - this.position.x, this.target.getPosition().y - this.position.y);
 }
 
   /**
@@ -71,6 +73,14 @@ public class Missile {
    */
   public void setPosition(Point point) {
 	  this.position = point;
+  }
+  
+  /**
+   * Getter - return the vector direction from the beginning of the missile movement
+   * @return
+   */
+  public Vector2D getDirection(){
+	  return this.direction;
   }
 
 }
