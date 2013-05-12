@@ -162,7 +162,7 @@ public class GameManager implements Runnable{
             	//get the current Date 
             	long playingTime = System.currentTimeMillis()-timeStart;
             	//System.out.println("Temps écoulé : " + playingTime);
-
+            	
             	//Move units
             	for(Unit unit:armyManager.getUnits()){
         			if(armyManager.moveUnit(unit, mapManager)){
@@ -172,7 +172,7 @@ public class GameManager implements Runnable{
         				//Tell the dispatcher to suppress the unit and to change the base amount
         				dispatcher.addOrderToView(new AmountBaseOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType(), unit.getDestination().getPosition(), unit.getDestination().getAmount()));
         				//dispatcher.addOrderToView(new AddUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getOrigin().getPosition(), unit.getDestination().getPosition(), unit.getAmount()));
-        				armyManager.getUnits().remove(unit);
+        				armyManager.suppressUnit(unit);
         				break;
         			}
         		}
@@ -182,17 +182,16 @@ public class GameManager implements Runnable{
             		if(warManager.moveMissile(missile) == true){
             			
             			//TODO order move missile
-            			//dispatcher.addOrderToView(new MoveMissileOrder());
             			System.out.println("Missile in movement...");
             			
             		}else{
 
-            			//TODO order move missile that suppress the missile from the view
-            			//TODO order that change the mount of a unit
+            			//TODO order that change the amount of a unit
             			int newAmount = missile.getTarget().getAmount()-missile.getDamages();
             			missile.getTarget().setAmount(newAmount);
             			System.out.println("IMPACT Unit amount now :"+newAmount);
-            			
+
+            			//TODO order suppress the missile from the view
             			towerManager.getMissiles().remove(missile);
             			break;
             		}
@@ -200,7 +199,6 @@ public class GameManager implements Runnable{
             	
             	//Battles
             	warManager.war(armyManager, towerManager, playingTime);
-            	
             }
         };
 		

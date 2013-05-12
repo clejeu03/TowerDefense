@@ -179,6 +179,32 @@ public class ArmyManager {
 	  }
 	  
   }
+  /**
+   * Suppress a unit from the current game
+   * @param id
+   * @param position
+   */
+  public void suppressUnit(int id, Point position){
+	  for(Unit unit:this.getUnits()){
+		  if(unit.getPosition().equals(position) && unit.getId() == id){
+			  units.remove(unit);
+			  break;
+		  }
+	  }
+  }
+  /**
+   * Suppress a unit from the current game
+   * @param toSuppressUnit
+   */
+  public void suppressUnit(Unit toSuppressUnit){
+	  for(Unit unit:this.getUnits()){
+		  if(unit.getPosition().equals(toSuppressUnit.getPosition()) && unit.getId() == toSuppressUnit.getId()){
+			  units.remove(unit);
+			  break;
+		  }
+	  }
+  }
+  
   
  /**
   * Getter - return the list of bases 

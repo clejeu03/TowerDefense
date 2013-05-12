@@ -20,7 +20,7 @@ public class Missile {
    * Define the current x position of the missile
    */
  private Point position;
-// private int id;
+ private int id;
  private Unit target;
  private int damages;
  private double speed;
@@ -29,8 +29,9 @@ public class Missile {
   /**
    * Constructor of the Missile class
    */
-  public Missile(Point position, Unit target, double speed, int damages) {
+  public Missile(int Id, Point position, Unit target, double speed, int damages) {
 	  System.out.println("Creation of a new missile !");
+	  this.id = Id;
 	  this.position = position;
 	  this.target = target;
 	  this.speed = speed;
@@ -86,8 +87,13 @@ public class Missile {
 		}
 		
   }
-  
-  
+  /**
+   * Getter that return the id
+   * @return
+   */
+  public int getId(){
+	  return this.id;
+  }
   /**
    * Getter that returns the current position of the selected missile
    * @return position

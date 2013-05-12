@@ -126,6 +126,17 @@ public class TowerManager {
 		  }
 	  }
   }
+  
+  public void suppressMissile(Missile toSuppressMissile){
+	  
+	  for(Missile missile:missiles){
+		  if(missile.getId() == toSuppressMissile.getId() 
+				  && missile.getTarget() == toSuppressMissile.getTarget()){
+			  missiles.remove(missile);
+			  break;
+		  }
+	  }
+  }
 
   /**
    * Getter - return the current tower list

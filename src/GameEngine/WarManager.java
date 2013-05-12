@@ -35,6 +35,7 @@ public class WarManager {
   public void war(ArmyManager armyManager, TowerManager towerManager, Long playingTime){
 	  beginEncounters(armyManager, towerManager, playingTime);
 	  terminateEncounters(armyManager, towerManager);
+	  cleanUpBattlefield(armyManager, towerManager);
   }
   
   /**
@@ -122,6 +123,31 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 		if(i!=missile.getSpeed())return false;
 		else return true;
 		
+	}
+	/**
+	 * Suppress units that have taken too much damages and suppress missiles that targeted suppressed units
+	 * @param towerManager
+	 * @param armyManager
+	 * @see WarManager#war(ArmyManager, TowerManager, Long)
+	 * @see GameManager#timer()
+	 */
+	public void cleanUpBattlefield(ArmyManager armyManager, TowerManager towerManager){
+		//Browse unit to find those who are dead
+		for(Unit unit:armyManager.getUnits()){
+			if(unit.getAmount()<=0){
+				
+				//Suppress the missiles that targeted this unit
+				for(Missile missile:towerManager.getMissiles()){
+					if(missile.getTarget() == unit){
+						towerManager.suppressMissile(missile);
+						break;
+					}
+				}
+				
+				armyManager.suppressUnit(unit);
+				break;
+			}
+		}
 	}
 
 }
