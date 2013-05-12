@@ -61,7 +61,7 @@ public class Player {
    * Constructor
    */
   public Player(PlayerType playerType) {
-	  this.playerType = playerType;
+	  this.setPlayerType(playerType);
   }
   /**
    * Setter that changes the current amount of player's money.
@@ -77,5 +77,17 @@ public class Player {
   public int getMoney() {
 	  return this.money;
   }
+/**
+ * @return the playerType
+ */
+public PlayerType getPlayerType() {
+	return playerType;
+}
+/**
+ * @param playerType the playerType to set
+ */
+public void setPlayerType(PlayerType playerType) {
+	this.playerType = playerType;
+}
 
 }

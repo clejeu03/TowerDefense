@@ -168,11 +168,11 @@ public class GameManager implements Runnable{
             	for(Unit unit:armyManager.getUnits()){
         			if(armyManager.moveUnit(unit, mapManager)){
         				//Tell the dispatcher that the unit need to be move
-					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(), newPosition));
+        				dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(), unit.getPosition()));
         			}else{
         				//Tell the dispatcher to suppress the unit and to change the base amount
-        				dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getPosition(), new Point(-1, -1)));
-        				dispatcher.addOrderToView(new AmountBaseOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType(), unit.getDestination().getPosition(), unit.getDestination().getAmount()));
+        				dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(), new Point(-1, -1)));
+        				dispatcher.addOrderToView(new AmountBaseOrder(unit.getDestination().getId(), unit.getDestination().getAmount()));
         				//dispatcher.addOrderToView(new AddUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getOrigin().getPosition(), unit.getDestination().getPosition(), unit.getAmount()));
         				armyManager.suppressUnit(unit);
         				break;
@@ -185,7 +185,7 @@ public class GameManager implements Runnable{
             			
             			System.out.println("Missile in movement...");
             			//Tell the view to move the missile
-            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getOrigin().getPlayerType(), missile.getPosition(), missile.getPosition()));
+            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getPosition()));
             			
             		}else{
             			//Change the target's amount
@@ -194,10 +194,10 @@ public class GameManager implements Runnable{
             			System.out.println("IMPACT Unit amount now :"+newAmount);
             			
             			//Tell the view that the unit need to update it's amount
-            			dispatcher.addOrderToView(new AmountUnitOrder(missile.getTarget().getId(), missile.getTarget().getOrigin().getPlayerType(), missile.getTarget().getPosition(), newAmount));
+            			dispatcher.addOrderToView(new AmountUnitOrder(missile.getTarget().getId(), newAmount));
             			
             			//Tell the view to suppress the missile
-            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getOrigin().getPlayerType(), missile.getPosition(), new Point(-1, -1)));
+            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), new Point(-1, -1)));
             			towerManager.suppressMissile(missile);
             			break;
             		}
@@ -258,14 +258,14 @@ public class GameManager implements Runnable{
 				
 				//If the order is a EvolveTowerOrder one
 				if(order instanceof EvolveTowerOrder){
-					System.out.println("Engine - Evolution order : "+((ArmyOrder) order).getId());
+					System.out.println("Engine - Evolution order : "+( order).getId());
 					
 					//Tell the engine to make the tower evolve
-					towerManager.evolveTower(((ArmyOrder)order).getId(), ((ArmyOrder)order).getPosition(), ((EvolveTowerOrder) order).getType(), idCount);
+					towerManager.evolveTower((order).getId(), ((AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType(), idCount);
 					
 					//Tell the view to erase the ancient tower and to draw the new one
-					dispatcher.addOrderToView(new SuppressTowerOrder(((ArmyOrder)order).getId(), order.getPlayerType(), ((ArmyOrder) order).getPosition()));
-					dispatcher.addOrderToView(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((EvolveTowerOrder) order).getType()));
+					dispatcher.addOrderToView(new SuppressTowerOrder(((order).getId())));
+					dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ( (AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType()));
 					
 					++idCount;
 					
