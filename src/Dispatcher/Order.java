@@ -7,7 +7,6 @@
  */
 package Dispatcher;
 
-import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>

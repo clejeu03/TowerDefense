@@ -11,12 +11,9 @@
  */
 package Dispatcher;
 
-import java.awt.Point;
-
-import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 
-public class EvolveTowerOrder extends ArmyOrder {
+public class EvolveTowerOrder extends Order {
 	
 private TowerTypes type;
 	/**
@@ -24,8 +21,9 @@ private TowerTypes type;
 	 * @param playerType
 	 * @param position
 	 */
-	public EvolveTowerOrder(int id, PlayerType playerType, Point position, TowerTypes towerTypes) {
-		super(id, playerType, position);
+	public EvolveTowerOrder(int id, TowerTypes towerType) {
+		super(id);
+		this.type = towerType;
 	}
 
 	/**

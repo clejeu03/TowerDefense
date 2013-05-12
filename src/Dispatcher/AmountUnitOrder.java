@@ -11,21 +11,19 @@
  */
 package Dispatcher;
 
-import java.awt.Point;
 
-import GameEngine.Player.PlayerType;
-
-public class AmountUnitOrder extends ArmyOrder {
+public class AmountUnitOrder extends Order {
 
 	private int amount;
+	
 	
 	/**
 	 * @param id
 	 * @param playerType
 	 * @param position
 	 */
-	public AmountUnitOrder(int id, PlayerType playerType, Point position, int newAmount) {
-		super(id, playerType, position);
+	public AmountUnitOrder(int id, int newAmount) {
+		super(id);
 		this.amount = newAmount;
 	}
 	/**

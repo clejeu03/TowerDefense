@@ -13,17 +13,15 @@ package Dispatcher;
 
 import java.awt.Point;
 
-import GameEngine.Player.PlayerType;
-
-public class MoveMissileOrder extends ArmyOrder {
+public class MoveMissileOrder extends Order {
 private Point newPosition;
 	/**
 	 * @param id - type long because missile's id are the date they were created
 	 * @param playerType
 	 * @param position
 	 */
-	public MoveMissileOrder(long id, PlayerType playerType, Point position, Point newPosition) {
-		super((int)id, playerType, position);
+	public MoveMissileOrder(long id, Point newPosition) {
+		super((int)id);
 		this.newPosition = newPosition;
 	}
 	

@@ -15,15 +15,48 @@ import java.awt.Point;
 
 import GameEngine.Player.PlayerType;
 
-public class AddMissileOrder extends ArmyOrder {
+public class AddMissileOrder extends Order {
 
+	private PlayerType playerType;
+	private Point position;
+	
 	/**
 	 * @param id
 	 * @param playerType
 	 * @param position
 	 */
 	public AddMissileOrder(long id, PlayerType playerType, Point position) {
-		super((int)id, playerType, position);
+		super((int)id);
+		this.setPlayerType(playerType);
+		this.setPosition(position);
+	}
+
+	/**
+	 * @return the playerType
+	 */
+	public PlayerType getPlayerType() {
+		return playerType;
+	}
+
+	/**
+	 * @param playerType the playerType to set
+	 */
+	public void setPlayerType(PlayerType playerType) {
+		this.playerType = playerType;
+	}
+
+	/**
+	 * @return the position
+	 */
+	public Point getPosition() {
+		return position;
+	}
+
+	/**
+	 * @param position the position to set
+	 */
+	public void setPosition(Point position) {
+		this.position = position;
 	}
 
 }
