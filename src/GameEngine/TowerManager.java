@@ -68,7 +68,7 @@ public class TowerManager {
 			  
 			  //TODO multiple targets
 			  long currentTime = GameManager.getTime();
-			  long diff = currentTime-date;
+			  //long diff = currentTime-date;
 
 			  if(toActiveTower.getLastShootingTime() == 0 || (currentTime-toActiveTower.getLastShootingTime())>=toActiveTower.getCadency()){
 				  missiles.add(toActiveTower.shoot(unit, date));

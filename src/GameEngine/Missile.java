@@ -38,6 +38,56 @@ public class Missile {
 	  this.direction = new Vector2D(this.target.getPosition().x - this.position.x, this.target.getPosition().y - this.position.y);
 }
 
+  
+  public boolean searchForTarget(){
+	  
+	  if(Math.abs(this.getPosition().x -this.getDestination().x) <= 2 && Math.abs(this.getPosition().y -this.getDestination().y) <= 2){
+			return false;
+			
+	  }else{
+	  
+		  //Define a vector to be followed by the missile
+			Vector2D currentDirection = new Vector2D(this.getDestination().x - this.getPosition().x, this.getDestination().y - this.getPosition().y);
+			Vector2D axeX = new Vector2D(1,0);
+			Vector2D axeY = new Vector2D(0,1);
+			double factorX = Math.abs(currentDirection.dotProduct(axeX));
+			double factorY = Math.abs(currentDirection.dotProduct(axeY));
+			
+			//Projection on axeX and axeY and updating the this position according to the tallest component's axe
+			if(factorX > factorY){
+				if(this.getDestination().x > this.getPosition().x)
+					this.setPosition(new Point(this.getPosition().x+1, this.getPosition().y));
+				else
+					this.setPosition(new Point(this.getPosition().x-1, this.getPosition().y));
+			}
+			if(factorY > factorX){
+				if(this.getDestination().y > this.getPosition().y)
+					this.setPosition(new Point(this.getPosition().x, this.getPosition().y+1));
+				else
+					this.setPosition(new Point(this.getPosition().x, this.getPosition().y-1));
+			}
+			if(factorX - factorY < 0.0001){
+				if(this.getDestination().x > this.getPosition().x && this.getDestination().y > this.getPosition().y)
+					this.setPosition(new Point(this.getPosition().x+1, this.getPosition().y+1));
+				else
+					this.setPosition(new Point(this.getPosition().x-1, this.getPosition().y-1));
+			}
+			
+			//Determine what should have been the ideal position
+			Point realPosition = this.getDirection().normalize().pointPlusVector(this.getPosition());
+			
+			//Correction of errors between realPosition and actualPosition
+			if(realPosition.x - this.getPosition().x > 1)this.setPosition(new Point(this.getPosition().x+1, this.getPosition().y));
+			else if(realPosition.x - this.getPosition().x < -1)this.setPosition(new Point(this.getPosition().x-1, this.getPosition().y));
+			if(realPosition.y - this.getPosition().y > 1)this.setPosition(new Point(this.getPosition().x, this.getPosition().y+1));
+			else if(realPosition.y - this.getPosition().y < -1)this.setPosition(new Point(this.getPosition().x, this.getPosition().y-1));
+			
+			return true;
+		}
+		
+  }
+  
+  
   /**
    * Getter that returns the current position of the selected missile
    * @return position
@@ -81,6 +131,10 @@ public class Missile {
    */
   public Vector2D getDirection(){
 	  return this.direction;
+  }
+  
+  public Unit getTarget(){
+	  return this.target;
   }
 
 }

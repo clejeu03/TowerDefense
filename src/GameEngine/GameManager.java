@@ -183,13 +183,18 @@ public class GameManager implements Runnable{
             			
             			//TODO order move missile
             			//dispatcher.addOrderToView(new MoveMissileOrder());
+            			System.out.println("Missile in movement...");
             			
             		}else{
 
             			//TODO order move missile that suppress the missile from the view
             			//TODO order that change the mount of a unit
+            			int newAmount = missile.getTarget().getAmount()-missile.getDamages();
+            			missile.getTarget().setAmount(newAmount);
+            			System.out.println("IMPACT Unit amount now :"+newAmount);
             			
             			towerManager.getMissiles().remove(missile);
+            			break;
             		}
             	}
             	

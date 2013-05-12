@@ -105,59 +105,23 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 	 * @param armyManager
 	 * @param towerManager
 	 * @return true if the missile need to be move / false if the missile have reached it's target
+	 * @see Missile#searchForTarget()
 	 */
-	public Boolean moveMissile(Missile missile){
+	public boolean moveMissile(Missile missile){
 		
-		//Temporary !
-		
-		System.out.println("Missile target : "+missile.getDestination());
-		
-		if(missile.getPosition() != missile.getDestination()){
-			//System.out.println("Missile = move !");
+		//For each pixel until the speed value, make the missile search it's target*/
+		int i=0;
+		for(i=0; i< ( missile.getSpeed() ); ++i){
 			
-			//For each pixel until the speed value, find the following pixel
-			for(int i=0; i< ( missile.getSpeed()*10 ); ++i){
-			
-				System.out.println("Turn "+i+" -- Missile position : "+missile.getPosition());
-				
-				//Define a vector to be followed by the missile
-				Vector2D currentDirection = new Vector2D(missile.getDestination().x - missile.getPosition().x, missile.getDestination().y - missile.getPosition().y);
-				Vector2D axeX = new Vector2D(1,0);
-				Vector2D axeY = new Vector2D(0,1);
-				double factorX = currentDirection.dotProduct(axeX);
-				double factorY = currentDirection.dotProduct(axeY);
-				
-				//Projection on the tallest component's axe and updating the missile position
-				if(factorX > factorY){
-					if(missile.getDestination().x > missile.getPosition().x)
-						missile.setPosition(new Point(missile.getPosition().x+1, missile.getPosition().y));
-					else
-						missile.setPosition(new Point(missile.getPosition().x-1, missile.getPosition().y));
-				}else if(factorY > factorX){
-					if(missile.getDestination().y > missile.getPosition().y)
-						missile.setPosition(new Point(missile.getPosition().x, missile.getPosition().y+1));
-					else
-						missile.setPosition(new Point(missile.getPosition().x, missile.getPosition().y-1));
-				}else if(factorX - factorY < 0.0001){
-					if(missile.getDestination().x > missile.getPosition().x && missile.getDestination().y > missile.getPosition().y)
-						missile.setPosition(new Point(missile.getPosition().x+1, missile.getPosition().y+1));
-					else
-						missile.setPosition(new Point(missile.getPosition().x-1, missile.getPosition().y-1));
-				}
-				
-				//First vector direction : le path to follow
-				Vector2D realDirection = missile.getDirection();
-				
-				//Correction of errors
-				
-				
-				
+			if(!missile.searchForTarget()){
+				break;
 			}
-			return true;
-		}else{
-			//System.out.println("Missile = reach target!");
-			return false;
 		}
+		
+		//If the previous for was interrupted, pass the message
+		if(i!=missile.getSpeed())return false;
+		else return true;
+		
 	}
 
 }
