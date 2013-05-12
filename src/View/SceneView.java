@@ -15,6 +15,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import Dispatcher.AddTowerOrder;
+import GameEngine.Tower;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 
@@ -52,6 +54,7 @@ public class SceneView extends MainViews implements Runnable{
     private int attackAmountPercent;
     private JLabel jAttackAmountPercent;
     private int idBaseSrc;
+    private int idBaseDst;
     private Point basePosition;
     private Point baseToAttackPosition;
     private Point mousePosition;
@@ -392,7 +395,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void addTower(int id, Point position, PlayerType playerType, TowerTypes towerType){
+	public void addTower(int id, PlayerType playerType, Point position, TowerTypes towerType){
 		Point test = new Point(-1,-1);
 		
 		//If the position of the tower is (-1,-1), the tower can't be add :
@@ -411,6 +414,28 @@ public class SceneView extends MainViews implements Runnable{
 		}
 	}
 	
+	/**
+	 * Add tower on the SceneView
+	 * @param position
+	 * @param playerType
+	 * @see ViewManager#refresh()
+	 */
+	public void addUnit(int id, int srcId, int amount){
+		Point position = null;
+		PlayerType playerType = null;
+		for(Sprite s: sprites){
+			if(s.getId()==srcId){
+				position = s.getPosition();
+				playerType = s.getPlayerType();
+				break;
+			}
+		}
+		if(position!=null){
+			UnitSprite unit = new UnitSprite(this,id, position, playerType, amount);
+			addSprite(unit);
+			addSprite(unit.getTextAmount());
+		}
+	}
 	
 	/**
 	 * Add the tower the player wanted to add
@@ -466,7 +491,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see BaseSprite#myMousePressed(MouseEvent)
 	 */
-	public void baseClicked(int idBaseSrc, final Point position, PlayerType playerType){
+	public void baseClicked(final int idBase, final Point position, PlayerType playerType){
 		if (towerClicked){
 			hideTowerInfo();
 		}
@@ -477,7 +502,7 @@ public class SceneView extends MainViews implements Runnable{
 		
 		//If the player has clicked on one of his base
 		if((!baseClicked)&&(playerType == humanType)){
-			this.idBaseSrc = idBaseSrc;
+			this.idBaseSrc = idBase;
 			basePosition = new Point(position);
 			baseClicked = true;
 			mousePosition = new Point(position);
@@ -492,6 +517,7 @@ public class SceneView extends MainViews implements Runnable{
 	
 				
 				baseToAttackPosition = new Point(position);
+				idBaseDst = idBase;
 				
 				if(baseToAttackPosition.x<=400){
 					jAttackAmountPercent.setBounds(baseToAttackPosition.x+20, baseToAttackPosition.y-10, 50,25);
@@ -529,14 +555,10 @@ public class SceneView extends MainViews implements Runnable{
 			baseClicked = false;
 			//Stop the thread
 			attackBase = false;
+		
 			//Tell the engine that the player want to attack an other base
-			view.baseToAttack(idBaseSrc, basePosition, humanType,baseToAttackPosition, attackAmountPercent);
-			
-			//TODO TEMPORARY create a unit 
-			/*UnitSprite test = new UnitSprite(this, new Point (100,100), false, humanType, 50,50, 10);
-			test.start();
-			addSprite(test);	
-			addSprite(test.getTextAmount());*/
+			view.baseToAttack(idBaseSrc,idBaseDst, attackAmountPercent);
+
 			SwingUtilities.invokeLater(new Runnable(){
 			public void run() {
 				jAttackAmountPercent.setVisible(false);
@@ -570,8 +592,8 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see TowerInfoSprite#myMousePressed(MouseEvent)
 	 */
-	 public void towerToSupress(int id, Point position, PlayerType playerType){
-		   view.towerToSupress(id, position, playerType);
+	 public void towerToSupress(int id){
+		   view.towerToSupress(id);
 	   }
 	 
 	/**
@@ -580,14 +602,14 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void suppressTower(final int id, final Point position, PlayerType playerType){
+	public void suppressTower(final int id){
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			Iterator<Sprite> it = sprites.iterator();	
 			while (it.hasNext()) {
 				Sprite element = it.next();
 				//Removing the towerSprite
-				if((element.getId()==id)&&(element.getPosition().equals(position))){
+				if(element.getId()==id){
 					it.remove();
 					remove(element);
 				}
@@ -603,14 +625,14 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param newAmount
 	 * @see ViewManager#refresh()
 	 */
-	public void setAmountBase(final int id,final Point position, PlayerType playerType, final int newAmount){
+	public void setAmountBase(final int id, final int newAmount){
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
 				Sprite element = it.next();
 				//Set the baseSprite amount
-				if((element.getId()==id)&&(element.getPosition().equals(position))){
+				if((element.getId()==id)&&(element instanceof BaseSprite)){
 					((BaseSprite)element).setAmount(newAmount);
 				}
 			}
@@ -624,7 +646,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param newAmount
 	 * @see ViewManager#refresh()
 	 */
-	public void moveUnit(final int id, PlayerType playerType, final Point position, final Point newPosition){
+	public void moveUnit(final int id, final Point newPosition){
 		
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {

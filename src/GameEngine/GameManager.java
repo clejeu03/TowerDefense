@@ -166,7 +166,7 @@ public class GameManager implements Runnable{
         			Point newPosition = new Point(unit.getPosition().x +2, unit.getPosition().y+2);
         			
         			//Tell the dispatcher that the unit need to be move
-					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(),PlayerType.ELECTRIC, unit.getPosition(), newPosition));
+					dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(), newPosition));
         			unit.setPosition(newPosition);
         		}
         	          
@@ -182,7 +182,7 @@ public class GameManager implements Runnable{
             		if(base.getPlayerType()!=PlayerType.NEUTRAL){
             			//System.out.println(base.getNeutral());
             			base.setAmount(base.getAmount()+1);
-            			dispatcher.addOrderToView(new AmountBaseOrder(base.getId(),base.getPlayerType(), base.getPosition(), base.getAmount()));
+            			dispatcher.addOrderToView(new AmountBaseOrder(base.getId(),base.getAmount()));
             		}
             	}
             }
@@ -213,27 +213,27 @@ public class GameManager implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(order instanceof SuppressTowerOrder) {
-					System.out.println("Engine Order : "+((ArmyOrder) order).getId());
+					System.out.println("Engine Order : "+ order.getId());
 					//Remove the tower from the engine list
-					towerManager.suppressTower(((ArmyOrder) order).getId(), ((ArmyOrder) order).getPosition());
+					towerManager.suppressTower(order.getId());
 					//Tell the dispatcher that the tower need to be remove from the view
-					dispatcher.addOrderToView(new SuppressTowerOrder(((SuppressTowerOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition()));
+					dispatcher.addOrderToView(new SuppressTowerOrder(order.getId()));
 					
 				}
 				
 				//If the order is a AddTowerOrder one
 				if(order instanceof AddTowerOrder) {
-					
+
 					//Get the owner of the selected pixel in the territoryMap
-					int zoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x, ((ArmyOrder) order).getPosition().y);
+					int zoneId = mapManager.getTerritoryMapValue(((AddTowerOrder) order).getPosition().x, ((AddTowerOrder) order).getPosition().y);
 					
 					//Let half of the sprite height's and half of the sprite's width exceed the limits of territory
 					int spriteQuart = 15; //Size of sprite : 64x64
 					
-					int supRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+spriteQuart, ((ArmyOrder) order).getPosition().y+spriteQuart);
-					int supLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-spriteQuart, ((ArmyOrder) order).getPosition().y+spriteQuart);
-					int infRightZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x+spriteQuart, ((ArmyOrder) order).getPosition().y-spriteQuart);
-					int infLeftZoneId = mapManager.getTerritoryMapValue(((ArmyOrder) order).getPosition().x-spriteQuart, ((ArmyOrder) order).getPosition().y-spriteQuart);
+					int supRightZoneId = mapManager.getTerritoryMapValue(((AddTowerOrder) order).getPosition().x+spriteQuart, ((AddTowerOrder) order).getPosition().y+spriteQuart);
+					int supLeftZoneId = mapManager.getTerritoryMapValue(((AddTowerOrder) order).getPosition().x-spriteQuart, ((AddTowerOrder) order).getPosition().y+spriteQuart);
+					int infRightZoneId = mapManager.getTerritoryMapValue(((AddTowerOrder) order).getPosition().x+spriteQuart, ((AddTowerOrder) order).getPosition().y-spriteQuart);
+					int infLeftZoneId = mapManager.getTerritoryMapValue(((AddTowerOrder) order).getPosition().x-spriteQuart, ((AddTowerOrder) order).getPosition().y-spriteQuart);
 					
 					if(	supRightZoneId == zoneId && supLeftZoneId == zoneId &&
 							infLeftZoneId == zoneId && infRightZoneId == zoneId){
@@ -244,31 +244,31 @@ public class GameManager implements Runnable{
 						if(zoneId !=0){
 							
 							//1 to 5 : territories
-							if(zoneId <6 && order.getPlayerType()== playerTypes.get(zoneId-1)){
+							if(zoneId <6 && ((AddTowerOrder) order).getPlayerType()== playerTypes.get(zoneId-1)){
 								
 								//Add the Tower and draw it
-								towerManager.createTower(idCount, order.getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((ArmyOrder) order).getPosition());
-								dispatcher.addOrderToView(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
-								dispatcher.addOrderToAI(new AddTowerOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
+								towerManager.createTower(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((AddTowerOrder) order).getPosition());
+								dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
+								dispatcher.addOrderToAI(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
 								++idCount;
 								
 							}else{
 								
 								//Tell the dispatcher that the tower CAN'T be add on the view
 								System.out.println("GameEngine says : You try to add a tower but this is not your territory");
-								dispatcher.addOrderToView(new AddTowerOrder(-1, order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
+								dispatcher.addOrderToView(new AddTowerOrder(-1,((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 							}
 							
 						}else{
 							//Tell the dispatcher that the tower CAN'T be add on the view
 							System.out.println("GameEngine says : maybe you should try on a hill...");
-							dispatcher.addOrderToView(new AddTowerOrder(-1, order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
+							dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 						}
 						
 					//The required part of the sprite is not on the same territory	
 					}else{
 						//Tell the dispatcher that the tower CAN'T be add on the view
-						dispatcher.addOrderToView(new AddTowerOrder(-1, order.getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
+						dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
 					}
 					
 				}
@@ -276,18 +276,18 @@ public class GameManager implements Runnable{
 				
 				//If the order is an AddUnitOrder one
 				if(order instanceof AddUnitOrder) {
-		
+	
 					//Create the unit
-					Unit unit = armyManager.launchUnit(idCount,((AddUnitOrder) order).getPosition(), ((AddUnitOrder) order).getDstPosition(), ((AddUnitOrder) order).getAmount());
+					Unit unit = armyManager.launchUnit(idCount, ((AddUnitOrder) order).getSrcId(), ((AddUnitOrder) order).getDstId(), ((AddUnitOrder) order).getAmount());
 					
-					System.out.println("Engine - TODO : base : "+((ArmyOrder) order).getPosition()+" want to send "+unit.getAmount()+" Units to "+((AddUnitOrder) order).getDstPosition());
-					dispatcher.addOrderToView(new AddUnitOrder(idCount, order.getPlayerType(), ((ArmyOrder) order).getPosition(), ((AddUnitOrder) order).getDstPosition(), unit.getAmount()));
+					System.out.println("Engine - TODO : base : "+((AddUnitOrder) order).getSrcId()+" want to send "+unit.getAmount()+" Units to "+((AddUnitOrder) order).getDstId());
+					dispatcher.addOrderToView(new AddUnitOrder(idCount, ((AddUnitOrder) order).getSrcId(), ((AddUnitOrder) order).getDstId(), unit.getAmount()));
 					++idCount;
 					
 					//Retrieve the new source base amount
 					for(Base base:armyManager.getBases()){
-						if(base.getPosition().equals(((ArmyOrder) order).getPosition())){
-							dispatcher.addOrderToView(new AmountBaseOrder(((AddUnitOrder) order).getId(),order.getPlayerType(), ((ArmyOrder) order).getPosition(), base.getAmount()));
+						if(base.getId() == order.getId()){
+							dispatcher.addOrderToView(new AmountBaseOrder(order.getId(), base.getAmount()));
 							break;
 						}
 					}

@@ -83,7 +83,7 @@ public class TowerInfoSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).towerToSupress(id, positionElt, playerType);
+			((SceneView) view).towerToSupress(id);
 	}
 	
 	/**

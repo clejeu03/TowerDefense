@@ -88,11 +88,11 @@ public class TowerManager {
    * @param position
    * @see GameManager#execute()
    */
-  public void suppressTower(int id, Point position){
+  public void suppressTower(int id){
 	  
 	  //Search the tower by it's position
 	  for(Tower tower: towers){
-		  if((tower.getPosition().equals(position))&&(tower.getId()==id)){
+		  if(tower.getId()==id){
 			  towers.remove(tower);
 			  break;
 		  }

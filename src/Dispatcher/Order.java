@@ -18,24 +18,24 @@ import GameEngine.Player.PlayerType;
  */
 public abstract class Order {
 	
-	protected PlayerType playerType;
+	protected int id;
 	
 	/**
 	 * Constructor of the Order class
-	 * @param playerId - player id
+	 * @param id - id of the object affected by the order
 	 */
-	public Order(PlayerType playerType) {
+	public Order(int id) {
 		super();
-		this.playerType = playerType;
+		this.id = id;
 	}
 	
     /**
-     * Getter idOwner
+     * Getter - id of the object affected by the order
      * @see View.ViewManager#refresh()
      * @see GameEngine.GameManager#execute()
      */	
-	public PlayerType getPlayerType(){
-		return playerType;
+	public int getId() {
+		return id;
 	}
 
 }

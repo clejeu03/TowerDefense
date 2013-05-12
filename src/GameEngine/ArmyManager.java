@@ -84,17 +84,17 @@ public class ArmyManager {
    * @param destination
    * @see WarManager
    */
-  public Unit launchUnit(int id, Point src, Point dst, int attackPercent) {
+  public Unit launchUnit(int id, int srcId, int dstId, int attackPercent) {
 	  Base origin = null;
 	  Base destination = null;
 
 	  //Retrieve source and destinations bases
 	  for(Base base: bases){
-		  if(base.getPosition().equals(src)){
+		  if(base.getId() == srcId){
 			  origin = base;
 			  System.out.println("find the origin !");
 		  }
-		  if(base.getPosition().equals(dst)){
+		  if(base.getId() == dstId){
 			  destination = base;
 			  System.out.println("find the destination !");
 		  }
