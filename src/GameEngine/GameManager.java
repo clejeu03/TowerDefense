@@ -187,11 +187,12 @@ public class GameManager implements Runnable{
             			
             		}else{
 
-            			//TODO order that change the amount of a unit
             			int newAmount = missile.getTarget().getAmount()-missile.getDamages();
             			missile.getTarget().setAmount(newAmount);
             			System.out.println("IMPACT Unit amount now :"+newAmount);
-
+            			
+            			//Tell the view that the unit need to update it's amount
+            			dispatcher.addOrderToView(new AmountUnitOrder(missile.getTarget().getId(), missile.getTarget().getOrigin().getPlayerType(), missile.getTarget().getPosition(), newAmount));
             			
             			//TODO order suppress the missile from the view
             			towerManager.suppressMissile(missile);
