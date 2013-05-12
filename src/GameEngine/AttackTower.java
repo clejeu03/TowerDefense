@@ -39,7 +39,6 @@ public class AttackTower extends Tower {
 		//System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
 		this.lastShootingTime = date;
 		return new Missile(this.getPosition(), unit,this.getSpeed(), this.getDamage());
-		
 	}
 
 	/**
