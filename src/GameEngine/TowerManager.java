@@ -104,13 +104,54 @@ public class TowerManager {
 	  	case SUPPORTTOWER :
 	  		tower = new SupportTower(id, position, playerType);
 	  		break;
+	  	case GUNTOWER :
+	  		tower = new GunTower(id, position, playerType);
+	  		break;
+	  	case FROSTTOWER :
+	  		tower = new FrostTower(id, position, playerType);
+	  		break;
+	  	case BOMBTOWER :
+	  		tower = new BombTower(id, position,playerType);
+	  		break;
+	  	case LAZERTOWER :
+	  		tower = new LazerTower(id, position, playerType);
+	  		break;
+	  	case MEDICALTOWER :
+	  		tower = new MedicalTower(id, position, playerType);
+	  		break;
+	  	case SHIELDTOWER :
+	  		tower = new ShieldTower(id, position, playerType);
+	  		break;
 	  	default :
 	  		break;
 	  }  
 	  
 	  towers.add(tower);
   }
+/**
+ * Make the tower evolve if it is permitted, create the evolution and suppress the ancient tower
+ * @param towerToEvolve
+ * @param type
+ * @param idCount
+ * @see GameManager#execute()
+ */
+  public void evolveTower(int id, Point position, TowerTypes type, int idCount){
+	  //Browse all the towers
+	  for(Tower tower:towers){
+		  if(tower.getId() == id){
+			  //Test if the evolution type is allowed
+			  if(tower.getFirstEvolution() == type || tower.getSecondEvolution() == type){
+				  
+				  //Create a new Tower with a new ID
+				  createTower(idCount, tower.getPlayerType(), type, tower.getPosition());
 
+				  //Suppress the ancient one
+				  towers.remove(tower);
+				  break;
+			  }
+		  }
+	  }
+  }
   /**
    * Remove a tower from the game
    * @param position

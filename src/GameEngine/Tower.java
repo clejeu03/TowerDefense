@@ -63,6 +63,7 @@ public abstract class Tower {
 		this.cadency = cadency;
 		this.speed = speed;
 		this.lastShootingTime = 0;
+		this.evolutions = new ArrayList<TowerManager.TowerTypes>();
 	}
 	
 	/**
