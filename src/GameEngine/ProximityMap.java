@@ -45,7 +45,7 @@ public class ProximityMap extends Map implements Serializable {
 		for (int y = 0; y < this.getHeight();y++){ 
 			for (int x = 0; x < this.getWidth();x++){
 				value = this.getPixel(x,y);
-				if (value==9999){
+				if (value==Integer.MAX_VALUE || value==-1){
 					outImage.setRGB(x, y, Color.black.getRGB());
 				}
 				else

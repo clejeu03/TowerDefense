@@ -279,7 +279,7 @@ public class MapManager implements Serializable{
 	 * @return Map
 	 */
 	public Map getNeutralProximityMap(int index) {
-		return neutralTerritoryMap.get(index);
+		return neutralProximityMap.get(index);
 	}
 	
 	/**
@@ -579,51 +579,53 @@ public class MapManager implements Serializable{
 		while(!nextPixels.isEmpty()){
 			p = nextPixels.poll();
 			if (proximityMap.getPixel(p.x,p.y)==-1){
-				if (heightMap.getPixel(p.x,p.y)!=0){
+				if (heightMap.getPixel(p.x,p.y)!=0 && heightMap.getPixel(p.x,p.y)!=6){
 					proximityMap.setPixel(p.x,p.y,value);
+					
+					//Right pixel
+					if (p.x<proximityMap.getWidth()-1)
+						nextPixels.add(new Point(p.x+1,p.y));
+					
+					
+					//Bottom pixel
+					if (p.y<proximityMap.getHeight()-1)
+						nextPixels.add(new Point(p.x,p.y+1));
+						
+					//Left pixel
+					if (p.y>0)
+						nextPixels.add(new Point(p.x,p.y-1));
+
+					
+					//Top pixel
+					if (p.x>0)
+						nextPixels.add(new Point(p.x-1,p.y));
+					
+					//Bottom-right pixel
+					if ((p.x<proximityMap.getWidth()-1)&&(p.y<proximityMap.getHeight()-1)){
+						nextPixels.add(new Point(p.x+1,p.y+1));
+					}
+					
+					//Bottom-left pixel
+					if (p.x>0&&(p.y<proximityMap.getHeight()-1)){
+						nextPixels.add(new Point(p.x-1,p.y+1));
+					}
+					
+					//Top-left pixel
+					if (p.x>0&&p.y>0){
+						nextPixels.add(new Point(p.x-1,p.y-1));
+					}
+					
+					//Top-right pixel
+					if ((p.x<proximityMap.getWidth()-1)&&p.y>0){
+						nextPixels.add(new Point(p.x+1,p.y-1));
+					}
+					
+					value++;
 				}
 				else
-					proximityMap.setPixel(p.x,p.y,9999);
-				
-				//Right pixel
-				if (p.x<proximityMap.getWidth()-1)
-					nextPixels.add(new Point(p.x+1,p.y));
+					proximityMap.setPixel(p.x,p.y,Integer.MAX_VALUE);
 				
 				
-				//Bottom pixel
-				if (p.y<proximityMap.getHeight()-1)
-					nextPixels.add(new Point(p.x,p.y+1));
-					
-				//Left pixel
-				if (p.y>0)
-					nextPixels.add(new Point(p.x,p.y-1));
-
-				
-				//Top pixel
-				if (p.x>0)
-					nextPixels.add(new Point(p.x-1,p.y));
-				
-				//Bottom-right pixel
-				if ((p.x<proximityMap.getWidth()-1)&&(p.y<proximityMap.getHeight()-1)){
-					nextPixels.add(new Point(p.x+1,p.y+1));
-				}
-				
-				//Bottom-left pixel
-				if (p.x>0&&(p.y<proximityMap.getHeight()-1)){
-					nextPixels.add(new Point(p.x-1,p.y+1));
-				}
-				
-				//Top-left pixel
-				if (p.x>0&&p.y>0){
-					nextPixels.add(new Point(p.x-1,p.y-1));
-				}
-				
-				//Top-right pixel
-				if ((p.x<proximityMap.getWidth()-1)&&p.y>0){
-					nextPixels.add(new Point(p.x+1,p.y-1));
-				}
-				
-				value++;
 			}
 		}
 	}
@@ -637,33 +639,50 @@ public class MapManager implements Serializable{
 		HashMap<Integer, Point> tab = new HashMap<Integer, Point>();
 
 		int up = proximityMap.getPixel(position.x, position.y-1);
-		int down = proximityMap.getPixel(position.x, position.y+1);
+		int upleft = proximityMap.getPixel(position.x-1,position.y-1);
+		int upright = proximityMap.getPixel(position.x+1,position.y-1);
 		int left = proximityMap.getPixel(position.x-1, position.y);
 		int right = proximityMap.getPixel(position.x+1, position.y);
+		int down = proximityMap.getPixel(position.x, position.y+1);
+		int downleft = proximityMap.getPixel(position.x-1,position.y+1);
+		int downright = proximityMap.getPixel(position.x+1,position.y+1);
 		
 		//Suppressing all obstacles
-		if(up!=9999){
+		if(up!=Integer.MAX_VALUE){
 			tab.put(up, new Point(position.x, position.y-1));
 		}
-		if(down !=9999){
+		if(down !=Integer.MAX_VALUE){
 			tab.put(down, new Point(position.x, position.y+1));
 		}
-		if(left != 9999){
+		if(left != Integer.MAX_VALUE){
 			tab.put(left, new Point(position.x-1, position.y));
 		}
-		if(right != 9999){
+		if(right != Integer.MAX_VALUE){
 			tab.put(right, new Point(position.x+1, position.y));
-		}		
+		}
+		if(upleft!=Integer.MAX_VALUE){
+			tab.put(upleft, new Point(position.x-1,position.y-1));
+		}
+		if(upright!=Integer.MAX_VALUE){
+			tab.put(upright, new Point(position.x+1,position.y-1));
+		}
+		if(downleft!=Integer.MAX_VALUE){
+			tab.put(downleft, new Point(position.x-1,position.y+1));
+		}
+		if(downright!=Integer.MAX_VALUE){
+			tab.put(downright, new Point(position.x+1,position.y+1));
+		}
 		
 		//Find the minimum of the stored values
-		int vmin = 999999;
+		int vmin = Integer.MAX_VALUE;
 		for(Integer value:tab.keySet()){
-			if(value <= vmin){
+			if(value < vmin){
 				vmin = value;
 			}
 		}
 		
 		return tab.get(vmin);
+		
 	}
 	
 	/**

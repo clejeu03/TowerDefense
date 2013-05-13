@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import Dispatcher.AddTowerOrder;
+import Dispatcher.AddUnitOrder;
 import Dispatcher.DispatcherManager;
 import Dispatcher.Order;
 import GameEngine.AttackTower;
@@ -217,7 +218,7 @@ public class AIManager implements Runnable {
 	 */
 	private void sendUnit(int idBaseSrc, int idBaseDst, int amount){
 		//TODO Changer constructeur AddUnitOrder
-		//dispatcher.addOrderToEngine(new AddUnitOrder(idBaseSrc, idBaseDst, amount));	
+		dispatcher.addOrderToEngine(new AddUnitOrder(-1, idBaseSrc, idBaseDst, amount));	
 		System.out.println("Order send : attack from="+idBaseSrc+" to="+idBaseDst+" with "+amount+"% of his power");
 	}
 	
