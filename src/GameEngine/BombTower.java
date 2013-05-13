@@ -28,6 +28,7 @@ public class BombTower extends Tower {
 	public BombTower(int id, Point position, PlayerType playerType) {
 		super(id, position, playerType, 120, 20, 10000, 5);
 		this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
+		this.setAreaDamages(true);
 	}
 
 	/**

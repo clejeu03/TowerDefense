@@ -26,6 +26,7 @@ public class Missile {
  private double speed;
  private Vector2D direction;
  private Tower origin;
+ private boolean area;
 
   /**
    * Constructor of the Missile class
@@ -38,10 +39,21 @@ public class Missile {
 	  this.speed = speed;
 	  this.damages = damages;
 	  this.origin = origin;
+	  
+	  if(origin.isAreaDamages())this.setArea(true);
+	  else this.setArea(false);
+	  
 	  this.direction = new Vector2D(this.target.getPosition().x - this.position.x, this.target.getPosition().y - this.position.y);
 }
 
-  
+  /**
+   * This function manage the move of a missile, using the Vector2D class from this package. The aim is to make the missile reach it's target
+   * while this one is moving. So the missile must actualize it's direction very often. The missile move of 1 pixel each millisecond, and we
+   * consider that it has reached it's target with a precision of 2 pixel because of movement.
+   * @return
+   * @see Vector2D
+   * @see WarManager#beginEncounters(ArmyManager, TowerManager, Dispatcher.DispatcherManager, Long)
+   */
   public boolean searchForTarget(){
 	  
 	  if(Math.abs(this.getPosition().x -this.getDestination().x) <= 2 && Math.abs(this.getPosition().y -this.getDestination().y) <= 2){
@@ -150,5 +162,19 @@ public class Missile {
   public Unit getTarget(){
 	  return this.target;
   }
+
+/**
+ * @return the area
+ */
+public boolean isArea() {
+	return area;
+}
+
+/**
+ * @param area the area to set
+ */
+public void setArea(boolean area) {
+	this.area = area;
+}
 
 }

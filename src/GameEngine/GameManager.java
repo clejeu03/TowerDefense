@@ -181,25 +181,50 @@ public class GameManager implements Runnable{
             	
             	//Move Missiles
             	for(Missile missile:towerManager.getMissiles()){
-            		if(warManager.moveMissile(missile) == true){
+            		if(missile.isArea()){
             			
-            			System.out.println("Missile in movement...");
-            			//Tell the view to move the missile
-            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getPosition()));
+            			//Make area damages
+            			System.out.println(">>>>>Area Damages !<<<<<<<<");
             			
-            		}else{
-            			//Change the target's amount
-            			int newAmount = missile.getTarget().getAmount()-missile.getDamages();
-            			missile.getTarget().setAmount(newAmount);
-            			System.out.println("IMPACT Unit amount now :"+newAmount);
-            			
-            			//Tell the view that the unit need to update it's amount
-            			dispatcher.addOrderToView(new AmountUnitOrder(missile.getTarget().getId(), newAmount));
+            			for(Unit unit:warManager.areaDamagesTarget(missile, armyManager)){
+            				
+            				//Change the target's amount
+	            			int newAmount = unit.getAmount()-missile.getDamages();
+	            			unit.setAmount(newAmount);
+	            			System.out.println("AREA IMPACT Unit amount now :"+newAmount);
+            				
+	            			//Tell the view that the unit need to update it's amount
+	            			dispatcher.addOrderToView(new AmountUnitOrder(unit.getId(), newAmount));
+	            			
+            			}
             			
             			//Tell the view to suppress the missile
             			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), new Point(-1, -1)));
             			towerManager.suppressMissile(missile);
-            			break;
+            			
+            		}else{
+            			
+            			//Launch projectile
+	            		if(warManager.moveMissile(missile) == true){
+	            			
+	            			System.out.println("Missile in movement...");
+	            			//Tell the view to move the missile
+	            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getPosition()));
+	            			
+	            		}else{
+	            			//Change the target's amount
+	            			int newAmount = missile.getTarget().getAmount()-missile.getDamages();
+	            			missile.getTarget().setAmount(newAmount);
+	            			System.out.println("IMPACT Unit amount now :"+newAmount);
+	            			
+	            			//Tell the view that the unit need to update it's amount
+	            			dispatcher.addOrderToView(new AmountUnitOrder(missile.getTarget().getId(), newAmount));
+	            			
+	            			//Tell the view to suppress the missile
+	            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), new Point(-1, -1)));
+	            			towerManager.suppressMissile(missile);
+	            			break;
+	            		}
             		}
             	}
             	

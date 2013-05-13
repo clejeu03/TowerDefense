@@ -29,6 +29,7 @@ public abstract class Tower {
 	private PlayerType playerType;
 	private int range;
 	private ArrayList<TowerManager.TowerTypes> evolutions;
+	private boolean areaDamages; //if false, just send missiles
 	/**
 	 * Define the effects of the Tower. Can be positive (to the player) or negative (to his enemies). Represents a different quantity following
 	 * the type of tower
@@ -173,6 +174,20 @@ public abstract class Tower {
 			return evolutions.get(1);
 		else
 			return TowerManager.TowerTypes.NOTOWER;
+	}
+
+	/**
+	 * @return the areaDamages
+	 */
+	public boolean isAreaDamages() {
+		return areaDamages;
+	}
+
+	/**
+	 * @param areaDamages the areaDamages to set
+	 */
+	public void setAreaDamages(boolean areaDamages) {
+		this.areaDamages = areaDamages;
 	}
 
 }

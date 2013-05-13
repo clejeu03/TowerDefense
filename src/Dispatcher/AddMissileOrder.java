@@ -19,16 +19,18 @@ public class AddMissileOrder extends Order {
 
 	private PlayerType playerType;
 	private Point position;
+	private boolean isArea;
 	
 	/**
 	 * @param id
 	 * @param playerType
 	 * @param position
 	 */
-	public AddMissileOrder(long id, PlayerType playerType, Point position) {
+	public AddMissileOrder(long id, PlayerType playerType, Point position, boolean isArea) {
 		super((int)id);
-		this.setPlayerType(playerType);
-		this.setPosition(position);
+		this.playerType = playerType;
+		this.position = position;
+		this.setArea(isArea);
 	}
 
 	/**
@@ -57,6 +59,20 @@ public class AddMissileOrder extends Order {
 	 */
 	public void setPosition(Point position) {
 		this.position = position;
+	}
+
+	/**
+	 * @return the isArea
+	 */
+	public boolean isArea() {
+		return isArea;
+	}
+
+	/**
+	 * @param isArea the isArea to set
+	 */
+	public void setArea(boolean isArea) {
+		this.isArea = isArea;
 	}
 
 }

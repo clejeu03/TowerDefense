@@ -1,6 +1,7 @@
 package GameEngine;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import Dispatcher.*;
 
@@ -59,13 +60,13 @@ public class WarManager {
      			 int centerY = tower.getPosition().y;
      			 int range = tower.getRange();
      			 
-     			 //The unit (x,y) is the area of the tower(centerX, centerY) if : (x - centerX)^2 + (y - centerY)^2 < range^2
+     			 //The unit (x,y) is in the area of the tower(centerX, centerY) if : (x - centerX)^2 + (y - centerY)^2 < range^2
      			 if(((x - centerX)*(x - centerX) + (y - centerY)*(y - centerY)) < range*range){
 
      				 //So active the tower
      				 towerManager.activeTower(tower, unit, playingTime);
-     				 //Tell the view to create a missile
-     				 dispatcher.addOrderToView(new AddMissileOrder(playingTime, tower.getPlayerType(), tower.getPosition()));
+     				 //Tell the view to create a missile   				 
+     				 dispatcher.addOrderToView(new AddMissileOrder(playingTime, tower.getPlayerType(), tower.getPosition(), tower.isAreaDamages()));
      			 }
      		 }
      	 }
@@ -124,6 +125,30 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 		if(i!=missile.getSpeed())return false;
 		else return true;
 		
+	}
+	
+	public ArrayList<Unit> areaDamagesTarget(Missile missile, ArmyManager armyManager){
+		ArrayList<Unit> targets = new ArrayList<Unit>();
+		
+		int range = missile.getOrigin().getRange();
+		int centerX = missile.getPosition().x;
+		int centerY = missile.getPosition().y;
+		
+		 //Browse all units
+		 for(Unit unit:armyManager.getUnits()){
+			 
+			 int x = unit.getPosition().x;
+			 int y = unit.getPosition().y;
+			 
+			 //The unit (x,y) is in the targeted area if : (x - centerX)^2 + (y - centerY)^2 < range^2
+			 if(((x - centerX)*(x - centerX) + (y - centerY)*(y - centerY)) < range*range){
+				 
+				 //Store the unit as a target
+				 targets.add(unit);
+			 }
+		 }
+    	 
+		return targets;
 	}
 	
 	

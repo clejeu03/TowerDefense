@@ -28,6 +28,7 @@ public class ShieldTower extends Tower {
 	public ShieldTower(int id, Point position, PlayerType playerType) {
 		super(id, position, playerType, 100, 0, 2000, 5);
 		this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
+		this.setAreaDamages(true);
 	}
 
 	/**
