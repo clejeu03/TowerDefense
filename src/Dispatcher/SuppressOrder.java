@@ -19,14 +19,14 @@ package Dispatcher;
  * <b>Creation :</b> 24/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
-public class SuppressTowerOrder extends Order{
+public class SuppressOrder extends Order{
 
 	/**
 	 * Constructor of the SuppressTowerOrder class
 	 * @param idPlayer - player id
 	 * @param position - position of the tower to suppress
 	 */
-	public SuppressTowerOrder(int id) {
+	public SuppressOrder(int id) {
 		super(id);
 	}
 

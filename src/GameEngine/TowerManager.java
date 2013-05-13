@@ -135,7 +135,7 @@ public class TowerManager {
  * @param idCount
  * @see GameManager#execute()
  */
-  public void evolveTower(int id, Point position, TowerTypes type, int idCount){
+  public void evolveTower(int id, TowerTypes type, int idCount){
 	  //Browse all the towers
 	  for(Tower tower:towers){
 		  if(tower.getId() == id){

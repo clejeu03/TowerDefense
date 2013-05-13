@@ -322,7 +322,7 @@ public class ViewManager extends JFrame implements Runnable{
     * @see SceneView#towerToSupress(Point, int)
     */
    public void towerToSupress(int id){
-	   dispatcher.addOrderToEngine(new SuppressTowerOrder(id));
+	   dispatcher.addOrderToEngine(new SuppressOrder(id));
    }
    
 	/**
@@ -360,9 +360,9 @@ public class ViewManager extends JFrame implements Runnable{
 				//Retrieve and remove the head of the queue
 				Order o = queue.poll();
 				
-				//If the order is a SuppressTowerOrder one
-				if(o instanceof SuppressTowerOrder) {
-					sceneView.suppressTower(o.getId());
+				//If the order is a SuppressOrder one
+				if(o instanceof SuppressOrder) {
+					sceneView.suppressObject(o.getId());
 				}
 				
 				//If the order is an AddTowerOrder one
@@ -382,9 +382,9 @@ public class ViewManager extends JFrame implements Runnable{
 				if(o instanceof MoveUnitOrder) {
 					sceneView.moveUnit(((MoveUnitOrder) o).getId(),((MoveUnitOrder) o).getNewPosition());
 				}
-				//If the order is an AmountBaseOrder one
-				if(o instanceof AmountBaseOrder){
-					sceneView.setAmountBase(((AmountBaseOrder) o).getId(), ((AmountBaseOrder) o).getAmount());
+				//If the order is an ChangeAmountOrder (base or unit) one
+				if(o instanceof ChangeAmountOrder){
+					sceneView.setAmount(((ChangeAmountOrder) o).getId(), ((ChangeAmountOrder) o).getAmount());
 				}
 			}
 		}
