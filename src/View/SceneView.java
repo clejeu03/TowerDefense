@@ -610,8 +610,11 @@ public class SceneView extends MainViews implements Runnable{
 				Sprite element = it.next();
 				//Removing the towerSprite, the UnitSprite, the matching TextInfoSprite, or the MissileSprite
 				if(element.getId()==id){
+					System.out.println("View - Suppress the unit "+id);
 					it.remove();
 					remove(element);
+					revalidate();
+					repaint();
 					
 					if(element instanceof TowerSprite){
 						hideTowerInfo();
@@ -666,7 +669,9 @@ public class SceneView extends MainViews implements Runnable{
 					if(element instanceof UnitSprite){
 						
 						//If the Sprite have to move to the right, the image need to be flipped
-						if(position.x<newPosition.x) ((UnitSprite)element).setFlipped(true);
+						if(((UnitSprite)element).getPosition().x<newPosition.x){((UnitSprite)element).setFlipped(true);}
+						else {((UnitSprite)element).setFlipped(false);}
+						
 						((UnitSprite)element).setPosition(newPosition);
 									
 						remove(element);

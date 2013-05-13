@@ -98,7 +98,7 @@ public class UnitSprite  extends Sprite{
 	public void paintComponent(Graphics g){
 		if(!flipped) g.drawImage(image, 0, 0,this);
 	    //Flip the image horizontally
-		else if(true){
+		else if(flipped){
 		g.drawImage (image, 
 				32, 0, 0, 32,
 	            0, 0, 32, 32,

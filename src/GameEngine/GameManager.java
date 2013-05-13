@@ -172,6 +172,7 @@ public class GameManager implements Runnable{
         			}else{
         				//Tell the dispatcher to suppress the unit and to change the base amount
         				dispatcher.addOrderToView(new SuppressOrder(unit.getId()));
+        				System.out.println("Engine - Suppress the unit "+unit.getId());
         				dispatcher.addOrderToView(new ChangeAmountOrder(unit.getDestination().getId(), unit.getDestination().getAmount()));
         				//dispatcher.addOrderToView(new AddUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getOrigin().getPosition(), unit.getDestination().getPosition(), unit.getAmount()));
         				armyManager.suppressUnit(unit);
