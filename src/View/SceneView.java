@@ -597,35 +597,39 @@ public class SceneView extends MainViews implements Runnable{
 	   }
 	 
 	/**
-	 * Suppress a tower and its Sprite info
+	 * Suppress a tower and its Sprite info, or a Unit and its label, or
 	 * @param position
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void suppressTower(final int id){
+	public void suppressObject(final int id){
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			Iterator<Sprite> it = sprites.iterator();	
 			while (it.hasNext()) {
 				Sprite element = it.next();
-				//Removing the towerSprite
+				//Removing the towerSprite, the UnitSprite, the matching TextInfoSprite, or the MissileSprite
 				if(element.getId()==id){
 					it.remove();
 					remove(element);
+					
+					if(element instanceof TowerSprite){
+						hideTowerInfo();
+					}
 				}
 			}	
-			hideTowerInfo();
+
 		}});
 	}
 	
 	/**
-	 * Reset the base amount whenthe base is the source (or the destination) of an attack
+	 * Reset the base amount when the base or a unit is the source (or the destination) of an attack
 	 * @param position
 	 * @param playerType
 	 * @param newAmount
 	 * @see ViewManager#refresh()
 	 */
-	public void setAmountBase(final int id, final int newAmount){
+	public void setAmount(final int id, final int newAmount){
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			Iterator<Sprite> it = sprites.iterator();
@@ -634,6 +638,9 @@ public class SceneView extends MainViews implements Runnable{
 				//Set the baseSprite amount
 				if((element.getId()==id)&&(element instanceof BaseSprite)){
 					((BaseSprite)element).setAmount(newAmount);
+				}
+				if((element.getId()==id)&&(element instanceof UnitSprite)){
+					((UnitSprite)element).setAmount(newAmount);
 				}
 			}
 		}});
