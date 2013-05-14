@@ -126,6 +126,8 @@ public class DispatcherManager {
 	 * @param order - Order
 	 */
 	public void addOrderToAI(Order order){
-		for (AIManager ai:aiEnemy) ai.addOrder(order);
+		for (AIManager ai:aiEnemy){
+			if (ai.isRunning()) ai.addOrder(order);
+		}
 	}
 }
