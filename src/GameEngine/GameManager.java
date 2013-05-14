@@ -132,17 +132,17 @@ public class GameManager implements Runnable{
 		//Clear the bases list
 		bases.clear();
 		for(int i=0; i<enemiesType.size();i++){
-			bases.add(armyManager.createBase(idCount, basesPositions[i+1],enemiesType.get(i),false,mapManager.getPlayerProximityMap(i+1)));
+			bases.add(armyManager.createBase(idCount, basesPositions[i+1],enemiesType.get(i),false,mapManager.getPlayerTerritoryMap(i+1),mapManager.getPlayerProximityMap(i+1)));
 			++idCount;
 		}
 		//human player base
-		bases.add(armyManager.createBase(idCount, basesPositions[0],humanType,false,mapManager.getPlayerProximityMap(0)));
+		bases.add(armyManager.createBase(idCount, basesPositions[0],humanType,false,mapManager.getPlayerTerritoryMap(0),mapManager.getPlayerProximityMap(0)));
 		++idCount;
 		
 		//TODO add different sizes of neutral base
 		ArrayList<Point> neutralBasePosition = mapManager.getNeutralBasePosition();
 		for(int i=0; i<neutralBasePosition.size();i++){
-			bases.add(armyManager.createBase(idCount, neutralBasePosition.get(i),PlayerType.NEUTRAL,true,mapManager.getNeutralProximityMap(i)));
+			bases.add(armyManager.createBase(idCount, neutralBasePosition.get(i),PlayerType.NEUTRAL,true,mapManager.getNeutralTerritoryMap(i),mapManager.getNeutralProximityMap(i)));
 			++idCount;
 		}
 		//Tells the dispatcher that the View need to be initialized
@@ -166,16 +166,23 @@ public class GameManager implements Runnable{
             	
             	//Move units
             	for(Unit unit:armyManager.getUnits()){
-        			if(armyManager.moveUnit(unit, mapManager)){
+            		int state =armyManager.moveUnit(unit, mapManager);
+        			if(state==0){
         				//Tell the dispatcher that the unit need to be move
         				dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(), unit.getPosition()));
-        			}else{
+        			}
+        			else{
         				//Tell the dispatcher to suppress the unit and to change the base amount
         				dispatcher.addOrderToView(new SuppressOrder(unit.getId()));
         				System.out.println("Engine - Suppress the unit "+unit.getId());
         				dispatcher.addOrderToView(new ChangeAmountOrder(unit.getDestination().getId(), unit.getDestination().getAmount()));
         				//dispatcher.addOrderToView(new AddUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getOrigin().getPosition(), unit.getDestination().getPosition(), unit.getAmount()));
         				armyManager.suppressUnit(unit);
+        				
+        				if (state ==2){
+        					dispatcher.addOrderToView(new ChangeOwnerOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType()));
+        					dispatcher.addOrderToAI(new ChangeOwnerOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType()));
+        				}
         				break;
         			}
         		}
@@ -375,7 +382,6 @@ public class GameManager implements Runnable{
 			}
 		}
 	}
-	
 	
 	/**
 	 * Add an order to the engine ConcurrentLinkedQueue queue

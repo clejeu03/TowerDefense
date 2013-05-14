@@ -122,8 +122,8 @@ public class ArmyManager {
    * @see ArmyManager#BaseType
    	*@return base
    	*/
-  public Base createBase(int id, Point pos, PlayerType playerType, Boolean neutral, BaseType type, Map proxMap) {
-	Base base = new Base(id, pos, playerType, neutral, type, proxMap);
+  public Base createBase(int id, Point pos, PlayerType playerType, Boolean neutral, BaseType type, TerritoryMap terMap, ProximityMap proxMap) {
+	Base base = new Base(id, pos, playerType, neutral, type, terMap, proxMap);
 	bases.add(base);
 	return base;
   }
@@ -136,8 +136,8 @@ public class ArmyManager {
    * @param proxMap
    * @return base
    */
-  public Base createBase(int id, Point pos, PlayerType playerType, Boolean neutral, Map proxMap) {
-	Base base = new Base(id, pos, playerType, neutral, proxMap);
+  public Base createBase(int id, Point pos, PlayerType playerType, Boolean neutral,TerritoryMap terMap, ProximityMap proxMap) {
+	Base base = new Base(id, pos, playerType, neutral, terMap, proxMap);
 	bases.add(base);
 	return base;
   }
@@ -155,28 +155,36 @@ public class ArmyManager {
    * Move a Unit, from its position to a new position, in the path to the Unit's destination.
    * @see ArmyManager#launchUnit(int, Point, Point, int)
    * @see GameManager#timer()
-   * @return true if the unit need to be move / false if the unit have reached it's destination
+   * @return 0 if the unit need to be move, 1 if the unit have reached it's destination, 2 if it have caught the base
    */
-  public boolean moveUnit(Unit unit, MapManager mapManager) {
+  public int moveUnit(Unit unit, MapManager mapManager) {
 	 
 	  //The unit need to be move
 	  if(!unit.getPosition().equals(unit.getDestination().getPosition())){
 
 		  //Find the way ! For each pixel until the unit's speed, find the smallest value and go on....
   		  for(int i=0; i<(unit.getSpeed()*10);++i){	
-  			  unit.setPosition(mapManager.proximityMapFindMin(unit.getDestination().getProximitytab(), unit.getPosition()));
+  			  unit.setPosition(mapManager.proximityMapFindMin(unit.getDestination().getProximityMap(), unit.getPosition()));
   		  }
   		  unit.setPosition(unit.getPosition());
  
-  		  return true;
+  		  return 0;
 			
   	  //The unit have reached it's destination
-	  }else{
+	  }
+	  else{
 		  
-		  //Updating the base amount
-		  unit.getDestination().setAmount(unit.getDestination().getAmount() - unit.getAmount());
-	
-		  return false;
+		  //If the base is caught by the unit
+		  if (unit.getDestination().getAmount() - unit.getAmount()>=0){
+			  unit.getDestination().setAmount(unit.getDestination().getAmount() - unit.getAmount());
+			  return 1;
+		  }
+		  else{
+			  unit.getDestination().setAmount(-(unit.getDestination().getAmount() - unit.getAmount()));
+			  unit.getDestination().setPlayerType(unit.getPlayerType());
+			  mapManager.changeOwnerOfTerritoryMap(unit.getDestination().getTerritoryMap(), unit.getPlayerType());
+			  return 2;
+		  }
 	  }
 	  
   }

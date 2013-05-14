@@ -110,6 +110,9 @@ public class MapManager implements Serializable{
    */
   private ArrayList<ProximityMap> neutralProximityMap;
   
+  /**
+   * Store the type of each player
+   */
   private ArrayList<PlayerType> playersType;
   
   /**
@@ -264,22 +267,6 @@ public class MapManager implements Serializable{
 	 */
 	public Point[] getPlayerBasePosition() {
 		return playerBasePosition;
-	}
-	
-	/**
-	 * Getter - get the proximityMap of the player base 
-	 * @return Map
-	 */
-	public Map getPlayerProximityMap(int index) {
-		return playerProximityMap[index];
-	}
-	
-	/**
-	 * Getter - get the proximityMap of the neutral base 
-	 * @return Map
-	 */
-	public Map getNeutralProximityMap(int index) {
-		return neutralProximityMap.get(index);
 	}
 	
 	/**
@@ -690,12 +677,18 @@ public class MapManager implements Serializable{
 	 * @param tm
 	 * @param player
 	 */
-	public void changeOwnerOfTerritoryMap(TerritoryMap tm, int player){
+	public void changeOwnerOfTerritoryMap(TerritoryMap tm, PlayerType player){
+		
+		int playerValue=1;
+		for (PlayerType p:playersType){
+			if (p == player) break;
+			playerValue++;
+		}
 		
 		for (int y = 0; y < tm.getHeight();y++){ 
 			for (int x = 0; x < tm.getWidth();x++){
 				if (tm.getPixel(x,y)!=-1 && heightMap.getPixel(x,y)==0){
-					tm.setPixel(x,y,player);
+					tm.setPixel(x,y,playerValue);
 				}
 			}
 		}
@@ -826,5 +819,35 @@ public class MapManager implements Serializable{
 		return neutralBasePosition;
 	}
 	
+	/**
+	 * Getter - get the proximityMap of the player base 
+	 * @return Map
+	 */
+	public ProximityMap getPlayerProximityMap(int index) {
+		return playerProximityMap[index];
+	}
 	
+	/**
+	 * Getter - get the proximityMap of the neutral base 
+	 * @return Map
+	 */
+	public ProximityMap getNeutralProximityMap(int index) {
+		return neutralProximityMap.get(index);
+	}
+	
+	/**
+	 * Getter - get the territoryMap of the player base 
+	 * @return Map
+	 */
+	public TerritoryMap getPlayerTerritoryMap(int index) {
+		return playerTerritoryMap[index];
+	}
+	
+	/**
+	 * Getter - get the proximityMap of the neutral base 
+	 * @return Map
+	 */
+	public TerritoryMap getNeutralTerritoryMap(int index) {
+		return neutralTerritoryMap.get(index);
+	}
 }

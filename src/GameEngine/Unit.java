@@ -2,6 +2,8 @@ package GameEngine;
 
 import java.awt.Point;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - Unit</b></br>
@@ -32,6 +34,7 @@ public class Unit {
   private Point position;
   private Base origin;
   private Base destination;
+  private PlayerType playerType;
   
   
   /**
@@ -46,20 +49,9 @@ public class Unit {
 	  this.origin = origin;
 	  this.amount = amount;
 	  this.position = origin.getPosition();
+	  this.playerType = origin.getPlayerType();
 	  //Temporary !
 	  this.speed = 0.5;
-  }
-  
-  /**
-   * Constructor of the Unit class
-   */
-  public Unit(int id, Point position, int amount) {
-	  super();
-	  this.id = id;
-	  this.amount = amount;
-	  this.position = position;
-	  //Temporary !
-	  setSpeed(0.5);
   }
   
   /**
@@ -90,7 +82,16 @@ public void setSpeed(double speed){
 public int getAmount(){
 	  return this.amount;
   }
-  /**
+
+/**
+ * Return the playerType of the unit
+ * @return playerType
+ */
+  public PlayerType getPlayerType() {
+	return playerType;
+}
+
+/**
    * Change the amount of the unit
    * @param amount
    */

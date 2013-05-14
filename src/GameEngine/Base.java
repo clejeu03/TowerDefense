@@ -34,7 +34,11 @@ public class Base {
   /**
    * Store the proximityMap deduced from the all Bases positions.
    */
-  private Map proximityTab;
+  private ProximityMap proximityMap;
+  /**
+   * Store the territoryMap of the base
+   */
+  private TerritoryMap territoryMap;
   /**
    * Store the owner id of the base
    */
@@ -64,14 +68,14 @@ public class Base {
   /**
    * Constructor of the Base class case the type is given. If the base a neutral you must specify 
    * his type (small, medium or large). If the base is active, it will be a medium one.
-   * @see ArmyManager.createBase(Point pos, Boolean neutral, BaseType type, Map proxMap);
+   * @see ArmyManager.createBase(Point pos, Boolean neutral, BaseType type, TerritoryMap terMap, ProximityMap proxMap);
    */
-  public Base(int id, Point position, PlayerType playerType, Boolean neutral, BaseType type, Map proximityTab) {
+  public Base(int id, Point position, PlayerType playerType, Boolean neutral, BaseType type, TerritoryMap territoryMap, ProximityMap proximityMap) {
 	  super();
 	  this.id = id;
 	  this.playerType = playerType;
 	  this.position = position;
-	  this.proximityTab = proximityTab;
+	  this.proximityMap = proximityMap;
 	  if(neutral){
 		  //Specifications if the base is an neutral one
 		  createNeutralBase(type);
@@ -81,16 +85,18 @@ public class Base {
 	  }
   }
   /**Constructor of the active base only called from the ArmyManager
-   * @see ArmyManager.createBase(Point pos, Boolean neutral, Map proxMap)*/
-  public Base(int id,Point position, PlayerType playerType, Boolean neutral, Map proximityTab) {
+   * @see ArmyManager.createBase(Point pos, Boolean neutral, TerritoryMap terMap, ProximityMap proxMap)*/
+  public Base(int id,Point position, PlayerType playerType, Boolean neutral,TerritoryMap territoryMap, ProximityMap proximityMap) {
 	  super();
 	  this.id = id;
 	  this.playerType = playerType;
-	  setPosition(position);
-	  setProximityTab(proximityTab);
+	  this.position = position;
+	  this.proximityMap=proximityMap;
+	  this.territoryMap=territoryMap;
 	  createActiveBase();
   }
- /**
+
+  /**
   * Create a neutral base following the given type
   * @param type
   */
@@ -154,18 +160,26 @@ public class Base {
 	  return amount;
   }
   /**
-   * Return the proximity map into an int tab.
-   * @return proximityTab (that store the proximityMap)
+   * Return the proximity map
+   * @return proximityMap
    */
-  public Map getProximitytab() {
-	  return this.proximityTab;
+  public ProximityMap getProximityMap() {
+	  return this.proximityMap;
   }
   /**
    * Set the proximity map of the concerned base
    * @param proximityTab
    */
-  public void setProximityTab(Map proximityTab){
-	  this.proximityTab = proximityTab;
+  public void setProximityMap(ProximityMap proximityMap){
+	  this.proximityMap = proximityMap;
+  }
+  
+  /**
+   * Return the territoryMap of the base
+   * @return territoryMap
+   */
+  public TerritoryMap getTerritoryMap(){
+	  return this.territoryMap;
   }
   /**
    * Setter that changes the current amount of soldier into the Base
