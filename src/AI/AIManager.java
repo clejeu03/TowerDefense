@@ -39,7 +39,7 @@ public class AIManager implements Runnable {
 	private int money;
 	private boolean running;
 
-	public AIManager(DispatcherManager dispatcher) {
+	public AIManager(DispatcherManager dispatcher, PlayerType aiType) {
 		this.dispatcher = dispatcher;
 		this.timeToSleep = 2000;
 		
@@ -48,13 +48,6 @@ public class AIManager implements Runnable {
 		towers = new ArrayList<Tower>();
 		
 		orderQueue = new LinkedList<Order>();
-	}
-	
-	/**
-	 * Set the type of the AI
-	 * @param aiType - AI's type
-	 */
-	public void setType(PlayerType aiType){
 		this.aiType = aiType;
 	}
 	
@@ -86,7 +79,7 @@ public class AIManager implements Runnable {
 				running = false;
 			}
 			refreshInfo();
-			printInfo();
+			//printInfo();
 			attackBehavior();
 		}
 	}
@@ -128,6 +121,17 @@ public class AIManager implements Runnable {
 							}
 							index++;
 						}
+					}
+					else{
+						int index=0;
+						for (Base b:bases){
+							if (b.getId()==o.getId()){
+								enemyBases.add(bases.remove(index));
+								break;
+							}
+							index++;
+						}
+						if (bases.isEmpty()) stop();
 					}
 				}
 			}
@@ -197,11 +201,10 @@ public class AIManager implements Runnable {
 	 * Returns the distance between two bases
 	 * @param b1 - First base
 	 * @param b2 - Second base
-	 * @return distance between them in double
+	 * @return distance between them in int
 	 */
-	private double distanceBetween(Base b1, Base b2){
-		//TODO Utiliser les map de proximity !
-		return Math.sqrt(Math.pow((b2.getPosition().x - b1.getPosition().x), 2) + Math.pow((b2.getPosition().y - b1.getPosition().y), 2));
+	private int distanceBetween(Base b1, Base b2){
+		return b1.getProximityMap().getPixel(b2.getPosition().x, b2.getPosition().y);
 	}
 	
 	/**
@@ -213,6 +216,7 @@ public class AIManager implements Runnable {
 		towers.clear();
 		enemyBases.clear();
 		this.running = false;
+		System.out.println("AI IS NOW DEAD");
 	}
 	
 	/**
@@ -251,5 +255,13 @@ public class AIManager implements Runnable {
 	 */
 	private void upgradeTower(int idTower){
 		//dispatcher.addOrderToEngine(new ......)
+	}
+	
+	/**
+	 * Check if the Ai is still active
+	 * @return boolean
+	 */
+	public boolean isRunning(){
+		return running;
 	}
 }

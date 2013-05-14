@@ -27,10 +27,10 @@ public class DispatcherManager {
 	
 	private GameManager engine;
 	private ViewManager view;
-	private AIManager ai;
+	private ArrayList<AIManager> aiEnemy;
 	private Thread threadEngine;
 	private Thread threadView;
-	private Thread threadAI;
+	private ArrayList<Thread> threadAI;
 	
 	/**
 	 * Constructor of the DisptacherManger class
@@ -41,7 +41,8 @@ public class DispatcherManager {
 		super();
 		this.engine = engine;
 		this.view = view;
-		this.ai = new AIManager(this);
+		this.aiEnemy = new ArrayList<AIManager>();
+		this.threadAI = new ArrayList<Thread>();
 	}
 	
 	/**
@@ -49,7 +50,10 @@ public class DispatcherManager {
 	 * @see View.ViewManager#play()
 	 */	
 	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
-		ai.setType(enemiesType.get(0));
+		for (PlayerType pt:enemiesType){
+			aiEnemy.add(new AIManager(this,pt));
+		}
+		
 		engine.initiateGame(humanType, nbEnemies, enemiesType);	
 		
 	}
@@ -61,8 +65,9 @@ public class DispatcherManager {
 	 * @see GameEngine.GameManager#initiateGame()
 	 */	
 	public void initiateGameView(ArrayList<Base> bases){
-		view.initiateGameView(bases);	
-		ai.initiateGameView(bases);
+		view.initiateGameView(bases);
+		for (AIManager ai:aiEnemy)
+			ai.initiateGameView(bases);
 	}
 
 	/**
@@ -74,10 +79,10 @@ public class DispatcherManager {
 		engine.setRunning(true);
 		threadView = new Thread(this.view);
 		threadEngine = new Thread(this.engine);
-		threadAI = new Thread(this.ai);
+		for (AIManager ai:aiEnemy) threadAI.add(new Thread(ai));
 		threadView.start();
 		threadEngine.start();
-		threadAI.start();
+		for (Thread t:threadAI) t.start();
 		//System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	
@@ -88,11 +93,13 @@ public class DispatcherManager {
 	public void stop(){
 		view.setRunning(false);
 		engine.setRunning(false);
-		ai.stop();
+		for (AIManager ai:aiEnemy) {
+			if (ai.isRunning()) ai.stop();
+		}
 		engine.endGame();
 		threadView.interrupt();
 		threadEngine.interrupt();
-		threadAI.interrupt();
+		for (Thread t:threadAI) t.interrupt();
 		//System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	
@@ -119,6 +126,6 @@ public class DispatcherManager {
 	 * @param order - Order
 	 */
 	public void addOrderToAI(Order order){
-		ai.addOrder(order);
+		for (AIManager ai:aiEnemy) ai.addOrder(order);
 	}
 }
