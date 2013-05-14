@@ -139,7 +139,11 @@ public class SceneView extends MainViews implements Runnable{
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
 				Sprite element = it.next();
-				element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+				if(element instanceof UnitSprite){
+					System.out.println("Hey");
+					element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()), element.getWidth(),element.getHeight());
+				}
+				else element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
 				add(element);
 			}
 			
@@ -711,7 +715,7 @@ public class SceneView extends MainViews implements Runnable{
 						((UnitSprite)element).setPosition(newPosition);
 									
 						remove(element);
-						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()), element.getWidth(),element.getHeight());
 						add(element);
 					
 						revalidate();
@@ -723,7 +727,7 @@ public class SceneView extends MainViews implements Runnable{
 						
 						((TextInfoSprite)element).setPosition(textPosition);
 						remove(element);
-						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()), element.getWidth(),element.getHeight());
 						add(element);
 						revalidate();
 						repaint();
