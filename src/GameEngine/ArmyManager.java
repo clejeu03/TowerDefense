@@ -173,17 +173,24 @@ public class ArmyManager {
   	  //The unit have reached it's destination
 	  }
 	  else{
-		  
-		  //If the base is caught by the unit
-		  if (unit.getDestination().getAmount() - unit.getAmount()>=0){
-			  unit.getDestination().setAmount(unit.getDestination().getAmount() - unit.getAmount());
+		  //If the base is already owned by the player
+		  if (unit.getDestination().getPlayerType()==unit.getOrigin().getPlayerType()){
+			  unit.getDestination().setAmount(unit.getDestination().getAmount()+unit.getAmount());
 			  return 1;
 		  }
-		  else{
-			  unit.getDestination().setAmount(-(unit.getDestination().getAmount() - unit.getAmount()));
-			  unit.getDestination().setPlayerType(unit.getPlayerType());
-			  mapManager.changeOwnerOfTerritoryMap(unit.getDestination().getTerritoryMap(), unit.getPlayerType());
-			  return 2;
+		  else
+		  {
+			  //If the base is caught by the unit
+			  if (unit.getDestination().getAmount() - unit.getAmount()>=0){
+				  unit.getDestination().setAmount(unit.getDestination().getAmount() - unit.getAmount());
+				  return 1;
+			  }
+			  else{
+				  unit.getDestination().setAmount(-(unit.getDestination().getAmount() - unit.getAmount()));
+				  unit.getDestination().setPlayerType(unit.getPlayerType());
+				  mapManager.changeOwnerOfTerritoryMap(unit.getDestination().getTerritoryMap(), unit.getPlayerType());
+				  return 2;
+			  }
 		  }
 	  }
 	  
