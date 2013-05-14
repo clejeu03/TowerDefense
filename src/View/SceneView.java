@@ -213,6 +213,21 @@ public class SceneView extends MainViews implements Runnable{
 	}
 	
 	/**
+	 * Reload the modified territory Map
+	 */
+	public void reloadTerritoryMap(){
+		try {
+		      territoryMap = ImageIO.read(new File("tmp/tm.png"));
+		  
+		} catch (IOException e) {
+		      e.printStackTrace();
+		}
+        //Repaint the panel
+    	revalidate();
+    	repaint();
+	}
+	
+	/**
 	 * Event "the mouse has been pressed in the zone" handler
 	 * @param me - MouseEvent
 	 */
@@ -644,6 +659,27 @@ public class SceneView extends MainViews implements Runnable{
 				}
 				if((element.getId()==id)&&(element instanceof UnitSprite)){
 					((UnitSprite)element).setAmount(newAmount);
+				}
+			}
+		}});
+	}
+	
+	/**
+	 * Reset the base owner when it has been taken
+	 * @param position
+	 * @param playerType
+	 * @param newAmount
+	 * @see ViewManager#refresh()
+	 */
+	public void setOwner(final int id, final PlayerType newPlayerType){
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				//Set the baseSprite amount
+				if((element.getId()==id)&&(element instanceof BaseSprite)){
+					((BaseSprite)element).setPlayerType(newPlayerType);
 				}
 			}
 		}});

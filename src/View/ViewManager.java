@@ -386,6 +386,13 @@ public class ViewManager extends JFrame implements Runnable{
 				if(o instanceof ChangeAmountOrder){
 					sceneView.setAmount(((ChangeAmountOrder) o).getId(), ((ChangeAmountOrder) o).getAmount());
 				}
+				
+				//If the order is a ChangeOwnerOrder
+				if(o instanceof ChangeOwnerOrder){
+					sceneView.setOwner(((ChangeOwnerOrder) o).getId(), ((ChangeOwnerOrder) o).getNewPlayerType());
+					//Reloading the modified territory map
+					sceneView.reloadTerritoryMap();
+				}
 			}
 		}
 	}

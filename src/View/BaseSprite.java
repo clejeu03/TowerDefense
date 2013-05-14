@@ -134,4 +134,37 @@ public class BaseSprite extends Sprite{
 		//Change the cursor aspect
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
+	
+	/**
+	 * Reset the playerType of a base
+	 * @param newPlayerType
+	 */
+	public void setPlayerType(PlayerType newPlayerType){
+		this.playerType = newPlayerType;
+		String fileName ="img/";
+		
+		if(playerType == PlayerType.ELECTRIC){
+			fileName +="Electric/";
+		}
+		else if(playerType == PlayerType.WATER){
+			fileName +="Water/";
+		}
+		else if(playerType == PlayerType.GRASS){
+			fileName +="Grass/";
+		}
+		else if(playerType == PlayerType.FIRE){
+			fileName +="Fire/";
+		}
+		else if(playerType == PlayerType.NEUTRAL){
+			fileName +="Neutral/";
+		}
+		
+		fileName += "base.png";
+		try {	
+		      image = ImageIO.read(new File(fileName));
+		  
+		} catch (IOException e) {
+		      e.printStackTrace();
+		}
+	}
 }
