@@ -47,7 +47,6 @@ public class WarManager {
    * @see GameManager#timer()
    */
   public void beginEncounters(ArmyManager armyManager, TowerManager towerManager, DispatcherManager dispatcher, Long playingTime) {
-
 	  if(armyManager.getUnits().isEmpty() == false && towerManager.getTowers().isEmpty() == false){
       	for(Unit unit:armyManager.getUnits()){
 
@@ -62,11 +61,13 @@ public class WarManager {
      			 
      			 //The unit (x,y) is in the area of the tower(centerX, centerY) if : (x - centerX)^2 + (y - centerY)^2 < range^2
      			 if(((x - centerX)*(x - centerX) + (y - centerY)*(y - centerY)) < range*range){
-
+     				 int currentIdCount = GameManager.idCount;
+     				 GameManager.idCount ++;
+     				 
      				 //So active the tower
-     				 towerManager.activeTower(tower, unit, playingTime);
+     				 towerManager.activeTower(tower, unit, playingTime, currentIdCount);
      				 //Tell the view to create a missile   				 
-     				 dispatcher.addOrderToView(new AddMissileOrder(playingTime, tower.getPlayerType(), tower.getPosition(), tower.isAreaDamages()));
+     				 dispatcher.addOrderToView(new AddMissileOrder(currentIdCount, tower.getPlayerType(), tower.getPosition(), tower.isAreaDamages()));
      			 }
      		 }
      	 }

@@ -35,10 +35,10 @@ public class ShieldTower extends Tower {
 	 * @see GameEngine.Tower#shoot(GameEngine.Unit, long)
 	 */
 	@Override
-	public Missile shoot(Unit unit, long date) {
+	public Missile shoot(Unit unit, long date, int currentIdCount) {
 		this.lastShootingTime = date;
 		//TODO personalize this attack
-		return new Missile(date, this, this.getPosition(), unit,this.getSpeed(), this.getDamage());
+		return new Missile(currentIdCount, this, this.getPosition(), unit,this.getSpeed(), this.getDamage());
 	}
 
 	/** 

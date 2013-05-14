@@ -72,7 +72,7 @@ public abstract class Tower {
 	 * @see TowerManager#activeTower()
 	 * @param unit - target
 	 */
-	public abstract Missile shoot(Unit unit, long date);
+	public abstract Missile shoot(Unit unit, long date, int currentIdCount);
 	/**
 	 * Function called by the TowerManager when no more units are in the tower range
 	 * @see TowerManager#desactiveTower()

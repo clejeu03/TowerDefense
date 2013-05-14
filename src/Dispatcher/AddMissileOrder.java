@@ -26,8 +26,8 @@ public class AddMissileOrder extends Order {
 	 * @param playerType
 	 * @param position
 	 */
-	public AddMissileOrder(long id, PlayerType playerType, Point position, boolean isArea) {
-		super((int)id);
+	public AddMissileOrder(int id, PlayerType playerType, Point position, boolean isArea) {
+		super(id);
 		this.playerType = playerType;
 		this.position = position;
 		this.setArea(isArea);

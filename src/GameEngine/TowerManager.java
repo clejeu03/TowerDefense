@@ -62,7 +62,7 @@ public class TowerManager {
    * @param unit - target
    * @see WarManager
    */
-  public void activeTower(Tower toActiveTower, Unit unit, Long date) {
+  public void activeTower(Tower toActiveTower, Unit unit, Long date, int currentIdCount) {
 	  for(Tower tower:towers){
 		  if(tower.getId() == toActiveTower.getId()){
 			  
@@ -71,7 +71,7 @@ public class TowerManager {
 			  //long diff = currentTime-date;
 
 			  if(toActiveTower.getLastShootingTime() == 0 || (currentTime-toActiveTower.getLastShootingTime())>=toActiveTower.getCadency()){
-				  missiles.add(toActiveTower.shoot(unit, date));
+				  missiles.add(toActiveTower.shoot(unit, date, currentIdCount));
 			  }
 		  }
 	  }

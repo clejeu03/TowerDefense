@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 
 public class GameManager implements Runnable{
-	private int idCount;
+	public static int idCount;
 	
 	//Thread managers
 	private boolean running;
@@ -68,6 +68,17 @@ public class GameManager implements Runnable{
 		timeStart = 0;
 	}
 	
+	
+	public int getIdCount() {
+		return idCount;
+	}
+
+
+	public void setIdCount(int idCount) {
+		this.idCount = idCount;
+	}
+
+
 	public static long getTime(){
 		return System.currentTimeMillis()-timeStart;
 	}
@@ -235,7 +246,6 @@ public class GameManager implements Runnable{
 	            		}
             		}
             	}
-            	
             	//Battles
             	warManager.war(armyManager, towerManager, dispatcher, playingTime);
             }
