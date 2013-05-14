@@ -13,6 +13,7 @@ import java.util.LinkedList;
 
 import Dispatcher.AddTowerOrder;
 import Dispatcher.AddUnitOrder;
+import Dispatcher.ChangeOwnerOrder;
 import Dispatcher.DispatcherManager;
 import Dispatcher.Order;
 import GameEngine.AttackTower;
@@ -85,7 +86,7 @@ public class AIManager implements Runnable {
 				running = false;
 			}
 			refreshInfo();
-			//printInfo();
+			printInfo();
 			attackBehavior();
 		}
 	}
@@ -113,6 +114,19 @@ public class AIManager implements Runnable {
 						
 						else if (((AddTowerOrder) o).getTowerType()==TowerTypes.SUPPORTTOWER){
 							towers.add(new SupportTower(((AddTowerOrder) o).getId(), new Point(0,0), aiType));
+						}
+					}
+				}
+				
+				if (o instanceof ChangeOwnerOrder){
+					if (((ChangeOwnerOrder)o).getNewPlayerType()==aiType){
+						int index=0;
+						for (Base b:enemyBases){
+							if (b.getId()==o.getId()){
+								bases.add(enemyBases.remove(index));
+								break;
+							}
+							index++;
 						}
 					}
 				}
