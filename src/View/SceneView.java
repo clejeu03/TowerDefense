@@ -523,8 +523,8 @@ public class SceneView extends MainViews implements Runnable{
 			mousePosition = new Point(position);
 		}
 		
-		//If the player has first clicked on one of his base, then clicked on an enemy base 
-		if((baseClicked)&&(playerType != humanType)){
+		//If the player has first clicked on one of his base, then clicked on an enemy base or on one of his other base
+		if((baseClicked)&&(idBase != idBaseSrc)){
 			SwingUtilities.invokeLater(new Runnable(){
 			public void run() {
 				//Set the amont percent
@@ -564,8 +564,8 @@ public class SceneView extends MainViews implements Runnable{
 	 */
 	public void attackBase(Point position, PlayerType playerType){
 		
-		//If the player has first clicked on one of his base, then clicked on an enemy base 
-		if(attackBase&&(playerType != humanType)){
+		//If the player has first clicked on one of his base, then clicked on an enemy base or one of on one of his other base
+		if(attackBase){
 			//Remove the line between the two bases
 			baseClicked = false;
 			//Stop the thread
