@@ -140,7 +140,6 @@ public class SceneView extends MainViews implements Runnable{
 			while (it.hasNext()) {
 				Sprite element = it.next();
 				if(element instanceof UnitSprite){
-					System.out.println("Hey");
 					element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()), element.getWidth(),element.getHeight());
 				}
 				else element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());

@@ -212,11 +212,12 @@ public class AIManager implements Runnable {
 	 * @see #run()
 	 */
 	public void stop(){
+		System.out.println("AI "+aiType+" IS NOW DEAD");
 		bases.clear();
 		towers.clear();
 		enemyBases.clear();
 		this.running = false;
-		System.out.println("AI IS NOW DEAD");
+		dispatcher.interruptAiThread(aiType);
 	}
 	
 	/**
@@ -263,5 +264,9 @@ public class AIManager implements Runnable {
 	 */
 	public boolean isRunning(){
 		return running;
+	}
+	
+	public PlayerType getPlayerType(){
+		return aiType;
 	}
 }

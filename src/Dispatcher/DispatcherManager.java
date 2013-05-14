@@ -99,7 +99,6 @@ public class DispatcherManager {
 		engine.endGame();
 		threadView.interrupt();
 		threadEngine.interrupt();
-		for (Thread t:threadAI) t.interrupt();
 		//System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	
@@ -129,5 +128,18 @@ public class DispatcherManager {
 		for (AIManager ai:aiEnemy){
 			if (ai.isRunning()) ai.addOrder(order);
 		}
+	}
+	
+	public void interruptAiThread(PlayerType aiType){
+		int index=0;
+		for (AIManager ai:aiEnemy){
+			if (aiType == ai.getPlayerType()){
+				aiEnemy.remove(index);
+				break;
+			}
+			index++;
+		}
+		threadAI.get(index).interrupt();
+		threadAI.remove(index);
 	}
 }
