@@ -94,11 +94,18 @@ public class DispatcherManager {
 		view.setRunning(false);
 		engine.setRunning(false);
 		for (AIManager ai:aiEnemy) {
-			if (ai.isRunning()) ai.stop();
+			if (ai.isRunning())
+				ai.stop();
 		}
 		engine.endGame();
 		threadView.interrupt();
 		threadEngine.interrupt();
+		for (Thread t:threadAI) {
+			if (!t.interrupted())
+				t.interrupt();
+		}
+		aiEnemy.clear();
+		threadAI.clear();
 		//System.out.println("Dispatcher - Number of active threads : " + Thread.activeCount());
 	}
 	

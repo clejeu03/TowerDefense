@@ -131,7 +131,10 @@ public class AIManager implements Runnable {
 							}
 							index++;
 						}
-						if (bases.isEmpty()) stop();
+						if (bases.isEmpty()) {
+							stop();
+							interrupt();
+						}
 					}
 				}
 			}
@@ -217,6 +220,9 @@ public class AIManager implements Runnable {
 		towers.clear();
 		enemyBases.clear();
 		this.running = false;
+	}
+	
+	private void interrupt(){
 		dispatcher.interruptAiThread(aiType);
 	}
 	
