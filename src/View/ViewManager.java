@@ -371,17 +371,26 @@ public class ViewManager extends JFrame implements Runnable{
 				}
 				//If the order is an AddUnitOrder one
 				if(o instanceof AddUnitOrder) {
-					//int id,inst srcId, int dstId, int amount
 					sceneView.addUnit(((AddUnitOrder) o).getId(), ((AddUnitOrder) o).getSrcId(),((AddUnitOrder) o).getAmount());
-					/*UnitSprite unit = new UnitSprite(sceneView,((AddUnitOrder) o).getId(), ((AddUnitOrder) o).getSrcId(),((AddUnitOrder) o).getAmount());
-					sceneView.addSprite(unit);
-					sceneView.addSprite(unit.getTextAmount());*/
-					System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" units from "+((AddUnitOrder) o).getSrcId());
+					//System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" units from "+((AddUnitOrder) o).getSrcId());
 				}
+				
+				if(o instanceof AddMissileOrder){
+					//int id, PlayerType playerType, Point position, boolean isArea
+					sceneView.addMissile(((AddMissileOrder) o).getId(), ((AddMissileOrder) o).getPlayerType(), ((AddMissileOrder) o).getPosition(),((AddMissileOrder) o).isArea());
+					//System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" units from "+((AddUnitOrder) o).getSrcId());
+				}
+				
 				//If the order is an MoveUnitOrder one
 				if(o instanceof MoveUnitOrder) {
 					sceneView.moveUnit(((MoveUnitOrder) o).getId(),((MoveUnitOrder) o).getNewPosition());
 				}
+					
+				//If the order is an MoveMissileOrder one
+				if(o instanceof MoveMissileOrder) {
+					sceneView.moveMissile(((MoveMissileOrder) o).getId(),((MoveMissileOrder) o).getNewPosition());
+				}
+				
 				//If the order is an ChangeAmountOrder (base or unit) one
 				if(o instanceof ChangeAmountOrder){
 					sceneView.setAmount(((ChangeAmountOrder) o).getId(), ((ChangeAmountOrder) o).getAmount());

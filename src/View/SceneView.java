@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import Dispatcher.AddMissileOrder;
 import Dispatcher.AddTowerOrder;
 import GameEngine.Tower;
 import GameEngine.Player.PlayerType;
@@ -428,12 +429,15 @@ public class SceneView extends MainViews implements Runnable{
 			}
 			
 			//TODO If the tower to add is owned by an AI player
+			else{
+				System.out.println("View - Add an AI tower");
+			}
 			
 		}
 	}
 	
 	/**
-	 * Add tower on the SceneView
+	 * Add a unit on the SceneView
 	 * @param position
 	 * @param playerType
 	 * @see ViewManager#refresh()
@@ -453,6 +457,18 @@ public class SceneView extends MainViews implements Runnable{
 			addSprite(unit);
 			addSprite(unit.getTextAmount());
 		}
+	}
+	
+	/**
+	 * Add a Missile on the SceneView
+	 * @param position
+	 * @param playerType
+	 * @see ViewManager#refresh()
+	 */	
+	public void addMissile(int id, PlayerType playerType, Point position, boolean isArea){
+		System.out.println("View - Add a Missile ");
+		MissileSprite unit = new MissileSprite(this,id, position, playerType, isArea);
+		addSprite(unit);
 	}
 	
 	/**
@@ -633,6 +649,9 @@ public class SceneView extends MainViews implements Runnable{
 					remove(element);
 					revalidate();
 					repaint();
+					if(element instanceof MissileSprite){
+						System.out.println("View - Suppress MissileSprite");
+					}
 					
 					if(element instanceof TowerSprite){
 						hideTowerInfo();
@@ -728,6 +747,39 @@ public class SceneView extends MainViews implements Runnable{
 						remove(element);
 						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()), element.getWidth(),element.getHeight());
 						add(element);
+						revalidate();
+						repaint();
+					}
+				}		
+			}
+		}});
+	}
+	
+	
+	/**
+	 * Reset the missile position 
+	 * @param position
+	 * @param playerType
+	 * @param newAmount
+	 * @see ViewManager#refresh()
+	 */
+	public void moveMissile(final int id, final Point newPosition){
+		
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			Iterator<Sprite> it = sprites.iterator();
+			
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				//Set the baseSprite amount
+				if(element.getId()==id){
+					if(element instanceof MissileSprite){
+						((MissileSprite)element).setPosition(newPosition);
+									
+						remove(element);
+						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
+						add(element);
+					
 						revalidate();
 						repaint();
 					}

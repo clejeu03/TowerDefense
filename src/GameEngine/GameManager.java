@@ -218,7 +218,7 @@ public class GameManager implements Runnable{
             			}
             			
             			//Tell the view to suppress the missile
-            			//TODO : dispatcher.addOrderToView(new SuppressOrder(missile.getId()));
+            			dispatcher.addOrderToView(new SuppressOrder(missile.getId()));
             			towerManager.suppressMissile(missile);
             			
             		}else{
@@ -239,9 +239,10 @@ public class GameManager implements Runnable{
 	            			//Tell the view that the unit need to update it's amount
 	            			dispatcher.addOrderToView(new ChangeAmountOrder(missile.getTarget().getId(), newAmount));
 	            			
-	            			//Tell the view to suppress the missile
-	            			//TODO : dispatcher.addOrderToView(new SuppressOrder(missile.getId()));
+	            			//Tell the view to suppress the missile	
 	            			towerManager.suppressMissile(missile);
+	            			dispatcher.addOrderToView(new SuppressOrder(missile.getId()));
+	            			
 	            			break;
 	            		}
             		}

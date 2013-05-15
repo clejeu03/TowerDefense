@@ -20,8 +20,8 @@ private Point newPosition;
 	 * @param playerType
 	 * @param position
 	 */
-	public MoveMissileOrder(long id, Point newPosition) {
-		super((int)id);
+	public MoveMissileOrder(int id, Point newPosition) {
+		super(id);
 		this.newPosition = newPosition;
 	}
 	
