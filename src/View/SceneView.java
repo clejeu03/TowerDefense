@@ -15,9 +15,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-import Dispatcher.AddMissileOrder;
-import Dispatcher.AddTowerOrder;
-import GameEngine.Tower;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 
@@ -414,7 +411,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void addTower(int id, PlayerType playerType, Point position, TowerTypes towerType){
+	public void addTower(int id, PlayerType playerType, Point position, TowerTypes towerType, int range){
 		Point test = new Point(-1,-1);
 		
 		//If the position of the tower is (-1,-1), the tower can't be add :
@@ -425,12 +422,12 @@ public class SceneView extends MainViews implements Runnable{
 		
 			//If the tower to add is owned by the human player 
 			if(position.equals(addTowerPosition)){
-				addTowerSuccess(id);
+				addTowerSuccess(id, range);
 			}
 			
 			//TODO If the tower to add is owned by an AI player
 			else{
-				System.out.println("View - Add an AI tower");
+				addSprite(new TowerSprite(this, id, position, false, playerType,64, 64, towerType, range));
 			}
 			
 		}
@@ -475,7 +472,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * Add the tower the player wanted to add
 	 * @see #addTower(Point, PlayerType, int)
 	 */
-	public void addTowerSuccess(int id){
+	public void addTowerSuccess(int id, int range){
 		addTowerClicked = false;
 		
 		//Set the tower Sprite clickable attribute to true
@@ -485,6 +482,7 @@ public class SceneView extends MainViews implements Runnable{
 			if(element.getPosition().equals(addTowerPosition)){
 				((TowerSprite) element).setClickable(true);
 				((TowerSprite) element).setId(id);
+				((TowerSprite) element).setRange(range);
 			}
 		}	
     	//Repaint the Panel
@@ -808,7 +806,7 @@ public class SceneView extends MainViews implements Runnable{
 			while (it.hasNext()) {
 				Sprite s = it.next();
 				if(s.getPosition().equals(clickedTowerPosition)){
-		    		g.fillOval(s.getPosition().x-(((TowerSprite) s).getRange()/2), s.getPosition().y -(((TowerSprite) s).getRange()/2), ((TowerSprite) s).getRange(), ((TowerSprite) s).getRange());
+		    		g.fillOval(s.getPosition().x-(((TowerSprite) s).getRange()), s.getPosition().y -(((TowerSprite) s).getRange()), 2*((TowerSprite) s).getRange(), 2*((TowerSprite) s).getRange());
 				}
 			}
 	    }

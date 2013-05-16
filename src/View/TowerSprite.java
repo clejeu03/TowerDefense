@@ -113,6 +113,13 @@ public class TowerSprite extends Sprite{
 	public int getRange(){
 		return range;
 	}
+	
+	
+	public void setRange(int range) {
+		this.range = range;
+	}
+
+
 	public TowerTypes getTowerType() {
 		return towerType;
 	}

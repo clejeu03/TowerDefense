@@ -26,7 +26,6 @@ import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import GameEngine.Player.PlayerType;
-import GameEngine.TowerManager.TowerTypes;
 
 
 /**

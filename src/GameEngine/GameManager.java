@@ -67,17 +67,6 @@ public class GameManager implements Runnable{
 		
 		timeStart = 0;
 	}
-	
-	
-	public int getIdCount() {
-		return idCount;
-	}
-
-
-	public void setIdCount(int idCount) {
-		this.idCount = idCount;
-	}
-
 
 	public static long getTime(){
 		return System.currentTimeMillis()-timeStart;
@@ -310,7 +299,7 @@ public class GameManager implements Runnable{
 					//TODO : dispatcher.addOrderToView(new evolveTower(idCount, ((AddTowerOrder) order).getPlayerType(), ( (AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType()));
 
 					dispatcher.addOrderToView(new SuppressOrder(((order).getId())));
-					dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ( (AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType()));
+					dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType(), ((AddTowerOrder) order).getRange()));
 			
 					++idCount;
 					
@@ -343,27 +332,29 @@ public class GameManager implements Runnable{
 								
 								//Add the Tower and draw it
 								towerManager.createTower(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((AddTowerOrder) order).getPosition());
-								dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
-								dispatcher.addOrderToAI(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), TowerTypes.SUPPORTTOWER));
+								  //Search the tower by it's position
+								Tower tower = towerManager.getTower(idCount);
+								dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(),((AddTowerOrder) order).getTowerType(),tower.getRange()));
+								dispatcher.addOrderToAI(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), ((AddTowerOrder) order).getTowerType(), tower.getRange()));
 								++idCount;
 								
 							}else{
 								
 								//Tell the dispatcher that the tower CAN'T be add on the view
 								System.out.println("GameEngine says : You try to add a tower but this is not your territory");
-								dispatcher.addOrderToView(new AddTowerOrder(-1,((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
+								dispatcher.addOrderToView(new AddTowerOrder(-1,((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER, -1));
 							}
 							
 						}else{
 							//Tell the dispatcher that the tower CAN'T be add on the view
 							System.out.println("GameEngine says : maybe you should try on a hill...");
-							dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
+							dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER, -1));
 						}
 						
 					//The required part of the sprite is not on the same territory	
 					}else{
 						//Tell the dispatcher that the tower CAN'T be add on the view
-						dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER));
+						dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER, -1));
 					}
 					
 				}

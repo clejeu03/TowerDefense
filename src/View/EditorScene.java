@@ -21,7 +21,6 @@ import java.util.Iterator;
 import javax.swing.SwingUtilities;
 
 import GameEngine.Player.PlayerType;
-import GameEngine.TowerManager.TowerTypes;
 
 
 /**

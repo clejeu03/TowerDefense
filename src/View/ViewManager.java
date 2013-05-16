@@ -333,7 +333,7 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @see SceneView#myMousePressed()
 	 */
 	public void towerToAdd(Point position, PlayerType playerType, TowerTypes towerTypes) {
-		   dispatcher.addOrderToEngine(new AddTowerOrder(-1, playerType, position, towerTypes));
+		   dispatcher.addOrderToEngine(new AddTowerOrder(-1, playerType, position, towerTypes, -1));
 	}
 	/**
 	 * Tell the dispatcher a player want to attack an other base
@@ -367,7 +367,7 @@ public class ViewManager extends JFrame implements Runnable{
 				
 				//If the order is an AddTowerOrder one
 				if(o instanceof AddTowerOrder) {
-					sceneView.addTower(o.getId(),((AddTowerOrder) o).getPlayerType(), ((AddTowerOrder) o).getPosition(), ((AddTowerOrder) o).getTowerType());
+					sceneView.addTower(o.getId(),((AddTowerOrder) o).getPlayerType(), ((AddTowerOrder) o).getPosition(), ((AddTowerOrder) o).getTowerType(),((AddTowerOrder) o).getRange());
 				}
 				//If the order is an AddUnitOrder one
 				if(o instanceof AddUnitOrder) {

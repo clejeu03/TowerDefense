@@ -253,7 +253,7 @@ public class AIManager implements Runnable {
 	 * @param type - Tower's type
 	 */
 	private void placeTower(Point position, TowerTypes type){
-		dispatcher.addOrderToEngine(new AddTowerOrder(-1, aiType, position, type));
+		dispatcher.addOrderToEngine(new AddTowerOrder(-1, aiType, position, type, -1));
 	}
 	
 	/**

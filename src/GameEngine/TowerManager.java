@@ -170,6 +170,20 @@ public class TowerManager {
 	  }
   }
   /**
+   * Retrieve the id tower
+   * @param id
+   * @see GameManager#execute()
+   */
+  public Tower getTower(int id){	  
+	  //Search the tower by it's position
+	  for(Tower tower: towers){
+		  if(tower.getId()==id){
+			  return tower;
+		  }
+	  }
+	  return null;
+  }
+  /**
    * Suppress the given missile
    * @param toSuppressMissile
    */

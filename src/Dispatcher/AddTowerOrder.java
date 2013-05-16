@@ -28,17 +28,19 @@ public class AddTowerOrder extends Order{
 	private PlayerType playerType;
 	private TowerTypes towerType;
 	private Point position;
+	private int range;
 
 	/**
 	 * Constructor of the AddTowerOrder class
 	 * @param idPlayer - player id
 	 * @param position - position of the tower to suppress
 	 */
-	public AddTowerOrder(int id, PlayerType playerType, Point position, TowerTypes towerTypes) {
+	public AddTowerOrder(int id, PlayerType playerType, Point position, TowerTypes towerTypes, int range) {
 		super(id);
 		this.playerType = playerType;
 		this.position = position;
 		this.towerType = towerTypes;
+		this.range = range;
 	}
 	
 
@@ -56,4 +58,10 @@ public class AddTowerOrder extends Order{
 		return towerType;
 	}
 
+
+	public int getRange() {
+		return range;
+	}
+
+	
 }
