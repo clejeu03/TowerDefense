@@ -35,7 +35,7 @@ public class MissileSprite extends Sprite{
 	 * 
 	 */
 	public MissileSprite(SceneView scene, int id, Point position, PlayerType playerType, boolean isArea) {
-		super(scene, id, position,false,playerType,32,32);
+		super(scene, id, position,false,playerType,16,16);
 		
 		//Loading the unit image (different one according the player)
 		String fileName ="img/";

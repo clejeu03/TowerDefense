@@ -466,7 +466,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @see ViewManager#refresh()
 	 */	
 	public void addMissile(int id, PlayerType playerType, Point position, boolean isArea){
-		System.out.println("View - Add a Missile ");
+		System.out.println("View - Add a Missile "+id);
 		MissileSprite unit = new MissileSprite(this,id, position, playerType, isArea);
 		addSprite(unit);
 	}
@@ -650,7 +650,7 @@ public class SceneView extends MainViews implements Runnable{
 					revalidate();
 					repaint();
 					if(element instanceof MissileSprite){
-						System.out.println("View - Suppress MissileSprite");
+						System.out.println("View - Suppress MissileSprite "+id);
 					}
 					
 					if(element instanceof TowerSprite){

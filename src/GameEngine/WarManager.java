@@ -66,7 +66,8 @@ public class WarManager {
      				 
      				 //So active the tower
      				 towerManager.activeTower(tower, unit, playingTime, currentIdCount);
-     				 //Tell the view to create a missile   				 
+     				 //Tell the view to create a missile  
+     				 System.out.println("Engine - Add missile "+currentIdCount);
      				 dispatcher.addOrderToView(new AddMissileOrder(currentIdCount, tower.getPlayerType(), tower.getPosition(), tower.isAreaDamages()));
      			 }
      		 }

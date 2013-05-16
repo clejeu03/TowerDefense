@@ -226,7 +226,7 @@ public class GameManager implements Runnable{
             			//Launch projectile
 	            		if(warManager.moveMissile(missile) == true){
 	            			
-	            			System.out.println("Missile in movement...");
+	            			System.out.println("Missile" + missile.getId() + " in movement...");
 	            			//Tell the view to move the missile
 	            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getPosition()));
 	            			
@@ -234,15 +234,14 @@ public class GameManager implements Runnable{
 	            			//Change the target's amount
 	            			int newAmount = missile.getTarget().getAmount()-missile.getDamages();
 	            			missile.getTarget().setAmount(newAmount);
-	            			System.out.println("IMPACT Unit amount now :"+newAmount);
+	            			System.out.println("IMPACT Missile "+ missile.getId()+" and Unit "+missile.getTarget().getId()+" Unit amount now :"+newAmount);
 	            			
 	            			//Tell the view that the unit need to update it's amount
 	            			dispatcher.addOrderToView(new ChangeAmountOrder(missile.getTarget().getId(), newAmount));
-	            			
 	            			//Tell the view to suppress the missile	
-	            			towerManager.suppressMissile(missile);
 	            			dispatcher.addOrderToView(new SuppressOrder(missile.getId()));
-	            			
+	            			towerManager.suppressMissile(missile);
+	            		
 	            			break;
 	            		}
             		}
