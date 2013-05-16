@@ -62,7 +62,7 @@ public class TowerManager {
    * @param unit - target
    * @see WarManager
    */
-  public void activeTower(Tower toActiveTower, Unit unit, Long date, int currentIdCount) {
+  public boolean activeTower(Tower toActiveTower, Unit unit, Long date, int currentIdCount) {
 	  for(Tower tower:towers){
 		  if(tower.getId() == toActiveTower.getId()){
 			  
@@ -71,10 +71,12 @@ public class TowerManager {
 			  //long diff = currentTime-date;
 
 			  if(toActiveTower.getLastShootingTime() == 0 || (currentTime-toActiveTower.getLastShootingTime())>=toActiveTower.getCadency()){
-				  missiles.add(toActiveTower.shoot(unit, date, currentIdCount));
+				  missiles.add(toActiveTower.shoot(unit, date, currentIdCount)); 
+				  return true;
 			  }
 		  }
 	  }
+	  return false;
   }
   /**
    * Set the selected Tower inactive because no Unit's in the neighborhood.
