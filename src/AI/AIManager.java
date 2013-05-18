@@ -18,6 +18,7 @@ import Dispatcher.DispatcherManager;
 import Dispatcher.Order;
 import GameEngine.AttackTower;
 import GameEngine.Base;
+import GameEngine.TerritoryMap;
 import GameEngine.Player.PlayerType;
 import GameEngine.SupportTower;
 import GameEngine.Tower;
@@ -38,6 +39,8 @@ public class AIManager implements Runnable {
 	private int timeToSleep;
 	private int money;
 	private boolean running;
+	private int mapHeight;
+	private int mapWidth;
 
 	public AIManager(DispatcherManager dispatcher, PlayerType aiType) {
 		this.dispatcher = dispatcher;
@@ -64,6 +67,12 @@ public class AIManager implements Runnable {
 				enemyBases.add(b);
 			}
 		}
+		
+		if (!bases.isEmpty()){
+			mapHeight = bases.get(0).getTerritoryMap().getHeight();
+			mapWidth = bases.get(0).getTerritoryMap().getWidth();
+		}
+		
 	}
 
 	/**
@@ -81,6 +90,7 @@ public class AIManager implements Runnable {
 			refreshInfo();
 			//printInfo();
 			attackBehavior();
+			towerBehavior();
 		}
 	}
 
@@ -102,11 +112,11 @@ public class AIManager implements Runnable {
 					if (((AddTowerOrder) o).getPlayerType()==aiType){
 						//We add it in the ai list
 						if(((AddTowerOrder) o).getTowerType()==TowerTypes.ATTACKTOWER){
-							towers.add(new AttackTower(((AddTowerOrder) o).getId(), new Point(0,0), aiType));
+							towers.add(new AttackTower(((AddTowerOrder) o).getId(), ((AddTowerOrder) o).getPosition(), aiType));
 						}
 						
 						else if (((AddTowerOrder) o).getTowerType()==TowerTypes.SUPPORTTOWER){
-							towers.add(new SupportTower(((AddTowerOrder) o).getId(), new Point(0,0), aiType));
+							towers.add(new SupportTower(((AddTowerOrder) o).getId(), ((AddTowerOrder) o).getPosition(), aiType));
 						}
 					}
 				}
@@ -161,7 +171,12 @@ public class AIManager implements Runnable {
 			
 			if(!towers.isEmpty()){
 				for(Tower t:towers){
-					System.out.println("AI : Tower ID="+t.getId());
+					TowerTypes type = null;
+					if (t instanceof AttackTower)
+						type = TowerTypes.ATTACKTOWER;
+					if (t instanceof SupportTower)
+						type = TowerTypes.SUPPORTTOWER;
+					System.out.println("AI : Tower ID="+t.getId()+" Position="+t.getPosition() + " Type="+type);
 				}
 			}
 			System.out.println("---------------------------------------------");
@@ -245,6 +260,117 @@ public class AIManager implements Runnable {
 		//TODO Changer constructeur AddUnitOrder
 		dispatcher.addOrderToEngine(new AddUnitOrder(-1, idBaseSrc, idBaseDst, amount));	
 		System.out.println("Order send : attack from="+idBaseSrc+" to="+idBaseDst+" with "+amount+"% of his power");
+	}
+	
+	private void towerBehavior(){
+		
+		//TODO if MONEY > 200
+		if (towers.size()<3){	
+			LinkedList<Point> availablePositions = new LinkedList<Point>();
+			
+			//Get all the available positions for placing tower
+			for (int y = 32; y < mapHeight-32;y++){ 
+				for (int x = 32; x < mapWidth-32;x++){
+					Point p = new Point (x,y);
+					if (canPlaceTowerAt(p)) availablePositions.add(p);
+				}
+			}
+			
+			if (!availablePositions.isEmpty()){
+				
+				//Place the tower the nearest possible position to his main base
+				Point nearestPosition = null;
+				double prevDistance = Double.MAX_VALUE;
+				for (Point p:availablePositions){
+					 double distance = Math.sqrt(Math.pow((bases.get(0).getPosition().x - p.x), 2)+Math.pow((bases.get(0).getPosition().y - p.y), 2));
+					 if (prevDistance>distance){
+						 nearestPosition = p;
+						 prevDistance = distance;
+					 }
+				}
+				if (nearestPosition != null)
+				{	
+					if (Math.random()<0.5) placeTower(nearestPosition, TowerTypes.ATTACKTOWER);
+					else placeTower(nearestPosition, TowerTypes.SUPPORTTOWER);
+				}
+				else{
+					System.out.println("AI TOWER BEHAVIOR ERROR : NEAREST POSITION = NULL");
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Check if the AI can place a tower at a given position
+	 * @param position - position checked
+	 * @return true if it can, false otherwise
+	 */
+	private boolean canPlaceTowerAt(Point position){
+		
+		//Let half of the sprite height's and half of the sprite's width exceed the limits of territory
+		int spriteQuart = 15; //Size of sprite : 64x64
+		
+		int zoneId = getTerritoryMapValue(position.x,position.y);
+		
+		int supRightZoneId = getTerritoryMapValue(position.x+spriteQuart,position.y-spriteQuart);
+		int supLeftZoneId = getTerritoryMapValue(position.x-spriteQuart, position.y-spriteQuart);
+		int infRightZoneId = getTerritoryMapValue(position.x+spriteQuart, position.y+spriteQuart);
+		int infLeftZoneId = getTerritoryMapValue(position.x-spriteQuart, position.y+spriteQuart);
+		
+		if(supRightZoneId == zoneId && supLeftZoneId == zoneId && 
+			infLeftZoneId == zoneId && infRightZoneId == zoneId){
+			
+			//Compare the zone with the order of types in the playerTypes array 
+			//-1 : null, 0: plain, 1 to 5 : territories
+			if(zoneId >0 && zoneId<6){
+				if (towers.isEmpty())
+					return true;
+				else{
+					//Check if there is already a tower at this position
+					for (Tower t:towers){
+						if (!towersCollide(position,t.getPosition())){
+							return true;
+						}
+					}
+					return false;
+				}
+			}
+			else return false;
+		}
+		else return false;
+	}
+
+	/**
+	 * Get the pixel value of the AI territory maps at a given position
+	 * @param x - position x of the pixel
+	 * @param y - position y of the pixel
+	 * @return value of the pixel at position (x,y)
+	 */
+	private int getTerritoryMapValue(int x, int y){
+		for (Base b:bases){
+			if (b.getTerritoryMap().getPixel(x,y)!=-1){
+				return b.getTerritoryMap().getPixel(x,y);
+			}	
+		}
+		return -1;
+	}
+	
+	/**
+	 * Check if two towers t1 and t2 are colliding
+	 * @param t1 - position of tower t1
+	 * @param t2 - position of tower t2
+	 * @return true if they collide, false otherwise
+	 */
+	private boolean towersCollide(Point t1, Point t2){
+		int spriteHalf = 32;
+		
+		int maxgauche = Math.max(t1.x-spriteHalf, t2.x-spriteHalf);
+		int mindroit = Math.min(t1.x+spriteHalf,t2.x+spriteHalf);
+		int maxbas = Math.max(t1.y-spriteHalf, t2.y-spriteHalf);
+		int minhaut = Math.min(t1.y+spriteHalf, t2.y+spriteHalf);
+		
+		if (maxgauche<mindroit && maxbas<minhaut) return true;
+		else return false;
 	}
 	
 	/**
