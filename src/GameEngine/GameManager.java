@@ -215,7 +215,7 @@ public class GameManager implements Runnable{
             			//Launch projectile
 	            		if(warManager.moveMissile(missile) == true){
 	            			
-	            			System.out.println("Missile" + missile.getId() + " in movement...");
+	            			System.out.println("Missile " + missile.getId() + " in movement...");
 	            			//Tell the view to move the missile
 	            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getPosition()));
 	            			
@@ -293,16 +293,16 @@ public class GameManager implements Runnable{
 					System.out.println("Engine - Evolution order : "+( order).getId());
 					
 					//Tell the engine to make the tower evolve
-					towerManager.evolveTower((order).getId(), ((EvolveTowerOrder) order).getType(), idCount);
+					towerManager.evolveTower((order).getId(), ((EvolveTowerOrder) order).getType());
 					
 					//Tell the view to erase the ancient tower and to draw the new one
-					//TODO : dispatcher.addOrderToView(new evolveTower(idCount, ((AddTowerOrder) order).getPlayerType(), ( (AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType()));
-
-					dispatcher.addOrderToView(new SuppressOrder(((order).getId())));
-					dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType(), ((AddTowerOrder) order).getRange()));
-			
-					++idCount;
 					
+					dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType()));
+
+					//dispatcher.addOrderToView(new SuppressOrder(((order).getId())));
+					//dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType(), ((AddTowerOrder) order).getRange()));
+			
+					//++idCount;			
 				}
 				
 				//If the order is a AddTowerOrder one

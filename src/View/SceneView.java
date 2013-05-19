@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import GameEngine.TowerManager;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 
@@ -308,7 +309,7 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType - PlayerType
 	 * @see TowerSprite#myMousePressed(MouseEvent)
 	 */
-	public void towerClicked(int id, Point position, PlayerType playerType){
+	public void towerClicked(int id, Point position, PlayerType playerType, TowerTypes towerType, ArrayList<TowerManager.TowerTypes> evolutions){
 
 		if (baseClicked) baseClicked = false;
 		
@@ -346,9 +347,30 @@ public class SceneView extends MainViews implements Runnable{
 		}});	
 		towerClicked = true;
 		
+		//Tell the ViewManager that a tower has been clicked
+		view.towerClicked(id, playerType, towerType, evolutions);
+		
 		//Repaint the panel
     	revalidate();
     	repaint();
+	}
+	
+	public void evolveTower(final int id, final TowerTypes towerType){
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				//Set the baseSprite amount
+				if((element.getId()==id)&&(element instanceof TowerSprite)){
+					((TowerSprite)element).setTowerType(towerType);
+				}
+			}
+		}});
+		//If the tower was clicked
+		if(towerClicked){
+			hideTowerInfo();
+		}
 	}
 	
 	/**
@@ -360,6 +382,9 @@ public class SceneView extends MainViews implements Runnable{
 	 * @see #myMousePressed(MouseEvent)
 	 */
 	public void hideTowerInfo(){
+		//Tell the viewManager that the tower info need to be hide in the GameInfoMenu
+		view.hideTowerInfo();
+		
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			//Removing the towerInfoSprite			
