@@ -12,6 +12,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.swing.SwingUtilities;
+
+import GameEngine.Missile;
+import GameEngine.TowerManager;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 
@@ -99,5 +103,52 @@ public class GameInfoMenu extends MainViews{
 	 */
 	public void setHumanType(PlayerType humanType) {
 		this.humanType = humanType;
+	}
+	
+	/**
+	 * Display the information of the tower
+	 * @param id
+	 * @param playerType
+	 * @param towerType
+	 */
+	public void towerClicked(int id, PlayerType playerType, TowerTypes towerType, ArrayList<TowerManager.TowerTypes> evolutions){
+		//TODO Displaying some information and a supressbouton..
+		
+		//Displaying the evolution tree of the tower
+		addSprite(new EvolveTowerSprite(this, id, new Point(100,80), false, humanType, 64, 64, towerType));
+		int i=0;
+		for(TowerTypes type:evolutions){
+			System.out.println(type);
+			if(type != TowerTypes.NOTOWER){
+				addSprite(new EvolveTowerSprite(this,id, new Point(150,40+i*80), true, humanType, 64, 64, type));
+				++i;
+			}
+		}
+	}
+	
+	/**
+	 * Hide the information of the tower
+	 */
+	public void hideTowerInfo(){	
+		SwingUtilities.invokeLater(new Runnable(){
+		public void run() {
+			//Removing the towerInfoSprite			
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				if(element instanceof EvolveTowerSprite){
+					it.remove();
+					remove(element);
+				}
+			}
+	    	//Repaint the Panel
+	    	revalidate();
+	    	repaint();
+		}});
+	}
+	
+	public void evolveTower(int id, TowerTypes towerType){
+		//Tell the engine that the player want to evolve his tower
+		view.evolveTower(id, towerType);
 	}
 }

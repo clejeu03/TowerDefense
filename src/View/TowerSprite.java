@@ -15,10 +15,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
 import GameEngine.GameManager;
+import GameEngine.TowerManager;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 
@@ -36,6 +39,7 @@ import GameEngine.TowerManager.TowerTypes;
 @SuppressWarnings("serial")
 public class TowerSprite extends Sprite{
 	private TowerTypes towerType;
+	private ArrayList<TowerManager.TowerTypes> evolutions;
 	private int range;
 	
 	/**
@@ -49,12 +53,35 @@ public class TowerSprite extends Sprite{
 	 * @param towerType2
 	 * @param range
 	 */
-	public TowerSprite(SceneView scene, int id, Point position, boolean clickable, PlayerType playerType, int width, int height, TowerTypes towerType2, int range) {
+	public TowerSprite(SceneView scene, int id, Point position, boolean clickable, PlayerType playerType, int width, int height, TowerTypes towerType, int range) {
 		super(scene, id, position,clickable,playerType,width,height);
 		
-		towerType = towerType2;
 		this.range = range;
-				
+		this.evolutions = new ArrayList<TowerManager.TowerTypes>();
+		
+		setTowerType(towerType);
+		
+		//Add listeners if the tower is clickable
+		if(clickable){
+			addMouseListener(new MouseAdapter() {
+				public void mousePressed(MouseEvent me) { 
+		             myMousePressed(me);
+		            } 
+		       public void mouseEntered(MouseEvent me) { 
+		    	   myMouseEntered(me);
+	           }
+		       public void mouseExited(MouseEvent me) { 
+		    	   myMouseExited(me);
+	           } 
+	         });
+		}
+	}
+	
+	public void setTowerType(TowerTypes towerType){
+		//Removing all the current evolution			
+		this.evolutions = new ArrayList<TowerManager.TowerTypes>();
+		
+		this.towerType = towerType;
 		//Loading the tower image (different one according the tower type and player)
 		String fileName ="img/";
 		
@@ -74,11 +101,38 @@ public class TowerSprite extends Sprite{
 		//Attack
 		if(towerType == TowerTypes.ATTACKTOWER){
 			fileName += "attackTower.png";
+			this.setEvolutions(TowerTypes.GUNTOWER, TowerTypes.FROSTTOWER);
+		}
+		else if(towerType ==  TowerTypes.GUNTOWER){
+			fileName += "gunTower.png";
+			this.setEvolutions(TowerTypes.BOMBTOWER, TowerTypes.LAZERTOWER);
+		}
+		else if(towerType == TowerTypes.FROSTTOWER){
+			fileName += "frostTower.png";	
+			this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
+		}
+		else if(towerType == TowerTypes.BOMBTOWER){
+			fileName += "bombTower.png";
+			this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
+		}
+		else if(towerType == TowerTypes.LAZERTOWER ){
+			fileName += "laserTower.png";
+			this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
 		}
 		//Medical
 		else if(towerType == TowerTypes.SUPPORTTOWER){
-			fileName += "medicalTower.png";
+			fileName += "supportTower.png";
+			this.setEvolutions(TowerTypes.MEDICALTOWER, TowerTypes.SHIELDTOWER);
 		}
+		else if(towerType == TowerTypes.MEDICALTOWER){
+			fileName += "medicalTower.png";			
+			this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
+		}
+		else if(towerType == TowerTypes.SHIELDTOWER){
+			fileName += "shieldTower.png";		
+			this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
+		}
+
 		
 		
 		try {	
@@ -87,23 +141,25 @@ public class TowerSprite extends Sprite{
 		} catch (IOException e) {
 		      e.printStackTrace();
 		}
-		
-		//Add listeners if the tower is clickable
-		if(clickable){
-			addMouseListener(new MouseAdapter() {
-				public void mousePressed(MouseEvent me) { 
-		             myMousePressed(me);
-		            } 
-		       public void mouseEntered(MouseEvent me) { 
-		    	   myMouseEntered(me);
-	           }
-		       public void mouseExited(MouseEvent me) { 
-		    	   myMouseExited(me);
-	           } 
-	         });
-		}
 	}
 	
+	/**
+	 * Setter that determine the evolutions of a tower. If there's no evolutions, the two types must be NOTOWER.
+	 * @param type1
+	 * @param type2
+	 */
+	public void setEvolutions(TowerManager.TowerTypes type1, TowerManager.TowerTypes type2){
+		this.evolutions.add(type1);
+		this.evolutions.add(type2);
+	}
+	
+	/**
+	 * Getter - Array with one or two elements the two types of evolution
+	 * @return the evolutions
+	 */
+	public ArrayList<TowerManager.TowerTypes> getEvolutions() {
+		return evolutions;
+	}
 	
     /**
      * Getter range
@@ -147,7 +203,7 @@ public class TowerSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-			((SceneView) view).towerClicked(id, position, playerType);
+			((SceneView) view).towerClicked(id, position, playerType, towerType,evolutions);
 	}
 	
 	/**

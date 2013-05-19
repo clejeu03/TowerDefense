@@ -256,6 +256,19 @@ public class ViewManager extends JFrame implements Runnable{
     	repaint();	  	
     }
     
+    /**
+     * Tell the GameInfoMenu to display the information of a tower
+     */
+    public void towerClicked(int id, PlayerType playerType, TowerTypes towerType, ArrayList<TowerManager.TowerTypes> evolutions){
+    	gameInfoMenu.towerClicked(id, playerType, towerType, evolutions);
+    }
+    /**
+     * Tell the GameInfoMenu to hide the information of a tower
+     */
+    public void hideTowerInfo(){
+    	gameInfoMenu.hideTowerInfo();
+    }   
+    
 	/**
 	 * Launch the game
 	 * @see HomeMenu#jButtonPlayPesrformed(ActionEvent)
@@ -347,6 +360,17 @@ public class ViewManager extends JFrame implements Runnable{
 	}
     
 	/**
+	 * Tell the dispatcher a player want to evolve one of his tower
+	 * @param position
+	 * @param humanType
+	 * @param towerType
+	 * @see SceneView#myMousePressed()
+	 */
+	public void evolveTower(int id, TowerTypes towerType){
+		   dispatcher.addOrderToEngine(new EvolveTowerOrder(id, towerType));
+	}
+	
+	/**
 	 * Refresh the graphic component of the view
 	 * @see #run()
 	 */	
@@ -369,6 +393,13 @@ public class ViewManager extends JFrame implements Runnable{
 				if(o instanceof AddTowerOrder) {
 					sceneView.addTower(o.getId(),((AddTowerOrder) o).getPlayerType(), ((AddTowerOrder) o).getPosition(), ((AddTowerOrder) o).getTowerType(),((AddTowerOrder) o).getRange());
 				}
+							
+				//If the order is an EvolveTowerOrder one
+				if(o instanceof EvolveTowerOrder) {
+					sceneView.evolveTower(o.getId(),((EvolveTowerOrder) o).getType());
+					//System.out.println("View - TODO : make the tower "+o.getId()+" evolve in "+((EvolveTowerOrder) o).getType());
+				}
+				
 				//If the order is an AddUnitOrder one
 				if(o instanceof AddUnitOrder) {
 					sceneView.addUnit(((AddUnitOrder) o).getId(), ((AddUnitOrder) o).getSrcId(),((AddUnitOrder) o).getAmount());

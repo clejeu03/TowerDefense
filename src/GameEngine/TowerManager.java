@@ -137,15 +137,15 @@ public class TowerManager {
  * @param idCount
  * @see GameManager#execute()
  */
-  public void evolveTower(int id, TowerTypes type, int idCount){
+  public void evolveTower(int id, TowerTypes type){
 	  //Browse all the towers
 	  for(Tower tower:towers){
 		  if(tower.getId() == id){
 			  //Test if the evolution type is allowed
 			  if(tower.getFirstEvolution() == type || tower.getSecondEvolution() == type){
 				  
-				  //Create a new Tower with a new ID
-				  createTower(idCount, tower.getPlayerType(), type, tower.getPosition());
+				  //Create a new Tower with the same ID
+				  createTower(id, tower.getPlayerType(), type, tower.getPosition());
 
 				  //Suppress the ancient one
 				  towers.remove(tower);

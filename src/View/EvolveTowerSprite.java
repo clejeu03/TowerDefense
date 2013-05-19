@@ -3,7 +3,7 @@
  * By Aurélie Beauprez, Thomas Demenat, Keven Akyurek and Cecilia Lejeune
  * Copyright IMAC 2013 - All Rights Reserved
  *
- * File created on 30 avr. 2013
+ * File created on 18 mai 2013
  */
 package View;
 
@@ -22,9 +22,9 @@ import GameEngine.TowerManager.TowerTypes;
 
 /**
  * Project - TowerDefense</br>
- * <b>Class - AddTowerSprite</b></br>
- * <p>The AddTowerSprite class represents the AddTower button displayed on the GameInfoMenu</p>
- * <b>Creation :</b> 30/04/2013</br>
+ * <b>Class - ElvolveTowerSprite</b></br>
+ * <p>The EvolveTowerSprite class represents the Evolvetower button displayed on the GameInfoMenu</p>
+ * <b>Creation :</b> 22/04/2013</br>
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  * @see MainViews
  * @see GameMenuBar
@@ -32,22 +32,15 @@ import GameEngine.TowerManager.TowerTypes;
  * @see GameManager
  */
 @SuppressWarnings("serial")
-public class AddTowerSprite  extends Sprite{
-	/*
-	 * 1 : attaque
-	 * 2 : soutien
-	 */
+public class EvolveTowerSprite extends Sprite{
 	private TowerTypes towerType;
-	protected MainViews info;
-
 	/**
 	 * 
 	 */
-	public AddTowerSprite(SceneView scene, GameInfoMenu info, Point position, boolean clickable, PlayerType playerType, int width, int height, TowerTypes towerType) {
-		super(scene, -1, position,clickable,playerType,width,height);
+	public EvolveTowerSprite(GameInfoMenu info, int id, Point position, boolean clickable, PlayerType playerType, int width, int height, TowerTypes towerType) {
+		super(info,id, position, clickable, playerType, width, height);
 		
 		this.towerType = towerType;
-		this.info = info;
 		
 		String fileName ="img/";
 		
@@ -66,12 +59,32 @@ public class AddTowerSprite  extends Sprite{
 		
 		//Attack
 		if(towerType == TowerTypes.ATTACKTOWER){
-			fileName += "addAttackTower.png";
+			fileName += "attackTower.png";
+		}
+		else if(towerType ==  TowerTypes.GUNTOWER){
+			fileName += "gunTower.png";
+			
+		}
+		else if(towerType == TowerTypes.FROSTTOWER){
+			fileName += "frostTower.png";	
+		}
+		else if(towerType == TowerTypes.BOMBTOWER){
+			fileName += "bombTower.png";
+		}
+		else if(towerType == TowerTypes.LAZERTOWER){
+			fileName += "laserTower.png";
 		}
 		//Medical
 		else if(towerType == TowerTypes.SUPPORTTOWER){
-			fileName += "addMedicalTower.png";
+			fileName += "supportTower.png";
 		}
+		else if(towerType == TowerTypes.MEDICALTOWER){
+			fileName += "medicalTower.png";			
+		}
+		else if(towerType == TowerTypes.SHIELDTOWER){
+			fileName += "shieldTower.png";		
+		}
+
 		
 		try {	
 		      image = ImageIO.read(new File(fileName));
@@ -80,6 +93,7 @@ public class AddTowerSprite  extends Sprite{
 		      e.printStackTrace();
 		}
 		
+		if(clickable){
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent me) { 
 	             myMousePressed(me);
@@ -91,20 +105,16 @@ public class AddTowerSprite  extends Sprite{
 	    	   myMouseExited(me);
            } 
          });
+		}
 	}
 	
-	public TowerTypes getTowerType() {
-		return towerType;
-	}
-
 	/**
 	 *  Event "the mouse has been pressed in the zone" handler
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-		((SceneView) view).addTowerClicked(info.getPosition(), playerType, towerType);
+		((GameInfoMenu) view).evolveTower(id, towerType);
 		//TODO display the towerToAdd information in the GameInfoMenu ((GameInfoMenu) info).addTowerClicked(towerType)
-		//and suppress (if needed) the tower information currently displayed
 	}
 	
 	/**
