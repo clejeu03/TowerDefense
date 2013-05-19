@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import GameEngine.Player.PlayerType;
@@ -36,7 +37,10 @@ import GameEngine.Player.PlayerType;
 @SuppressWarnings("serial")
 public class GameInfoPlayer extends MainViews{
     private ArrayList<Sprite> sprites;
+    private JLabel jMoney;
+    
     private PlayerType humanType;
+    private int money;
    
     private Image img;
 	
@@ -52,8 +56,14 @@ public class GameInfoPlayer extends MainViews{
 		
 		sprites = new ArrayList<Sprite>();
 		
+		jMoney = new JLabel();
+		jMoney.setForeground(Color.BLACK);
+	
 		//Laying the components on the Panel
 		setLayout(null);
+		jMoney.setBounds(10, 10, 50,15);
+		add(jMoney);
+		
 		setBackground(Color.gray); 
 	}
 	
@@ -61,7 +71,8 @@ public class GameInfoPlayer extends MainViews{
 	 * Reset the SceneView
 	 * @see ViewManager#initiateGameView(ArrayList)
 	 */
-	public void initiate(SceneView scene){
+	public void initiate(SceneView scene, final int money){
+		this.money = money;
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {	
 			//Removing all the Sprites		
@@ -97,6 +108,7 @@ public class GameInfoPlayer extends MainViews{
 			      e.printStackTrace();
 			}
 		
+			jMoney.setText(money+" P$");
 	        //Repaint the panel
 	    	revalidate();
 	    	repaint();	
@@ -110,6 +122,18 @@ public class GameInfoPlayer extends MainViews{
 	 */
 	public void setHumanType(PlayerType humanType) {
 		this.humanType = humanType;
+	}
+	
+	/**
+	 * 
+	 * @param money
+	 * @param playerType
+	 */
+	public void setMoney(int money, PlayerType playerType){
+		if(playerType == humanType){
+			this.money = money;
+			jMoney.setText(money+" P$");
+		}	
 	}
 	
     /**

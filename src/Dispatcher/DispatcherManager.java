@@ -64,8 +64,10 @@ public class DispatcherManager {
 	 * @param bases 
 	 * @see GameEngine.GameManager#initiateGame()
 	 */	
-	public void initiateGameView(ArrayList<Base> bases){
-		view.initiateGameView(bases);
+	public void initiateGameView(ArrayList<Base> bases, int money){
+		//TODO : The engine need to send to the view and the AIs their money !
+		view.initiateGameView(bases, money);
+		//TODO : AI money
 		for (AIManager ai:aiEnemy)
 			ai.initiateGameView(bases);
 	}

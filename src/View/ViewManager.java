@@ -213,12 +213,12 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @param bases 
 	 * @see Dispatcher.DispatcherManager#initiateGameView(ArrayList)
 	 */	
-    public void initiateGameView(ArrayList<Base> bases){
+    public void initiateGameView(ArrayList<Base> bases, int money){
 
 		//Clear the Sprites list of the scene
-		sceneView.initiate();
+		sceneView.initiate(money);
 		gameInfoMenu.initiate(sceneView);
-		gameInfoPlayer.initiate(sceneView);
+		gameInfoPlayer.initiate(sceneView, money);
 		
 		Iterator<Base> iter = bases.iterator();
 		while (iter.hasNext()) {
@@ -426,7 +426,12 @@ public class ViewManager extends JFrame implements Runnable{
 				if(o instanceof ChangeAmountOrder){
 					sceneView.setAmount(((ChangeAmountOrder) o).getId(), ((ChangeAmountOrder) o).getAmount());
 				}
-				
+				//If the order is a MoneyOrder one
+				if(o instanceof MoneyOrder){
+					sceneView.setMoney(((MoneyOrder) o).getAmount(),((MoneyOrder) o).getPlayerType());
+					gameInfoPlayer.setMoney(((MoneyOrder) o).getAmount(),((MoneyOrder) o).getPlayerType());
+					
+				}		
 				//If the order is a ChangeOwnerOrder
 				if(o instanceof ChangeOwnerOrder){
 					sceneView.setOwner(((ChangeOwnerOrder) o).getId(), ((ChangeOwnerOrder) o).getNewPlayerType());

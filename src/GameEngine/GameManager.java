@@ -146,7 +146,8 @@ public class GameManager implements Runnable{
 			++idCount;
 		}
 		//Tells the dispatcher that the View need to be initialized
-		dispatcher.initiateGameView(bases);
+		//TODO : send to the view and AIs their money ! 200 is temporary !
+		dispatcher.initiateGameView(bases, 200);
 		
 		//Start the timer
 		timer = new Timer();

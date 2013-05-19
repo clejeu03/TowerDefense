@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import Dispatcher.MoneyOrder;
 import GameEngine.TowerManager;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
@@ -59,6 +60,7 @@ public class SceneView extends MainViews implements Runnable{
     private Point mousePosition;
 	private Thread thread;
 	
+	private int money;
 	
     
     /**
@@ -79,6 +81,7 @@ public class SceneView extends MainViews implements Runnable{
 		mousePosition = new Point(0,0);
 		clickedTowerPosition = new Point(0,0);
 		humanType = PlayerType.ELECTRIC;
+		money = 0;
 
 		jAttackAmountPercent = new JLabel();
 		jAttackAmountPercent.setForeground(Color.BLACK);
@@ -110,12 +113,13 @@ public class SceneView extends MainViews implements Runnable{
 	/**
 	 * Setter - humanType
 	 * @param humanType - id of the human player
-	 * @see ViewManager#play(int)
+	 * @see
 	 */
 	public void setHumanType(PlayerType humanType) {
 		this.humanType = humanType;
 	}
-	
+
+
 	/**
 	 * Getter - retrieve humanType
 	 * @return PlayerType
@@ -155,7 +159,10 @@ public class SceneView extends MainViews implements Runnable{
 	 * Reset the SceneView
 	 * @see ViewManager#initiateGameView(ArrayList)
 	 */
-	public void initiate(){
+	public void initiate(int money){
+		
+		//resetting the money
+		this.money = money;
 
 		//Setting the color
 		if(humanType == PlayerType.ELECTRIC){
@@ -728,6 +735,17 @@ public class SceneView extends MainViews implements Runnable{
 				}
 			}
 		}});
+	}
+	
+	/**
+	 * 
+	 * @param money
+	 * @param playerType
+	 */
+	public void setMoney(int money, PlayerType playerType){
+		if(playerType == humanType){
+			this.money = money;
+		}	
 	}
 	
 	/**
