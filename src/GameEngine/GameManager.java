@@ -297,8 +297,10 @@ public class GameManager implements Runnable{
 					towerManager.evolveTower((order).getId(), ((EvolveTowerOrder) order).getType());
 					
 					//Tell the view to erase the ancient tower and to draw the new one
+					//Retrieve the range of the tower
+					int range = towerManager.getTower((order).getId()).getRange();
 					
-					dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType()));
+					dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType(), range));
 
 					//dispatcher.addOrderToView(new SuppressOrder(((order).getId())));
 					//dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType(), ((AddTowerOrder) order).getRange()));

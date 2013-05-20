@@ -362,7 +362,7 @@ public class SceneView extends MainViews implements Runnable{
     	repaint();
 	}
 	
-	public void evolveTower(final int id, final TowerTypes towerType){
+	public void evolveTower(final int id, final TowerTypes towerType, final int range){
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			Iterator<Sprite> it = sprites.iterator();
@@ -371,6 +371,7 @@ public class SceneView extends MainViews implements Runnable{
 				//Set the baseSprite amount
 				if((element.getId()==id)&&(element instanceof TowerSprite)){
 					((TowerSprite)element).setTowerType(towerType);
+					((TowerSprite)element).setRange(range);
 				}
 			}
 		}});

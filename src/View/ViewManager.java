@@ -367,7 +367,7 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @see SceneView#myMousePressed()
 	 */
 	public void evolveTower(int id, TowerTypes towerType){
-		   dispatcher.addOrderToEngine(new EvolveTowerOrder(id, towerType));
+		   dispatcher.addOrderToEngine(new EvolveTowerOrder(id, towerType,-1));
 	}
 	
 	/**
@@ -396,7 +396,7 @@ public class ViewManager extends JFrame implements Runnable{
 							
 				//If the order is an EvolveTowerOrder one
 				if(o instanceof EvolveTowerOrder) {
-					sceneView.evolveTower(o.getId(),((EvolveTowerOrder) o).getType());
+					sceneView.evolveTower(o.getId(),((EvolveTowerOrder) o).getType(),((EvolveTowerOrder) o).getRange());
 					//System.out.println("View - TODO : make the tower "+o.getId()+" evolve in "+((EvolveTowerOrder) o).getType());
 				}
 				
