@@ -207,12 +207,20 @@ public class GameManager implements Runnable{
                 					
                 					if (territoryMapValue!=playerNumber && territoryMapValue!=-1){
                 						System.out.println("Changing Owner of tower id="+t.getId()+"from player"+playerNumber+" to player"+territoryMapValue);
+                						
+                						//Changing the owner
                 						towerManager.changeOwner(t.getId(),unit.getPlayerType());
                 						dispatcher.addOrderToView(new ChangeOwnerOrder(t.getId(),unit.getPlayerType()));
                 						dispatcher.addOrderToAI(new ChangeOwnerOrder(t.getId(),unit.getPlayerType()));
+                						
+                						idCount++;
                 					}
         						}
             				}
+        					
+        					//Updating the player's money
+    						bank.put(unit.getPlayerType(), bank.get(unit.getPlayerType())+50 );
+    						dispatcher.addOrderToView( new MoneyOrder(idCount, bank.get(unit.getPlayerType())+50, unit.getPlayerType()));
         					
         					dispatcher.addOrderToView(new ChangeOwnerOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType()));
         					dispatcher.addOrderToAI(new ChangeOwnerOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType()));
@@ -384,6 +392,7 @@ public class GameManager implements Runnable{
 					towerManager.suppressTower(order.getId());
 					//Tell the dispatcher that the tower need to be remove from the view
 					dispatcher.addOrderToView(new SuppressOrder(order.getId()));
+					idCount++;
 					
 				}
 				
