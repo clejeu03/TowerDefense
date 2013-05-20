@@ -202,10 +202,12 @@ public class GameManager implements Runnable{
             					break;
 	            			case SHIELD :
 	            				System.out.println(" ===== Shield Attack =====");
+	            				//TODO symbolize in the view ?
 	            				armyManager.createEffect(missile.getTarget(), missile.getAttackType(), getTime(),5000);
 	            				break;
 	            			case FROST :
 	            				System.out.println(" ===== Frost Attack =====");
+	            				//TODO symbolize in the view ?
 	            				//Apply a frost effect that reduce unit's speed by 0.2 for 5000 ms
 	            				armyManager.createEffect(missile.getTarget(), missile.getAttackType(), getTime(),5000, 0.2);
 	            				break;

@@ -124,9 +124,25 @@ public class ArmyManager {
    * @see TowerManager#AttackTypes
    */
   public void createEffect(Unit unit, TowerManager.AttackTypes type, long date, int duration, double intensity){
-	  Effect effect = new Effect(GameManager.idCount, unit, type, date, duration, intensity);
-	  effects.add(effect);
-	  effect.active(unit);
+	 if(alreadyApplied(unit, type)==false){
+		  Effect newEffect = new Effect(GameManager.idCount, unit, type, date, duration, intensity);
+		  effects.add(newEffect);
+		  newEffect.active(unit);
+	 }
+  }
+  /**
+   * Prevent from applying twice the same effect to the same unit
+   * @param unit
+   * @param type
+   * @return
+   */
+  public boolean alreadyApplied(Unit unit, TowerManager.AttackTypes type){
+	  for(Effect effect:effects){
+		  if(effect.getTarget().getId() == unit.getId() && effect.getType()==type){
+			  return true;
+		  }
+	  }
+	  return false;
   }
   /**
    * Simple version of the function that associated a unit with an effect.
@@ -136,9 +152,11 @@ public class ArmyManager {
    * @param duration
    */
   public void createEffect(Unit unit, TowerManager.AttackTypes type, long date, int duration){
-	  Effect effect = new Effect(GameManager.idCount, unit, type, date, duration);
-	  effects.add(effect);
-	  effect.active(unit);
+	  if(alreadyApplied(unit, type)==false){
+			  Effect newEffect = new Effect(GameManager.idCount, unit, type, date, duration);
+			  effects.add(newEffect);
+			  newEffect.active(unit);
+	  }
   }
 
   /**
