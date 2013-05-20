@@ -113,19 +113,10 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
  */
 public void applyModifiers(ArmyManager armyManager){
 	long currentTime = GameManager.getTime();
-	
 	//Browse all the current effects
 	for(Effect effect:armyManager.getEffects()){
-		//If the limit time is not reached then continue to apply
-		System.out.println("Applying effect");
-		System.out.println("Current time :"+currentTime);
-		long targetTime = effect.getBeginTime()+ effect.getDuration();
-		System.out.println("Target time :"+targetTime);
-		if(currentTime <= effect.getBeginTime()+effect.getDuration()){
-			effect.active(effect.getTarget());
-		}
-		//Else suppress the effect
-		else{
+		if(currentTime >= effect.getBeginTime()+effect.getDuration()){
+			effect.desactive(effect.getTarget());
 			System.out.println("Stop applying effect");
 			armyManager.suppressEffect(effect);
 			break;

@@ -19,7 +19,7 @@ public class Effect {
 	private Unit target;
 	private long beginTime;
 	private int duration;
-	private int intensity; //Optionnal
+	private double intensity; //Optionnal
 	
 	/**
 	 * Constructor of the Effect class
@@ -44,7 +44,7 @@ public class Effect {
 	 * @param duration
 	 * @param intensity
 	 */
-	public Effect(int id, Unit target, TowerManager.AttackTypes type, long beginTime, int duration, int intensity){
+	public Effect(int id, Unit target, TowerManager.AttackTypes type, long beginTime, int duration, double intensity){
 		this.id = id;
 		this.type = type;
 		this.target = target;
@@ -66,8 +66,26 @@ public class Effect {
 			System.out.println("Unit n°"+unit.getId()+" under shield protection !");
 			break;
 		case FROST :
+			System.out.println("Speed : "+unit.getSpeed());
 			unit.setSpeed(unit.getSpeed()- intensity);
+
 			System.out.println("Unit n°"+unit.getId()+" frozen !");
+			break;
+		default :
+			break;
+		}
+	}
+	
+	public void desactive(Unit unit){
+		switch(this.type){
+		case SHIELD : 
+			unit.setProtected(false);
+			System.out.println("Unit n°"+unit.getId()+" end of shield protection.");
+			break;
+		case FROST :
+			unit.setSpeed(unit.getSpeed()+ intensity);
+
+			System.out.println("Unit n°"+unit.getId()+" no more frozen !");
 			break;
 		default :
 			break;

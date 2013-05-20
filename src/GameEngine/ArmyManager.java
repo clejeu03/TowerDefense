@@ -123,9 +123,10 @@ public class ArmyManager {
    * @param duration
    * @see TowerManager#AttackTypes
    */
-  public void createEffect(Unit unit, TowerManager.AttackTypes type, long date, int duration, int intensity){
+  public void createEffect(Unit unit, TowerManager.AttackTypes type, long date, int duration, double intensity){
 	  Effect effect = new Effect(GameManager.idCount, unit, type, date, duration, intensity);
 	  effects.add(effect);
+	  effect.active(unit);
   }
   /**
    * Simple version of the function that associated a unit with an effect.
@@ -137,6 +138,7 @@ public class ArmyManager {
   public void createEffect(Unit unit, TowerManager.AttackTypes type, long date, int duration){
 	  Effect effect = new Effect(GameManager.idCount, unit, type, date, duration);
 	  effects.add(effect);
+	  effect.active(unit);
   }
 
   /**
