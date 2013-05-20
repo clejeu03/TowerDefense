@@ -35,6 +35,7 @@ public class ArmyManager {
    */
   private ArrayList<Unit> units;
   
+  private ArrayList<Unit> unitsUnderEffects;
   /**
    * List all the sizes the Bases can take. The size of a base affects 
    * the visual size of the Base and the speed of producing units into itself. 
@@ -72,6 +73,7 @@ public class ArmyManager {
 	  //Initializations
 	  units = new ArrayList<Unit>();
 	  bases = new ArrayList<Base>();
+	  unitsUnderEffects = new ArrayList<Unit>();
 	  }
   
   
@@ -111,7 +113,23 @@ public class ArmyManager {
 	  return unit;
 
   }
-  
+  /**
+   * Shield attack from a shield tower
+   * @param unit
+   * @param duration
+   */
+  public void shieldAttack(Unit unit, int duration){
+	  long currentTime = GameManager.getTime();
+	  unit.setLastAttackTime(currentTime);
+	  unit.setProtected(true);
+	  unitsUnderEffects.add(unit);
+  }
+  /*
+  public void frostAttack(Unit unit, int duration){
+	  long currentTimee = GameManager.getTime();
+	  unit.setLastAttackTime(currentTime);
+  }
+  */
   /**
    * Create a new Base, with the BaseType parameter, and add it to the global list of bases
    * @param pos
@@ -237,5 +255,19 @@ public class ArmyManager {
    public ArrayList<Unit> getUnits(){
  	  return this.units;
    }
+
+/**
+ * @return the unitsUnderEffects
+ */
+public ArrayList<Unit> getUnitsUnderEffects() {
+	return unitsUnderEffects;
+}
+
+/**
+ * @param unitsUnderEffects the unitsUnderEffects to set
+ */
+public void setUnitsUnderEffects(ArrayList<Unit> unitsUnderEffects) {
+	this.unitsUnderEffects = unitsUnderEffects;
+}
 
 }

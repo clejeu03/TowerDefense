@@ -159,7 +159,6 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 		return targets;
 	}
 	
-	
 	/**
 	 * Suppress units that have taken too much damages and suppress missiles that targeted suppressed units
 	 * @param towerManager
