@@ -47,7 +47,6 @@ public class SceneView extends MainViews implements Runnable{
     private boolean addTowerClicked;
     private Point addTowerPosition;
    
-    
     private boolean baseClicked;
     private boolean attackBase;
     private int attackAmountPercent;
@@ -856,6 +855,7 @@ public class SceneView extends MainViews implements Runnable{
 	    if(addTowerClicked){
 	    	//Display the territoryMap
 		    g.drawImage(territoryMap, 0, 0, this.getWidth(), this.getHeight(), this);
+		    //TODO Displaying the range of the tower to add
 	    }    
 	    
 	    if(towerClicked){
