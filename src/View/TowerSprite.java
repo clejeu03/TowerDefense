@@ -224,4 +224,9 @@ public class TowerSprite extends Sprite{
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
+	public void setPlayerType(PlayerType newPlayerType, boolean clickable){
+		this.playerType = newPlayerType;
+		setTowerType(this.towerType);
+		setClickable(clickable);
+	}
 }

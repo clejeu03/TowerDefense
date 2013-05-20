@@ -86,6 +86,15 @@ public abstract class Tower {
 	public PlayerType getPlayerType() {
 		return playerType;
 	}
+	
+	/**
+	 * Setter - Change the playerType attribute
+	 * @param newPlayerType
+	 * @see TowerManager#changeOwner(int, PlayerType)
+	 */
+	public void setPlayerType(PlayerType newPlayerType){
+		this.playerType = newPlayerType;
+	}
 
 	/**
 	 * Getter - Retrieve the range attribute

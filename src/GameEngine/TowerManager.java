@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import GameEngine.Player.PlayerType;
+
 /**
  * Project - TowerDefense</br>
  * <b>Class - TowerManager</b></br>
@@ -229,5 +231,19 @@ public class TowerManager {
    */
   public ArrayList<Missile> getMissiles(){
 	  return this.missiles;
+  }
+  
+  /**
+   * Change the owner of a tower if the corresponding base has been captured
+   * @param id - id of the tower
+   * @param newOwner - playerType of the new owner
+   */
+  public void changeOwner(int id, PlayerType newOwner){
+	  for (Tower t:towers){
+		  if (t.getId()==id){
+			  t.setPlayerType(newOwner);
+			  break;
+		  }
+	  }
   }
 }
