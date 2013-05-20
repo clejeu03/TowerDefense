@@ -7,9 +7,11 @@
  */
 package View;
 
+import java.awt.Graphics;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
@@ -63,5 +65,20 @@ public class MissileSprite extends Sprite{
 		      e.printStackTrace();
 		}
 	}
+	
+	 /**
+     * Draw the SceneView Panel
+     */
+    @Override
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		//if(!isArea){
+			g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
+		//}
+		/*else{
+			g.setColor(color);
+			g.fillOval(s.getPosition().x-(((TowerSprite) s).getRange()), s.getPosition().y -(((TowerSprite) s).getRange()), 2*((TowerSprite) s).getRange(), 2*((TowerSprite) s).getRange());
+	    }*/  
+    }              
 
 }

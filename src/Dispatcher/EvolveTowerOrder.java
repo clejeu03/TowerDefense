@@ -15,15 +15,17 @@ import GameEngine.TowerManager.TowerTypes;
 
 public class EvolveTowerOrder extends Order {
 	
-private TowerTypes type;
+	private TowerTypes type;
+	private int range;
 	/**
 	 * @param id
 	 * @param playerType
 	 * @param position
 	 */
-	public EvolveTowerOrder(int id, TowerTypes towerType) {
+	public EvolveTowerOrder(int id, TowerTypes towerType, int range) {
 		super(id);
 		this.type = towerType;
+		this.range = range;
 	}
 
 	/**
@@ -33,4 +35,9 @@ private TowerTypes type;
 	public TowerTypes getType(){
 		return type;
 	}
+
+	public int getRange() {
+		return range;
+	}
+
 }

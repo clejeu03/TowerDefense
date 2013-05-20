@@ -362,7 +362,7 @@ public class SceneView extends MainViews implements Runnable{
     	repaint();
 	}
 	
-	public void evolveTower(final int id, final TowerTypes towerType){
+	public void evolveTower(final int id, final TowerTypes towerType, final int range){
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			Iterator<Sprite> it = sprites.iterator();
@@ -371,6 +371,7 @@ public class SceneView extends MainViews implements Runnable{
 				//Set the baseSprite amount
 				if((element.getId()==id)&&(element instanceof TowerSprite)){
 					((TowerSprite)element).setTowerType(towerType);
+					((TowerSprite)element).setRange(range);
 				}
 			}
 		}});
@@ -640,7 +641,7 @@ public class SceneView extends MainViews implements Runnable{
 		 while(attackBase)
 		 {
 			 try{
-				Thread.sleep(100);
+				Thread.sleep(50);
 				SwingUtilities.invokeLater(new Runnable(){
 				public void run() {
 					 if((attackAmountPercent+1)<=99)  attackAmountPercent+=1;
@@ -853,7 +854,7 @@ public class SceneView extends MainViews implements Runnable{
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
 				Sprite s = it.next();
-				if(s.getPosition().equals(clickedTowerPosition)){
+				if((s.getPosition().equals(clickedTowerPosition))&& (s instanceof TowerSprite)){
 		    		g.fillOval(s.getPosition().x-(((TowerSprite) s).getRange()), s.getPosition().y -(((TowerSprite) s).getRange()), 2*((TowerSprite) s).getRange(), 2*((TowerSprite) s).getRange());
 				}
 			}

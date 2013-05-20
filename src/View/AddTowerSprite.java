@@ -70,7 +70,7 @@ public class AddTowerSprite  extends Sprite{
 		}
 		//Medical
 		else if(towerType == TowerTypes.SUPPORTTOWER){
-			fileName += "addMedicalTower.png";
+			fileName += "addSupportTower.png";
 		}
 		
 		try {	
