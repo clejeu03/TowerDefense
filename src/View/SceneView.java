@@ -289,7 +289,7 @@ public class SceneView extends MainViews implements Runnable{
 				while (it.hasNext()) {
 					Sprite element = it.next();
 					if(element.getPosition().equals(addTowerPosition)){
-						//Reset the tower Sprite Position according to the mouse one
+						//Reset the tower Sprite Position according to the mouse one						
 						if(e.getPoint().y<(height-10)){
 							addTowerPosition = new Point(e.getPoint());
 							element.setPosition(addTowerPosition);
@@ -421,9 +421,13 @@ public class SceneView extends MainViews implements Runnable{
 		if(!addTowerClicked){
 			addTowerClicked = true;
 			addTowerPosition = new Point(position.x+1, position.y+1);
-			
+			int range;
+			if(towerType == TowerTypes.ATTACKTOWER){
+				range = 80;
+			}
+			else range = 35;
 			//TODO : change the id of the tower if it's add by the engine...
-			TowerSprite ts = new TowerSprite(this, -1, addTowerPosition, false, humanType, 64, 64, towerType, 90);
+			TowerSprite ts = new TowerSprite(this, -1, addTowerPosition, false, humanType, 64, 64, towerType, range);
 			
 			//Add the towerSprite in the sceneView list of Sprites
 			addSprite(ts);	
@@ -860,6 +864,15 @@ public class SceneView extends MainViews implements Runnable{
 	    	//Display the territoryMap
 		    g.drawImage(territoryMap, 0, 0, this.getWidth(), this.getHeight(), this);
 		    //TODO Displaying the range of the tower to add
+		    if(addTowerPosition.y<(height-15)){
+				Iterator<Sprite> it = sprites.iterator();
+				while (it.hasNext()) {
+					Sprite s = it.next();
+					if((s.getPosition().equals(addTowerPosition))&& (s instanceof TowerSprite)){
+						g.fillOval(s.getPosition().x-(((TowerSprite) s).getRange()), s.getPosition().y -(((TowerSprite) s).getRange()), 2*((TowerSprite) s).getRange(), 2*((TowerSprite) s).getRange());
+					}
+				}
+		    }
 	    }    
 	    
 	    if(towerClicked){
