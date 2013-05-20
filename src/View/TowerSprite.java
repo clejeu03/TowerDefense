@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
 
 import GameEngine.GameManager;
 import GameEngine.TowerManager;
@@ -37,10 +38,12 @@ import GameEngine.TowerManager.TowerTypes;
  * @see GameManager
  */
 @SuppressWarnings("serial")
-public class TowerSprite extends Sprite{
+public class TowerSprite extends Sprite implements Runnable{
 	private TowerTypes towerType;
 	private ArrayList<TowerManager.TowerTypes> evolutions;
 	private int range;
+	private boolean isActivated;
+	private Thread thread;
 	
 	/**
 	 * Constructor of the TowerSprite class
@@ -57,6 +60,7 @@ public class TowerSprite extends Sprite{
 		super(scene, id, position,clickable,playerType,width,height);
 		
 		this.range = range;
+		this.isActivated = false;
 		this.evolutions = new ArrayList<TowerManager.TowerTypes>();
 		
 		setTowerType(towerType);
@@ -169,8 +173,31 @@ public class TowerSprite extends Sprite{
 	public int getRange(){
 		return range;
 	}
+
+	public boolean isActivated() {
+		return isActivated;
+	}
+
+	public void setActivated(boolean isActivated) {
+		this.isActivated = isActivated;
+		if(this.isActivated){
+			//Start the thread
+			this.thread = new Thread(this);
+	        thread.start();       
+		}
+	}
 	
-	
+	public void run()
+	{
+		 if(isActivated)
+		 {
+			 try{
+				Thread.sleep(100);
+				this.isActivated = false;
+		 	}catch(Exception e){e.printStackTrace();}
+		 }
+	}
+
 	public void setRange(int range) {
 		this.range = range;
 	}

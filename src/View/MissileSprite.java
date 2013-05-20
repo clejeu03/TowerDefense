@@ -7,6 +7,7 @@
  */
 package View;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.io.File;
@@ -38,47 +39,44 @@ public class MissileSprite extends Sprite{
 	 */
 	public MissileSprite(SceneView scene, int id, Point position, PlayerType playerType, boolean isArea) {
 		super(scene, id, position,false,playerType,16,16);
-		
-		//Loading the unit image (different one according the player)
-		String fileName ="img/";
-		
-		if(playerType == PlayerType.ELECTRIC){
-			fileName +="Electric/";
+		this.isArea = isArea;
+		if(!isArea){
+			//Loading the unit image (different one according the player)
+			String fileName ="img/";
+			
+			if(playerType == PlayerType.ELECTRIC){
+				fileName +="Electric/";
+			}
+			else if(playerType == PlayerType.WATER){
+				fileName +="Water/";
+			}
+			else if(playerType == PlayerType.GRASS){
+				fileName +="Grass/";
+			}
+			else if(playerType == PlayerType.FIRE){
+				fileName +="Fire/";
+			}
+			
+			fileName += "Missile.png";
+			
+			try {	
+			      image = ImageIO.read(new File(fileName));
+			  
+			} catch (IOException e) {
+			      e.printStackTrace();
+			}
 		}
-		else if(playerType == PlayerType.WATER){
-			fileName +="Water/";
-		}
-		else if(playerType == PlayerType.GRASS){
-			fileName +="Grass/";
-		}
-		else if(playerType == PlayerType.FIRE){
-			fileName +="Fire/";
-		}
-		
-		if(isArea) fileName += "Missile.png";
-		else fileName += "Missile.png";
-		
-		try {	
-		      image = ImageIO.read(new File(fileName));
-		  
-		} catch (IOException e) {
-		      e.printStackTrace();
-		}
-	}
+
+	} 
 	
-	 /**
-     * Draw the SceneView Panel
+    /**
+     * Draw the Sprite
      */
     @Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		//if(!isArea){
-			g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
-		//}
-		/*else{
-			g.setColor(color);
-			g.fillOval(s.getPosition().x-(((TowerSprite) s).getRange()), s.getPosition().y -(((TowerSprite) s).getRange()), 2*((TowerSprite) s).getRange(), 2*((TowerSprite) s).getRange());
-	    }*/  
-    }              
-
+		if(!isArea){
+			g.drawImage(image, 0, 0,this);
+		}
+	  }  
 }
