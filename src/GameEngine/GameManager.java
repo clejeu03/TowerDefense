@@ -192,14 +192,25 @@ public class GameManager implements Runnable{
             			
             			//Make area damages            			
             			for(Unit unit:warManager.areaDamagesTarget(missile, armyManager)){
-            				
-            				//Change the target's amount
-	            			int newAmount = unit.getAmount()-missile.getDamages();
-	            			unit.setAmount(newAmount);
-            				
-	            			//Tell the view that the unit need to update it's amount
-	            			dispatcher.addOrderToView(new ChangeAmountOrder(unit.getId(), newAmount));
-	            			
+            				switch(missile.getAttackType()){
+            				case NORMAL :
+            					//Change the target's amount
+		            			int newAmount = unit.getAmount()-missile.getDamages();
+		            			unit.setAmount(newAmount);
+		            			//Tell the view that the unit need to update it's amount
+		            			dispatcher.addOrderToView(new ChangeAmountOrder(unit.getId(), newAmount));
+            					break;
+	            			case SHIELD :
+	            				System.out.println(" ===== Shield Attack =====");
+	            				armyManager.createEffect(missile.getTarget(), missile.getAttackType(), getTime(),1000);
+	            				break;
+	            			case FROST :
+	            				System.out.println(" ===== Frost Attack =====");
+	            				armyManager.createEffect(missile.getTarget(), missile.getAttackType(), getTime(),1000, 9);
+	            				break;
+	            			default :
+	            				break;
+            				}
             			}
             			
             			//Tell the view to suppress the missile
@@ -219,38 +230,30 @@ public class GameManager implements Runnable{
 	            		}else{
 	            			//Impact implications
 	            			switch (missile.getAttackType()){
+	            			
+	            			//Basic Attack
 	            			case NORMAL :
 	            				//Change the target's amount
 	            				int newAmount = missile.getTarget().getAmount()-missile.getDamages();
 	            				missile.getTarget().setAmount(newAmount);
 	            				//Tell the view that the unit need to update it's amount
 	            				dispatcher.addOrderToView(new ChangeAmountOrder(missile.getTarget().getId(), newAmount));
-	            				//Tell the view to suppress the missile	
-	            				dispatcher.addOrderToView(new SuppressOrder(missile.getId()));
-	            				towerManager.suppressMissile(missile);
 	            				break;
-	            			case SHIELD :
-	            				System.out.println(" ===== Shield Attack =====");
-	            				//armyManager.shieldAttack(missile.getTarget(), 10000);
-	            				break;
-	            			case FROST :
-	            				System.out.println(" ===== Frost Attack =====");
-	            				//missile.getTarget()
-	            				break;
+	            				
+	            			//Attack that sends +10 agents to an unit
 	            			case GENERATION :
-	            				System.out.println(" ===== Generation Attack =====");
 	            				//Update unit's amount
 	            				int amount = missile.getTarget().getAmount() + missile.getDamages();
 	            				missile.getTarget().setAmount(amount);
 	            				dispatcher.addOrderToView(new ChangeAmountOrder(missile.getTarget().getId(), missile.getTarget().getAmount()));
-	            				//Tell the view to suppress the missile	
-	            				dispatcher.addOrderToView(new SuppressOrder(missile.getId()));
-	            				towerManager.suppressMissile(missile);
 	            				break;
+	            				
 	            			default :
 	            				break;	
 	            			}
-	            		
+	            			//Tell the view to suppress the missile	
+            				dispatcher.addOrderToView(new SuppressOrder(missile.getId()));
+            				towerManager.suppressMissile(missile);
 	            			break;
 	            		}
             		}

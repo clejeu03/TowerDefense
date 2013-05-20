@@ -40,7 +40,6 @@ public class Unit {
    * @see ShieldTower#shoot(Unit, long, int)
    */
   private boolean isProtected;
-  private long lastAttackTime;
   
   
   /**
@@ -58,7 +57,6 @@ public class Unit {
 	  this.playerType = origin.getPlayerType();
 	  this.speed = 0.5;
 	  this.setProtected(false);
-	  this.setLastAttackTime(0);
   }
   
   /**
@@ -151,20 +149,6 @@ public boolean isProtected() {
  */
 public void setProtected(boolean isProtected) {
 	this.isProtected = isProtected;
-}
-
-/**
- * @return the lastAttackTime
- */
-public long getLastAttackTime() {
-	return lastAttackTime;
-}
-
-/**
- * @param lastAttackTime the lastAttackTime to set
- */
-public void setLastAttackTime(long lastAttackTime) {
-	this.lastAttackTime = lastAttackTime;
 }
 
 }

@@ -36,6 +36,7 @@ public class WarManager {
    */
   public void war(ArmyManager armyManager, TowerManager towerManager, DispatcherManager dispatcher, Long playingTime){
 	  beginEncounters(armyManager, towerManager, dispatcher, playingTime);
+	  applyModifiers(armyManager);
 	  terminateEncounters(armyManager, towerManager);
 	  cleanUpBattlefield(armyManager, towerManager, dispatcher);
   }
@@ -105,6 +106,33 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
      		 
      	 }
   	}
+
+/**
+ * Apply modifiers to their target for the time defined
+ * @param armyManager
+ */
+public void applyModifiers(ArmyManager armyManager){
+	long currentTime = GameManager.getTime();
+	
+	//Browse all the current effects
+	for(Effect effect:armyManager.getEffects()){
+		//If the limit time is not reached then continue to apply
+		System.out.println("Applying effect");
+		System.out.println("Current time :"+currentTime);
+		long targetTime = effect.getBeginTime()+ effect.getDuration();
+		System.out.println("Target time :"+targetTime);
+		if(currentTime <= effect.getBeginTime()+effect.getDuration()){
+			effect.active(effect.getTarget());
+		}
+		//Else suppress the effect
+		else{
+			System.out.println("Stop applying effect");
+			armyManager.suppressEffect(effect);
+			break;
+		}
+	}
+}
+
 	/**
 	 * Move a missile 
 	 * @param armyManager
@@ -117,7 +145,6 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 		//For each pixel until the speed value, make the missile search it's target*/
 		int i=0;
 		for(i=0; i< ( missile.getSpeed() ); ++i){
-			
 			if(!missile.searchForTarget()){
 				break;
 			}

@@ -34,8 +34,10 @@ public class ArmyManager {
    * Save all the units
    */
   private ArrayList<Unit> units;
-  
-  private ArrayList<Unit> unitsUnderEffects;
+  /**
+   * Store all the effects currently applied
+   */
+  private ArrayList<Effect> effects;
   /**
    * List all the sizes the Bases can take. The size of a base affects 
    * the visual size of the Base and the speed of producing units into itself. 
@@ -73,7 +75,7 @@ public class ArmyManager {
 	  //Initializations
 	  units = new ArrayList<Unit>();
 	  bases = new ArrayList<Base>();
-	  unitsUnderEffects = new ArrayList<Unit>();
+	  effects = new ArrayList<Effect>();
 	  }
   
   
@@ -114,22 +116,29 @@ public class ArmyManager {
 
   }
   /**
-   * Shield attack from a shield tower
+   * Associate an effect with an unit
    * @param unit
+   * @param type
+   * @param date
+   * @param duration
+   * @see TowerManager#AttackTypes
+   */
+  public void createEffect(Unit unit, TowerManager.AttackTypes type, long date, int duration, int intensity){
+	  Effect effect = new Effect(GameManager.idCount, unit, type, date, duration, intensity);
+	  effects.add(effect);
+  }
+  /**
+   * Simple version of the function that associated a unit with an effect.
+   * @param unit
+   * @param type
+   * @param date
    * @param duration
    */
-  public void shieldAttack(Unit unit, int duration){
-	  long currentTime = GameManager.getTime();
-	  unit.setLastAttackTime(currentTime);
-	  unit.setProtected(true);
-	  unitsUnderEffects.add(unit);
+  public void createEffect(Unit unit, TowerManager.AttackTypes type, long date, int duration){
+	  Effect effect = new Effect(GameManager.idCount, unit, type, date, duration);
+	  effects.add(effect);
   }
-  /*
-  public void frostAttack(Unit unit, int duration){
-	  long currentTimee = GameManager.getTime();
-	  unit.setLastAttackTime(currentTime);
-  }
-  */
+
   /**
    * Create a new Base, with the BaseType parameter, and add it to the global list of bases
    * @param pos
@@ -214,6 +223,18 @@ public class ArmyManager {
 	  
   }
   /**
+   * Function that suppress the given effect
+   * @param toSuppressEffect
+   */
+  public void suppressEffect(Effect toSuppressEffect){
+	  for(Effect effect:effects){
+		  if(effect.getId() == toSuppressEffect.getId()){
+			  effects.remove(effect);
+			  break;
+		  }
+	  }
+  }
+  /**
    * Suppress a unit from the current game
    * @param id
    * @param position
@@ -256,18 +277,19 @@ public class ArmyManager {
  	  return this.units;
    }
 
+
 /**
- * @return the unitsUnderEffects
+ * @return the effects
  */
-public ArrayList<Unit> getUnitsUnderEffects() {
-	return unitsUnderEffects;
+public ArrayList<Effect> getEffects() {
+	return effects;
 }
 
 /**
- * @param unitsUnderEffects the unitsUnderEffects to set
+ * @param effects the effects to set
  */
-public void setUnitsUnderEffects(ArrayList<Unit> unitsUnderEffects) {
-	this.unitsUnderEffects = unitsUnderEffects;
+public void setEffects(ArrayList<Effect> effects) {
+	this.effects = effects;
 }
 
 }
