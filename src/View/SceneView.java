@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-import Dispatcher.MoneyOrder;
 import GameEngine.TowerManager;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
@@ -496,6 +495,16 @@ public class SceneView extends MainViews implements Runnable{
 	 * @see ViewManager#refresh()
 	 */	
 	public void addMissile(int id, PlayerType playerType, Point position, boolean isArea){
+		//If the missile is an area one, the matching tower need to be activated
+		if(isArea){
+			Iterator<Sprite> it = sprites.iterator();
+			while (it.hasNext()) {
+				Sprite element = it.next();
+				if((element.getPosition().equals(position))&&(element instanceof TowerSprite)){
+					((TowerSprite) element).setActivated(true);
+				}
+			}	
+		}
 		System.out.println("View - Add a Missile "+id);
 		MissileSprite unit = new MissileSprite(this,id, position, playerType, isArea);
 		addSprite(unit);
@@ -675,7 +684,7 @@ public class SceneView extends MainViews implements Runnable{
 				Sprite element = it.next();
 				//Removing the towerSprite, the UnitSprite, the matching TextInfoSprite, or the MissileSprite
 				if(element.getId()==id){
-					System.out.println("View - Suppress the unit "+id);
+					System.out.println("View - Suppress the object "+id);
 					it.remove();
 					remove(element);
 					revalidate();
@@ -843,7 +852,7 @@ public class SceneView extends MainViews implements Runnable{
 		super.paintComponent(g);
 	    g.drawImage(map, 0, 0, this.getWidth(), this.getHeight(), this);
 	    g.setColor(color);
-	 
+	    
 	    if(addTowerClicked){
 	    	//Display the territoryMap
 		    g.drawImage(territoryMap, 0, 0, this.getWidth(), this.getHeight(), this);
@@ -855,7 +864,7 @@ public class SceneView extends MainViews implements Runnable{
 			while (it.hasNext()) {
 				Sprite s = it.next();
 				if((s.getPosition().equals(clickedTowerPosition))&& (s instanceof TowerSprite)){
-		    		g.fillOval(s.getPosition().x-(((TowerSprite) s).getRange()), s.getPosition().y -(((TowerSprite) s).getRange()), 2*((TowerSprite) s).getRange(), 2*((TowerSprite) s).getRange());
+					g.fillOval(s.getPosition().x-(((TowerSprite) s).getRange()), s.getPosition().y -(((TowerSprite) s).getRange()), 2*((TowerSprite) s).getRange(), 2*((TowerSprite) s).getRange());
 				}
 			}
 	    }
@@ -864,5 +873,28 @@ public class SceneView extends MainViews implements Runnable{
 	    	//g.setColor(Color.blue);
     		g.drawLine(basePosition.x, basePosition.y, mousePosition.x, mousePosition.y);
 	    }
+	    
+	    //Retrieving the activated tower
+		Iterator<Sprite> iter = sprites.iterator();
+		while (iter.hasNext()) {
+			Sprite element = iter.next();
+			if(((element instanceof TowerSprite))&&(((TowerSprite) element).isActivated())){
+				Color towerColor = null;
+				if(((TowerSprite) element).getPlayerType() == PlayerType.ELECTRIC){
+					towerColor = new Color(255,255,0,50);
+				}
+				else if(((TowerSprite) element).getPlayerType() == PlayerType.WATER){
+					towerColor = new Color(0,0,255,50);
+				}
+				else if(((TowerSprite) element).getPlayerType() == PlayerType.GRASS){
+					towerColor = new Color(0,255,0,50);
+				}
+				else if(((TowerSprite) element).getPlayerType()== PlayerType.FIRE){
+					towerColor= new Color(255,0,0,50);
+				}
+				g.setColor(towerColor);
+				g.fillOval((((TowerSprite) element).getPosition().x-(((TowerSprite) element).getRange())), element.getPosition().y -(((TowerSprite) element).getRange()), 2*((TowerSprite) element).getRange(), 2*((TowerSprite) element).getRange());
+			}
+		}	
 	 }              
 }
