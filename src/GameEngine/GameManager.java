@@ -192,9 +192,7 @@ public class GameManager implements Runnable{
             	for(Missile missile:towerManager.getMissiles()){
             		if(missile.isArea()){
             			
-            			//Make area damages
-            			System.out.println(">>>>>Area Damages !<<<<<<<<");
-            			
+            			//Make area damages            			
             			for(Unit unit:warManager.areaDamagesTarget(missile, armyManager)){
             				
             				//Change the target's amount
@@ -210,6 +208,8 @@ public class GameManager implements Runnable{
             			//Tell the view to suppress the missile
             			dispatcher.addOrderToView(new SuppressOrder(missile.getId()));
             			towerManager.suppressMissile(missile);
+            			
+            			break;
             			
             		}else{
             			
