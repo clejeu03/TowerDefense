@@ -641,7 +641,7 @@ public class SceneView extends MainViews implements Runnable{
 		 while(attackBase)
 		 {
 			 try{
-				Thread.sleep(100);
+				Thread.sleep(50);
 				SwingUtilities.invokeLater(new Runnable(){
 				public void run() {
 					 if((attackAmountPercent+1)<=99)  attackAmountPercent+=1;
