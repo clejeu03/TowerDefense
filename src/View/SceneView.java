@@ -288,7 +288,7 @@ public class SceneView extends MainViews implements Runnable{
 				Iterator<Sprite> it = sprites.iterator();
 				while (it.hasNext()) {
 					Sprite element = it.next();
-					if(element.getPosition().equals(addTowerPosition)){
+					if((element.getPosition().equals(addTowerPosition))&&(element instanceof TowerSprite)&&(element.getId()==-1)){
 						//Reset the tower Sprite Position according to the mouse one						
 						if(e.getPoint().y<(height-10)){
 							addTowerPosition = new Point(e.getPoint());
