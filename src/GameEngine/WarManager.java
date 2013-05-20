@@ -129,6 +129,12 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 		
 	}
 	
+	/**
+	 * Make a list of all the units that are targeted by an area damages Tower
+	 * @param missile
+	 * @param armyManager
+	 * @return
+	 */
 	public ArrayList<Unit> areaDamagesTarget(Missile missile, ArmyManager armyManager){
 		ArrayList<Unit> targets = new ArrayList<Unit>();
 		

@@ -37,7 +37,7 @@ public class LazerTower extends Tower {
 	public Missile shoot(Unit unit, long date, int currentIdCount) {
 		this.lastShootingTime = date;
 		//TODO personalize the damages made by this tower
-		return new Missile(currentIdCount, this, this.getPosition(), unit,this.getSpeed(), this.getDamage());
+		return new Missile(currentIdCount, this, this.getPosition(), unit,this.getSpeed(), this.getDamage(), TowerManager.AttackTypes.NORMAL);
 	}
 
 	/**

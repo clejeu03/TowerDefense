@@ -27,17 +27,19 @@ public class Missile {
  private Vector2D direction;
  private Tower origin;
  private boolean area;
+ private TowerManager.AttackTypes attackType;
 
   /**
    * Constructor of the Missile class
    */
-  public Missile(int id, Tower origin, Point position, Unit target, double speed, int damages) {
+  public Missile(int id, Tower origin, Point position, Unit target, double speed, int damages, TowerManager.AttackTypes attackType) {
 	  this.id = id;
 	  this.position = position;
 	  this.target = target;
 	  this.speed = speed;
 	  this.damages = damages;
 	  this.origin = origin;
+	  this.setAttackType(attackType);
 	  
 	  //If the tower that created the missile was an areaDamage one, then the missile is an area missile
 	  if(origin.isAreaDamages())this.setArea(true);
@@ -176,6 +178,20 @@ public boolean isArea() {
  */
 public void setArea(boolean area) {
 	this.area = area;
+}
+
+/**
+ * @return the attackType
+ */
+public TowerManager.AttackTypes getAttackType() {
+	return attackType;
+}
+
+/**
+ * @param attackType the attackType to set
+ */
+public void setAttackType(TowerManager.AttackTypes attackType) {
+	this.attackType = attackType;
 }
 
 }

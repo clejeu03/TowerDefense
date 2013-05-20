@@ -47,7 +47,16 @@ public class TowerManager {
 	  MEDICALTOWER,
 	  SHIELDTOWER
   }
-  
+  /**
+   * List all the types of attack that are carried by missiles. The NORMAL type define a basic missile impact.
+   *@see Missile
+   */
+  public enum AttackTypes{
+	  NORMAL,
+	  SHIELD,
+	  FROST,
+	  GENERATION
+  }
   /**
    * Constructor of the TowerManager class
    */

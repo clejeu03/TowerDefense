@@ -35,6 +35,11 @@ public class Unit {
   private Base origin;
   private Base destination;
   private PlayerType playerType;
+  /**
+   * Holds the property of shield protection given by the ShieldTower
+   * @see ShieldTower#shoot(Unit, long, int)
+   */
+  private boolean isProtected;
   
   
   /**
@@ -50,8 +55,8 @@ public class Unit {
 	  this.amount = amount;
 	  this.position = origin.getPosition();
 	  this.playerType = origin.getPlayerType();
-	  //Temporary !
 	  this.speed = 0.5;
+	  this.setProtected(false);
   }
   
   /**
@@ -131,5 +136,19 @@ public void setDestination(Base destination) {
   public int getId() {
 	return id;
   }
+
+/**
+ * @return the isProtected
+ */
+public boolean isProtected() {
+	return isProtected;
+}
+
+/**
+ * @param isProtected the isProtected to set
+ */
+public void setProtected(boolean isProtected) {
+	this.isProtected = isProtected;
+}
 
 }
