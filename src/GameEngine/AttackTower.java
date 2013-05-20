@@ -27,7 +27,7 @@ public class AttackTower extends Tower {
 	 * @param playerType
 	 */
 	public AttackTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 60, 2, 2000, 9);
+		super(id, position, playerType, 80, 2, 2000, 12);
 		this.setEvolutions(TowerTypes.GUNTOWER, TowerTypes.FROSTTOWER);
 		this.setAreaDamages(false);
 	}
@@ -37,7 +37,7 @@ public class AttackTower extends Tower {
 	 */
 	@Override
 	public Missile shoot(Unit unit, long date, int currentIdCount) {
-		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
+		//System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
 		this.lastShootingTime = date;
 		return new Missile(currentIdCount, this, this.getPosition(), unit,this.getSpeed(), this.getDamage());
 	}
@@ -47,7 +47,7 @@ public class AttackTower extends Tower {
 	 */
 	@Override
 	public void stop() {
-		System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says STOP !!!");
+		//System.out.println("Attack Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says STOP !!!");
 	}
 
 }

@@ -32,7 +32,6 @@ public class Missile {
    * Constructor of the Missile class
    */
   public Missile(int id, Tower origin, Point position, Unit target, double speed, int damages) {
-	  System.out.println("Creation of a new missile !");
 	  this.id = id;
 	  this.position = position;
 	  this.target = target;

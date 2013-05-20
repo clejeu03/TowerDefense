@@ -145,9 +145,9 @@ public class GameManager implements Runnable{
 			bases.add(armyManager.createBase(idCount, neutralBasePosition.get(i),PlayerType.NEUTRAL,true,mapManager.getNeutralTerritoryMap(i),mapManager.getNeutralProximityMap(i)));
 			++idCount;
 		}
-		//Tells the dispatcher that the View need to be initialized
-		//TODO : send to the view and AIs their money ! 200 is temporary !
-		dispatcher.initiateGameView(bases, 200);
+		
+		//Tells the dispatcher that the View need to be initialized : (bases, player's money)
+		dispatcher.initiateGameView(bases, 300);
 		
 		//Start the timer
 		timer = new Timer();
@@ -175,9 +175,7 @@ public class GameManager implements Runnable{
         			else{
         				//Tell the dispatcher to suppress the unit and to change the base amount
         				dispatcher.addOrderToView(new SuppressOrder(unit.getId()));
-        				System.out.println("Engine - Suppress the unit "+unit.getId());
         				dispatcher.addOrderToView(new ChangeAmountOrder(unit.getDestination().getId(), unit.getDestination().getAmount()));
-        				//dispatcher.addOrderToView(new AddUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getOrigin().getPosition(), unit.getDestination().getPosition(), unit.getAmount()));
         				armyManager.suppressUnit(unit);
         				
         				if (state ==2){
@@ -198,7 +196,6 @@ public class GameManager implements Runnable{
             				//Change the target's amount
 	            			int newAmount = unit.getAmount()-missile.getDamages();
 	            			unit.setAmount(newAmount);
-	            			System.out.println("AREA IMPACT Unit amount now :"+newAmount);
             				
 	            			//Tell the view that the unit need to update it's amount
 	            			dispatcher.addOrderToView(new ChangeAmountOrder(unit.getId(), newAmount));
@@ -215,8 +212,7 @@ public class GameManager implements Runnable{
             			
             			//Launch projectile
 	            		if(warManager.moveMissile(missile) == true){
-	            			
-	            			System.out.println("Missile " + missile.getId() + " in movement...");
+
 	            			//Tell the view to move the missile
 	            			dispatcher.addOrderToView(new MoveMissileOrder(missile.getId(), missile.getPosition()));
 	            			
@@ -224,8 +220,6 @@ public class GameManager implements Runnable{
 	            			//Change the target's amount
 	            			int newAmount = missile.getTarget().getAmount()-missile.getDamages();
 	            			missile.getTarget().setAmount(newAmount);
-	            			System.out.println("IMPACT Missile "+ missile.getId()+" and Unit "+missile.getTarget().getId()+" Unit amount now :"+newAmount);
-	            			
 	            			//Tell the view that the unit need to update it's amount
 	            			dispatcher.addOrderToView(new ChangeAmountOrder(missile.getTarget().getId(), newAmount));
 	            			//Tell the view to suppress the missile	
@@ -281,7 +275,6 @@ public class GameManager implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(order instanceof SuppressOrder) {
-					System.out.println("Engine Order : "+ order.getId());
 					//Remove the tower from the engine list
 					towerManager.suppressTower(order.getId());
 					//Tell the dispatcher that the tower need to be remove from the view
@@ -291,19 +284,12 @@ public class GameManager implements Runnable{
 				
 				//If the order is a EvolveTowerOrder one
 				if(order instanceof EvolveTowerOrder){
-					System.out.println("Engine - Evolution order : "+( order).getId());
 					
 					//Tell the engine to make the tower evolve
 					towerManager.evolveTower((order).getId(), ((EvolveTowerOrder) order).getType());
 					
 					//Tell the view to erase the ancient tower and to draw the new one
-					
-					dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType()));
-
-					//dispatcher.addOrderToView(new SuppressOrder(((order).getId())));
-					//dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType(), ((AddTowerOrder) order).getRange()));
-			
-					//++idCount;			
+					dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType()));		
 				}
 				
 				//If the order is a AddTowerOrder one
@@ -367,7 +353,7 @@ public class GameManager implements Runnable{
 					//Create the unit
 					Unit unit = armyManager.launchUnit(idCount, ((AddUnitOrder) order).getSrcId(), ((AddUnitOrder) order).getDstId(), ((AddUnitOrder) order).getAmount());
 					
-					System.out.println("Engine - TODO : base : "+((AddUnitOrder) order).getSrcId()+" want to send "+unit.getAmount()+" Units to "+((AddUnitOrder) order).getDstId());
+					//System.out.println("Engine - TODO : base : "+((AddUnitOrder) order).getSrcId()+" want to send "+unit.getAmount()+" Units to "+((AddUnitOrder) order).getDstId());
 					dispatcher.addOrderToView(new AddUnitOrder(idCount, ((AddUnitOrder) order).getSrcId(), ((AddUnitOrder) order).getDstId(), unit.getAmount()));
 					++idCount;
 					

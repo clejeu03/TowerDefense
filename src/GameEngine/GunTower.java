@@ -26,7 +26,7 @@ public class GunTower extends Tower {
 	 * @param playerType
 	 */
 	public GunTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 40, 1, 500, 9);
+		super(id, position, playerType, 60, 1, 500, 15);
 		this.setEvolutions(TowerTypes.BOMBTOWER, TowerTypes.LAZERTOWER);
 		this.setAreaDamages(false);
 	}

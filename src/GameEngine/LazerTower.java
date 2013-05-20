@@ -25,7 +25,7 @@ public class LazerTower extends Tower {
 	 * @param playerType
 	 */
 	public LazerTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 60, 1, 100, 9);
+		super(id, position, playerType, 80, 1, 300, 12);
 		this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
 		this.setAreaDamages(false);
 	}

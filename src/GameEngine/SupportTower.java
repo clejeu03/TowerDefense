@@ -38,7 +38,6 @@ public class SupportTower extends Tower {
 	 */
 	@Override
 	public Missile shoot(Unit unit, long date, int currentIdCount) {
-		System.out.println("SUPPORT TOWER ACTIVATED !");
 		return null;
 	}
 
@@ -47,7 +46,7 @@ public class SupportTower extends Tower {
 	 */
 	@Override
 	public void stop() {
-		System.out.println("Support Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says STOP !!!");
+		//System.out.println("Support Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says STOP !!!");
 	}
 
 }
