@@ -65,14 +65,15 @@ public class TowerManager {
   public boolean activeTower(Tower toActiveTower, Unit unit, Long date, int currentIdCount) {
 	  for(Tower tower:towers){
 		  if(tower.getId() == toActiveTower.getId()){
-			  
+			  if(!(toActiveTower instanceof SupportTower)){
 			  //TODO multiple targets
-			  long currentTime = GameManager.getTime();
-			  //long diff = currentTime-date;
-
-			  if(toActiveTower.getLastShootingTime() == 0 || (currentTime-toActiveTower.getLastShootingTime())>=toActiveTower.getCadency()){
-				  missiles.add(toActiveTower.shoot(unit, date, currentIdCount)); 
-				  return true;
+				  long currentTime = GameManager.getTime();
+				  //long diff = currentTime-date;
+	
+				  if(toActiveTower.getLastShootingTime() == 0 || (currentTime-toActiveTower.getLastShootingTime())>=toActiveTower.getCadency()){
+					  missiles.add(toActiveTower.shoot(unit, date, currentIdCount)); 
+					  return true;
+				  }
 			  }
 		  }
 	  }

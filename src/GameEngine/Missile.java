@@ -40,9 +40,13 @@ public class Missile {
 	  this.damages = damages;
 	  this.origin = origin;
 	  
+	  //If the tower that created the missile was an areaDamage one, then the missile is an area missile
 	  if(origin.isAreaDamages())this.setArea(true);
 	  else this.setArea(false);
 	  
+	  System.out.println("AreaMissile :"+this.area);
+	  
+	  //Saving the real direction the missile will have to follow
 	  this.direction = new Vector2D(this.target.getPosition().x - this.position.x, this.target.getPosition().y - this.position.y);
 }
 

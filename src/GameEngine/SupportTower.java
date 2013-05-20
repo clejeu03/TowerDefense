@@ -28,7 +28,7 @@ public class SupportTower extends Tower {
 	 * @param playerType
 	 */
 	public SupportTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 35, 0, 0, 0);
+		super(id, position, playerType, 35, 0, 0, 9);
 		this.setEvolutions(TowerTypes.MEDICALTOWER, TowerTypes.SHIELDTOWER);
 		this.setAreaDamages(false);
 	}
@@ -38,9 +38,8 @@ public class SupportTower extends Tower {
 	 */
 	@Override
 	public Missile shoot(Unit unit, long date, int currentIdCount) {
-		//System.out.println("Support Tower n°"+this.getId()+" position "+this.getPosition().toString()+" says SHOOT !!!");
-		this.lastShootingTime = date;
-		return new Missile(currentIdCount, this, this.getPosition(), unit, this.getSpeed(), this.getDamage());
+		System.out.println("SUPPORT TOWER ACTIVATED !");
+		return null;
 	}
 
 	/**
