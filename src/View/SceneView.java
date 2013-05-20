@@ -368,6 +368,7 @@ public class SceneView extends MainViews implements Runnable{
 				Sprite element = it.next();
 				//Set the baseSprite amount
 				if((element.getId()==id)&&(element instanceof TowerSprite)){
+					System.out.println(range);
 					((TowerSprite)element).setTowerType(towerType);
 					((TowerSprite)element).setRange(range);
 				}
