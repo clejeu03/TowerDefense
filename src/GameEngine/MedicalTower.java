@@ -25,7 +25,7 @@ public class MedicalTower extends Tower {
 	 * @param playerType
 	 */
 	public MedicalTower(int id, int cost, Point position, PlayerType playerType) {
-		super(id, cost, position, playerType, 80, 10, 2500, 12); 
+		super(id, cost, position, playerType, 120, 10, 2500, 12); 
 		this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
 		this.setAreaDamages(false);
 	}

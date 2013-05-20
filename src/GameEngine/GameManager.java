@@ -156,11 +156,11 @@ public class GameManager implements Runnable{
 		
 		//Initiate the bank
 		for(PlayerType playerType:playerTypes){
-			bank.put(playerType, 500);
+			bank.put(playerType, 300);
 		}
 		
 		//Tells the dispatcher that the View need to be initialized : (bases, player's money)
-		dispatcher.initiateGameView(bases, 500);
+		dispatcher.initiateGameView(bases, 300);
 		
 		//Start the timer
 		timer = new Timer();
@@ -191,6 +191,10 @@ public class GameManager implements Runnable{
         				//Tell the dispatcher to suppress the unit and to change the base amount
         				dispatcher.addOrderToView(new SuppressOrder(unit.getId()));
         				dispatcher.addOrderToView(new ChangeAmountOrder(unit.getDestination().getId(), unit.getDestination().getAmount()));
+        				
+        				//Updating the player's money
+						bank.put(unit.getPlayerType(), bank.get(unit.getPlayerType())+unit.getAmount() +10*timeIndex);
+						dispatcher.addOrderToView( new MoneyOrder(idCount, bank.get(unit.getPlayerType())+10*timeIndex, unit.getPlayerType()));
         				
         				if (state ==2){
         					//Change the owner of the towers in the territory of the base captured

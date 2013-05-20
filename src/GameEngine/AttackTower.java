@@ -27,7 +27,7 @@ public class AttackTower extends Tower {
 	 * @param playerType
 	 */
 	public AttackTower(int id, int cost, Point position, PlayerType playerType) {
-		super(id,cost, position, playerType, 80, 2, 2000, 12);
+		super(id,cost, position, playerType, 80, 2, 1000, 12);
 		this.setEvolutions(TowerTypes.GUNTOWER, TowerTypes.FROSTTOWER);
 		this.setAreaDamages(false);
 	}
