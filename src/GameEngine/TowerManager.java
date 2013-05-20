@@ -2,7 +2,6 @@ package GameEngine;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import GameEngine.Player.PlayerType;
 
@@ -39,15 +38,19 @@ public class TowerManager {
    *@see Tower
    */
   public enum TowerTypes{
-	  NOTOWER, //replace the ancient zero in the view
-	  ATTACKTOWER,
-	  SUPPORTTOWER,
-	  GUNTOWER,
-	  FROSTTOWER,
-	  BOMBTOWER,
-	  LAZERTOWER,
-	  MEDICALTOWER,
-	  SHIELDTOWER
+	  NOTOWER (0), //replace the ancient zero in the view
+	  ATTACKTOWER (100),
+	  SUPPORTTOWER (80),
+	  GUNTOWER (150),
+	  FROSTTOWER (150),
+	  BOMBTOWER (200),
+	  LAZERTOWER (200),
+	  MEDICALTOWER (200),
+	  SHIELDTOWER (100);
+	  
+	  private int cost;
+	  TowerTypes(int cost){this.cost = cost;}
+	  public int cost(){return cost;}
   }
   /**
    * List all the types of attack that are carried by missiles. The NORMAL type define a basic missile impact.
@@ -111,7 +114,6 @@ public class TowerManager {
   */
   public void createTower(int id, Player.PlayerType playerType, TowerTypes towerType, Point position) {
 	  Tower tower = null;
-	  
 	  switch(towerType){
 	  	case ATTACKTOWER:
 	  		tower = new AttackTower(id, position, playerType);
@@ -140,7 +142,6 @@ public class TowerManager {
 	  	default :
 	  		break;
 	  }  
-	  
 	  towers.add(tower);
   }
 /**

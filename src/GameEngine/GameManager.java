@@ -6,6 +6,7 @@ import GameEngine.TowerManager.TowerTypes;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,6 +35,8 @@ public class GameManager implements Runnable{
 	
     private ArrayList<Player> players;
     private ArrayList<PlayerType> playerTypes;
+    
+    private HashMap<PlayerType, Integer> bank;
 	
 	//Temporary !!
     private ArrayList<Tower> towers;
@@ -58,6 +61,8 @@ public class GameManager implements Runnable{
 		running = false;
 		queue = new ConcurrentLinkedQueue<Order>();
 		players = new ArrayList<Player>();
+		
+		bank = new HashMap<PlayerType, Integer>();
 		
 		towers = new ArrayList<Tower>();
 		bases = new ArrayList<Base>();
@@ -144,6 +149,11 @@ public class GameManager implements Runnable{
 		for(int i=0; i<neutralBasePosition.size();i++){
 			bases.add(armyManager.createBase(idCount, neutralBasePosition.get(i),PlayerType.NEUTRAL,true,mapManager.getNeutralTerritoryMap(i),mapManager.getNeutralProximityMap(i)));
 			++idCount;
+		}
+		
+		//Initiate the bank
+		for(PlayerType playerType:playerTypes){
+			bank.put(playerType, 300);
 		}
 		
 		//Tells the dispatcher that the View need to be initialized : (bases, player's money)
@@ -395,13 +405,26 @@ public class GameManager implements Runnable{
 							//1 to 5 : territories
 							if(zoneId <6 && ((AddTowerOrder) order).getPlayerType()== playerTypes.get(zoneId-1)){
 								
-								//Add the Tower and draw it
-								towerManager.createTower(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((AddTowerOrder) order).getPosition());
-								  //Search the tower by it's position
-								Tower tower = towerManager.getTower(idCount);
-								dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(),((AddTowerOrder) order).getTowerType(),tower.getRange()));
-								dispatcher.addOrderToAI(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), ((AddTowerOrder) order).getTowerType(), tower.getRange()));
-								++idCount;
+								//Test if there's enough money
+								if(((AddTowerOrder) order).getTowerType().cost() < bank.get(((AddTowerOrder) order).getPlayerType()) ){
+								
+									//Add the Tower
+									towerManager.createTower(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((AddTowerOrder) order).getPosition());
+									//Update the money
+									int amount = bank.get(((AddTowerOrder) order).getPlayerType()) - ((AddTowerOrder) order).getTowerType().cost();
+									bank.put(((AddTowerOrder) order).getPlayerType(), amount);
+									dispatcher.addOrderToView(new MoneyOrder(idCount, amount,((AddTowerOrder) order).getPlayerType()));
+									//Search the tower to add it to the view
+									Tower tower = towerManager.getTower(idCount);
+									dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), tower.getPosition(),((AddTowerOrder) order).getTowerType(),tower.getRange()));
+									dispatcher.addOrderToAI(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), tower.getPosition(), ((AddTowerOrder) order).getTowerType(), tower.getRange()));
+									++idCount;
+									
+								}else{
+									//Tell the dispatcher the player hasn't enough money
+									System.out.println("GameEngine says : You can't afford this !");
+									dispatcher.addOrderToView(new AddTowerOrder(-1,((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER, -1));
+								}
 								
 							}else{
 								
@@ -474,6 +497,5 @@ public class GameManager implements Runnable{
 		}
 		
 	}
-
 
 }

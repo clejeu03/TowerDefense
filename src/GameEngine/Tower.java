@@ -191,7 +191,6 @@ public abstract class Tower {
 	public boolean isAreaDamages() {
 		return areaDamages;
 	}
-
 	/**
 	 * @param areaDamages the areaDamages to set
 	 */
