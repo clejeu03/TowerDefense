@@ -848,7 +848,7 @@ public class SceneView extends MainViews implements Runnable{
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
 				Sprite s = it.next();
-				if(s.getPosition().equals(clickedTowerPosition)){
+				if((s.getPosition().equals(clickedTowerPosition))&& (s instanceof TowerSprite)){
 		    		g.fillOval(s.getPosition().x-(((TowerSprite) s).getRange()), s.getPosition().y -(((TowerSprite) s).getRange()), 2*((TowerSprite) s).getRange(), 2*((TowerSprite) s).getRange());
 				}
 			}
