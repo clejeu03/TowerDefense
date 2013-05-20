@@ -61,15 +61,23 @@ public class WarManager {
      			 
      			 //The unit (x,y) is in the area of the tower(centerX, centerY) if : (x - centerX)^2 + (y - centerY)^2 < range^2
      			 if(((x - centerX)*(x - centerX) + (y - centerY)*(y - centerY)) < range*range){
-     				 int currentIdCount = GameManager.idCount;
-     							 
-     				 //So active the tower
-     				if( towerManager.activeTower(tower, unit, playingTime, currentIdCount)){
-     					GameManager.idCount ++;
-     					//Tell the view to create a missile  
-     					System.out.println("Engine - Add missile "+currentIdCount);
-     					dispatcher.addOrderToView(new AddMissileOrder(currentIdCount, tower.getPlayerType(), tower.getPosition(), tower.isAreaDamages()));
-     				}
+     				 
+     				 //Check if the tower has to be activated
+     				 if(((unit.getPlayerType()==tower.getPlayerType() 
+         					 && (tower instanceof SupportTower || tower instanceof MedicalTower || tower instanceof ShieldTower)))
+     					 ||(unit.getPlayerType()!=tower.getPlayerType() 
+             					 && (tower instanceof AttackTower || tower instanceof BombTower || tower instanceof GunTower || tower instanceof LazerTower || tower instanceof FrostTower)))
+         			 {
+     					int currentIdCount = GameManager.idCount;
+						 
+        				 //So active the tower
+        				if(towerManager.activeTower(tower, unit, playingTime, currentIdCount)){
+        					GameManager.idCount ++;
+        					//Tell the view to create a missile  
+        					System.out.println("Engine - Add missile "+currentIdCount);
+        					dispatcher.addOrderToView(new AddMissileOrder(currentIdCount, tower.getPlayerType(), tower.getPosition(), tower.isAreaDamages()));
+        				}
+         			 }
      			}
      		 }
      	 }
