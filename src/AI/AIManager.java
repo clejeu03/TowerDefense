@@ -88,7 +88,7 @@ public class AIManager implements Runnable {
 				running = false;
 			}
 			refreshInfo();
-			//printInfo();
+			printInfo();
 			attackBehavior();
 			towerBehavior();
 		}
@@ -328,11 +328,11 @@ public class AIManager implements Runnable {
 				else{
 					//Check if there is already a tower at this position
 					for (Tower t:towers){
-						if (!towersCollide(position,t.getPosition())){
-							return true;
+						if (towersCollide(position,t.getPosition())){
+							return false;
 						}
 					}
-					return false;
+					return true;
 				}
 			}
 			else return false;
