@@ -44,6 +44,7 @@ public class TowerSprite extends Sprite implements Runnable{
 	private int range;
 	private boolean isActivated;
 	private Thread thread;
+	private MouseAdapter m ;
 	
 	/**
 	 * Constructor of the TowerSprite class
@@ -62,23 +63,22 @@ public class TowerSprite extends Sprite implements Runnable{
 		this.range = range;
 		this.isActivated = false;
 		this.evolutions = new ArrayList<TowerManager.TowerTypes>();
+		m = new MouseAdapter() {
+			public void mousePressed(MouseEvent me) { 
+	            myMousePressed(me);
+	           } 
+	      public void mouseEntered(MouseEvent me) { 
+	   	   myMouseEntered(me);
+	      }
+	      public void mouseExited(MouseEvent me) { 
+	   	   myMouseExited(me);
+	      } 
+	    };
 		
 		setTowerType(towerType);
 		
 		//Add listeners if the tower is clickable
-		if(clickable){
-			addMouseListener(new MouseAdapter() {
-				public void mousePressed(MouseEvent me) { 
-		             myMousePressed(me);
-		            } 
-		       public void mouseEntered(MouseEvent me) { 
-		    	   myMouseEntered(me);
-	           }
-		       public void mouseExited(MouseEvent me) { 
-		    	   myMouseExited(me);
-	           } 
-	         });
-		}
+		setClickable(clickable);
 	}
 	
 	public void setTowerType(TowerTypes towerType){
@@ -209,19 +209,13 @@ public class TowerSprite extends Sprite implements Runnable{
 	
 	public void setClickable(boolean clickable){
 		this.clickable = clickable;
+
 		
 		if(clickable){
-			addMouseListener(new MouseAdapter() {
-				public void mousePressed(MouseEvent me) { 
-		             myMousePressed(me);
-		            } 
-		       public void mouseEntered(MouseEvent me) { 
-		    	   myMouseEntered(me);
-	           }
-		       public void mouseExited(MouseEvent me) { 
-		    	   myMouseExited(me);
-	           } 
-	         });
+			addMouseListener(m);
+		}
+		else {
+			removeMouseListener(m);
 		}
 	}
 	

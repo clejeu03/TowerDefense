@@ -743,6 +743,9 @@ public class SceneView extends MainViews implements Runnable{
 					((BaseSprite)element).setPlayerType(newPlayerType);
 				}
 				if((element.getId()==id)&&(element instanceof TowerSprite)){
+					//If the tower was the clicked one 
+					if(((TowerSprite)element).getPosition().equals(clickedTowerPosition)) hideTowerInfo();
+					//Reset the tower playerType et clickable attributs
 					boolean clickable = false;
 					if (newPlayerType==humanType) clickable = true;
 					((TowerSprite)element).setPlayerType(newPlayerType,clickable);
