@@ -51,7 +51,9 @@ public class GameManager implements Runnable{
 	private Timer timer;
 	private TimerTask timerTask;
 	private TimerTask baseTimerTask;
+	private TimerTask timeIndexTask;
     private static long timeStart;
+    private static int timeIndex;
 	
     /**
      * Constructor of the GameManager class
@@ -71,6 +73,7 @@ public class GameManager implements Runnable{
 		idCount = 0;
 		
 		timeStart = 0;
+		timeIndex = 0;
 	}
 
 	public static long getTime(){
@@ -153,11 +156,11 @@ public class GameManager implements Runnable{
 		
 		//Initiate the bank
 		for(PlayerType playerType:playerTypes){
-			bank.put(playerType, 300);
+			bank.put(playerType, 500);
 		}
 		
 		//Tells the dispatcher that the View need to be initialized : (bases, player's money)
-		dispatcher.initiateGameView(bases, 300);
+		dispatcher.initiateGameView(bases, 500);
 		
 		//Start the timer
 		timer = new Timer();
@@ -237,8 +240,12 @@ public class GameManager implements Runnable{
             						//Change the target's amount
     		            			int newAmount = unit.getAmount()-missile.getDamages();
     		            			unit.setAmount(newAmount);
+    		            			//Updating the player's money
+    		            			int gain = missile.getDamages()*10 + 10*timeIndex;
+    		            			dispatcher.addOrderToView( new MoneyOrder(idCount, gain, missile.getOrigin().getPlayerType()));
     		            			//Tell the view that the unit need to update it's amount
     		            			dispatcher.addOrderToView(new ChangeAmountOrder(unit.getId(), newAmount));
+    		            			idCount++;
                 					break;
             					}
             					
@@ -285,8 +292,12 @@ public class GameManager implements Runnable{
 	            					//Change the target's amount
 		            				int newAmount = missile.getTarget().getAmount()-missile.getDamages();
 		            				missile.getTarget().setAmount(newAmount);
+		            				//Updating the player's money
+    		            			int gain = missile.getDamages()*10+10*timeIndex;
+    		            			dispatcher.addOrderToView( new MoneyOrder(idCount, gain, missile.getOrigin().getPlayerType()));
 		            				//Tell the view that the unit need to update it's amount
 		            				dispatcher.addOrderToView(new ChangeAmountOrder(missile.getTarget().getId(), newAmount));
+		            				idCount++;
 		            				break;
 	            				}
 	            				
@@ -328,8 +339,16 @@ public class GameManager implements Runnable{
             }
         };
         
+        //Action each 1 minute
+        timeIndexTask = new TimerTask(){
+        	public void run(){
+        		timeIndex+=1;
+        	}
+        };
+        
         timer.schedule(timerTask ,0, 100);
 		timer.schedule(baseTimerTask ,0, 2000);
+		timer.schedule(timeIndexTask, 0, 60000);
 	}
 	
 	public void endGame(){
@@ -353,6 +372,14 @@ public class GameManager implements Runnable{
 				
 				//If the order is a SuppressTowerOrder one
 				if(order instanceof SuppressOrder) {
+					
+					//Updating the player's money
+					int amount = bank.get(towerManager.getTower(order.getId()).getPlayerType());
+					double gain = towerManager.getTower(order.getId()).getCost() - towerManager.getTower(order.getId()).getCost()*0.2 - towerManager.getTower(order.getId()).getCost()*0.1*timeIndex;
+					double total = amount + gain;
+					bank.put(towerManager.getTower(order.getId()).getPlayerType(), (int)Math.abs(total));
+					dispatcher.addOrderToView(new MoneyOrder(idCount, (int)Math.abs(total),towerManager.getTower(order.getId()).getPlayerType()));
+					
 					//Remove the tower from the engine list
 					towerManager.suppressTower(order.getId());
 					//Tell the dispatcher that the tower need to be remove from the view

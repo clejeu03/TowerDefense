@@ -25,8 +25,8 @@ public class BombTower extends Tower {
 	 * @param position
 	 * @param playerType
 	 */
-	public BombTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 100, 20, 10000, 5);
+	public BombTower(int id, int cost, Point position, PlayerType playerType) {
+		super(id, cost, position, playerType, 100, 20, 10000, 5);
 		this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
 		this.setAreaDamages(true);
 	}

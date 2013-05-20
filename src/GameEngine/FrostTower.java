@@ -25,8 +25,8 @@ public class FrostTower extends Tower {
 	 * @param position
 	 * @param playerType
 	 */
-	public FrostTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 80, 2, 3500, 5);
+	public FrostTower(int id, int cost, Point position, PlayerType playerType) {
+		super(id, cost, position, playerType, 80, 2, 3500, 5);
 		this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
 		this.setAreaDamages(true);
 	}

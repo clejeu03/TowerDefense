@@ -116,28 +116,28 @@ public class TowerManager {
 	  Tower tower = null;
 	  switch(towerType){
 	  	case ATTACKTOWER:
-	  		tower = new AttackTower(id, position, playerType);
+	  		tower = new AttackTower(id, TowerTypes.ATTACKTOWER.cost, position, playerType);
 	  		break;
 	  	case SUPPORTTOWER :
-	  		tower = new SupportTower(id, position, playerType);
+	  		tower = new SupportTower(id, TowerTypes.SUPPORTTOWER.cost, position, playerType);
 	  		break;
 	  	case GUNTOWER :
-	  		tower = new GunTower(id, position, playerType);
+	  		tower = new GunTower(id, TowerTypes.GUNTOWER.cost, position, playerType);
 	  		break;
 	  	case FROSTTOWER :
-	  		tower = new FrostTower(id, position, playerType);
+	  		tower = new FrostTower(id, TowerTypes.FROSTTOWER.cost, position, playerType);
 	  		break;
 	  	case BOMBTOWER :
-	  		tower = new BombTower(id, position,playerType);
+	  		tower = new BombTower(id, TowerTypes.BOMBTOWER.cost, position,playerType);
 	  		break;
 	  	case LAZERTOWER :
-	  		tower = new LazerTower(id, position, playerType);
+	  		tower = new LazerTower(id, TowerTypes.LAZERTOWER.cost, position, playerType);
 	  		break;
 	  	case MEDICALTOWER :
-	  		tower = new MedicalTower(id, position, playerType);
+	  		tower = new MedicalTower(id, TowerTypes.MEDICALTOWER.cost, position, playerType);
 	  		break;
 	  	case SHIELDTOWER :
-	  		tower = new ShieldTower(id, position, playerType);
+	  		tower = new ShieldTower(id, TowerTypes.SHIELDTOWER.cost, position, playerType);
 	  		break;
 	  	default :
 	  		break;

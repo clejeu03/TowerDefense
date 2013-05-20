@@ -27,8 +27,8 @@ public class SupportTower extends Tower {
 	 * @param position
 	 * @param playerType
 	 */
-	public SupportTower(int id, Point position, PlayerType playerType) {
-		super(id, position, playerType, 35, 0, 0, 9);
+	public SupportTower(int id, int cost, Point position, PlayerType playerType) {
+		super(id, cost, position, playerType, 35, 0, 0, 9);
 		this.setEvolutions(TowerTypes.MEDICALTOWER, TowerTypes.SHIELDTOWER);
 		this.setAreaDamages(false);
 	}

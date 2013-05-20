@@ -22,6 +22,7 @@ import GameEngine.TerritoryMap;
 import GameEngine.Player.PlayerType;
 import GameEngine.SupportTower;
 import GameEngine.Tower;
+import GameEngine.TowerManager;
 import GameEngine.TowerManager.TowerTypes;
 
 
@@ -112,11 +113,11 @@ public class AIManager implements Runnable {
 					if (((AddTowerOrder) o).getPlayerType()==aiType){
 						//We add it in the ai list
 						if(((AddTowerOrder) o).getTowerType()==TowerTypes.ATTACKTOWER){
-							towers.add(new AttackTower(((AddTowerOrder) o).getId(), ((AddTowerOrder) o).getPosition(), aiType));
+							towers.add(new AttackTower(((AddTowerOrder) o).getId(), TowerManager.TowerTypes.ATTACKTOWER.cost(), ((AddTowerOrder) o).getPosition(), aiType));
 						}
 						
 						else if (((AddTowerOrder) o).getTowerType()==TowerTypes.SUPPORTTOWER){
-							towers.add(new SupportTower(((AddTowerOrder) o).getId(), ((AddTowerOrder) o).getPosition(), aiType));
+							towers.add(new SupportTower(((AddTowerOrder) o).getId(), TowerManager.TowerTypes.SUPPORTTOWER.cost(), ((AddTowerOrder) o).getPosition(), aiType));
 						}
 					}
 				}

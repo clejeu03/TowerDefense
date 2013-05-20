@@ -128,6 +128,7 @@ public class ArmyManager {
 		  Effect newEffect = new Effect(GameManager.idCount, unit, type, date, duration, intensity);
 		  effects.add(newEffect);
 		  newEffect.active(unit);
+		  GameManager.idCount++;
 	 }
   }
   /**
@@ -156,6 +157,7 @@ public class ArmyManager {
 			  Effect newEffect = new Effect(GameManager.idCount, unit, type, date, duration);
 			  effects.add(newEffect);
 			  newEffect.active(unit);
+			  GameManager.idCount++;
 	  }
   }
 

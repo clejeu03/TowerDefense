@@ -30,6 +30,7 @@ public abstract class Tower {
 	private int range;
 	private ArrayList<TowerManager.TowerTypes> evolutions;
 	private boolean areaDamages; //if false, just send missiles
+	private int cost;
 	/**
 	 * Define the effects of the Tower. Can be positive (to the player) or negative (to his enemies). Represents a different quantity following
 	 * the type of tower
@@ -55,7 +56,7 @@ public abstract class Tower {
 	 * @param cadency - in milliseconds
 	 * @param speed - speed of the missiles in m/s
 	 */
-	public Tower(int id, Point position, PlayerType playerType, int range, int damage, double cadency, double speed) {
+	public Tower(int id, int cost, Point position, PlayerType playerType, int range, int damage, double cadency, double speed) {
 		this.id = id;
 		this.position = position;
 		this.playerType= playerType;
@@ -65,6 +66,7 @@ public abstract class Tower {
 		this.speed = speed;
 		this.lastShootingTime = 0;
 		this.evolutions = new ArrayList<TowerManager.TowerTypes>();
+		this.cost = cost;
 	}
 	
 	/**
@@ -196,6 +198,20 @@ public abstract class Tower {
 	 */
 	public void setAreaDamages(boolean areaDamages) {
 		this.areaDamages = areaDamages;
+	}
+
+	/**
+	 * @return the cost
+	 */
+	public int getCost() {
+		return cost;
+	}
+
+	/**
+	 * @param cost the cost to set
+	 */
+	public void setCost(int cost) {
+		this.cost = cost;
 	}
 
 }
