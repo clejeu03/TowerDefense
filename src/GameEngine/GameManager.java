@@ -167,7 +167,9 @@ public class GameManager implements Runnable{
             	
             	//Move units
             	for(Unit unit:armyManager.getUnits()){
+            		PlayerType ptDst = unit.getDestination().getPlayerType();
             		int state =armyManager.moveUnit(unit, mapManager);
+            		
         			if(state==0){
         				//Tell the dispatcher that the unit need to be move
         				dispatcher.addOrderToView(new MoveUnitOrder(unit.getId(), unit.getPosition()));
@@ -178,12 +180,35 @@ public class GameManager implements Runnable{
         				System.out.println("Engine - Suppress the unit "+unit.getId());
         				dispatcher.addOrderToView(new ChangeAmountOrder(unit.getDestination().getId(), unit.getDestination().getAmount()));
         				//dispatcher.addOrderToView(new AddUnitOrder(unit.getId(), unit.getOrigin().getPlayerType(), unit.getOrigin().getPosition(), unit.getDestination().getPosition(), unit.getAmount()));
-        				armyManager.suppressUnit(unit);
+        				
         				
         				if (state ==2){
+        					//Change the owner of the towers in the territory of the base captured
+        					if (ptDst!=PlayerType.NEUTRAL){
+        						for (Tower t:towerManager.getTowers()){
+            						int territoryMapValue = unit.getDestination().getTerritoryMap().getPixel(t.getPosition().x, t.getPosition().y);
+                					int playerNumber = 1;
+                					for (PlayerType p:playerTypes){
+                						if (p==t.getPlayerType()){
+                							break;
+                						}
+                						playerNumber++;
+                					}
+                					
+                					if (territoryMapValue!=playerNumber && territoryMapValue!=-1){
+                						System.out.println("Changing Owner of tower id="+t.getId()+"from player"+playerNumber+" to player"+territoryMapValue);
+                						towerManager.changeOwner(t.getId(),unit.getPlayerType());
+                						dispatcher.addOrderToView(new ChangeOwnerOrder(t.getId(),unit.getPlayerType()));
+                						dispatcher.addOrderToAI(new ChangeOwnerOrder(t.getId(),unit.getPlayerType()));
+                					}
+        						}
+            				}
+        					
         					dispatcher.addOrderToView(new ChangeOwnerOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType()));
         					dispatcher.addOrderToAI(new ChangeOwnerOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType()));
         				}
+        				
+        				armyManager.suppressUnit(unit);
         				break;
         			}
         		}

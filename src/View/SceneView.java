@@ -733,6 +733,11 @@ public class SceneView extends MainViews implements Runnable{
 				if((element.getId()==id)&&(element instanceof BaseSprite)){
 					((BaseSprite)element).setPlayerType(newPlayerType);
 				}
+				if((element.getId()==id)&&(element instanceof TowerSprite)){
+					boolean clickable = false;
+					if (newPlayerType==humanType) clickable = true;
+					((TowerSprite)element).setPlayerType(newPlayerType,clickable);
+				}
 			}
 		}});
 	}
