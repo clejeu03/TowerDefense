@@ -194,19 +194,25 @@ public class GameManager implements Runnable{
             			for(Unit unit:warManager.areaDamagesTarget(missile, armyManager)){
             				switch(missile.getAttackType()){
             				case NORMAL :
-            					//Change the target's amount
-		            			int newAmount = unit.getAmount()-missile.getDamages();
-		            			unit.setAmount(newAmount);
-		            			//Tell the view that the unit need to update it's amount
-		            			dispatcher.addOrderToView(new ChangeAmountOrder(unit.getId(), newAmount));
-            					break;
+            					//If the unit has shield it has no damages
+            					if(missile.getTarget().isProtected()){
+            						System.out.println("Attack failed.");
+            						missile.getTarget().setProtected(false);
+            						break;
+            					}else{
+            						//Change the target's amount
+    		            			int newAmount = unit.getAmount()-missile.getDamages();
+    		            			unit.setAmount(newAmount);
+    		            			//Tell the view that the unit need to update it's amount
+    		            			dispatcher.addOrderToView(new ChangeAmountOrder(unit.getId(), newAmount));
+                					break;
+            					}
+            					
 	            			case SHIELD :
-	            				System.out.println(" ===== Shield Attack =====");
 	            				//TODO symbolize in the view ?
 	            				armyManager.createEffect(missile.getTarget(), missile.getAttackType(), getTime(),5000);
 	            				break;
 	            			case FROST :
-	            				System.out.println(" ===== Frost Attack =====");
 	            				//TODO symbolize in the view ?
 	            				//Apply a frost effect that reduce unit's speed by 0.2 for 5000 ms
 	            				armyManager.createEffect(missile.getTarget(), missile.getAttackType(), getTime(),5000, 0.2);
@@ -236,12 +242,19 @@ public class GameManager implements Runnable{
 	            			
 	            			//Basic Attack
 	            			case NORMAL :
-	            				//Change the target's amount
-	            				int newAmount = missile.getTarget().getAmount()-missile.getDamages();
-	            				missile.getTarget().setAmount(newAmount);
-	            				//Tell the view that the unit need to update it's amount
-	            				dispatcher.addOrderToView(new ChangeAmountOrder(missile.getTarget().getId(), newAmount));
-	            				break;
+	            				//If the unit has shield it has no damages
+	            				if(missile.getTarget().isProtected()){
+	            					System.out.println("Attack failed.");
+	            					missile.getTarget().setProtected(false);
+	            					break;
+	            				}else{
+	            					//Change the target's amount
+		            				int newAmount = missile.getTarget().getAmount()-missile.getDamages();
+		            				missile.getTarget().setAmount(newAmount);
+		            				//Tell the view that the unit need to update it's amount
+		            				dispatcher.addOrderToView(new ChangeAmountOrder(missile.getTarget().getId(), newAmount));
+		            				break;
+	            				}
 	            				
 	            			//Attack that sends +10 agents to an unit
 	            			case GENERATION :

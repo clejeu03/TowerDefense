@@ -59,7 +59,6 @@ public class Effect {
 	 * @param unit
 	 */
 	public void active(Unit unit){
-		System.out.println("Effect start :"+this.getBeginTime()+" and duration :"+this.getDuration());
 		switch(this.type){
 		case SHIELD : 
 			unit.setProtected(true);
