@@ -362,22 +362,18 @@ public class GameManager implements Runnable{
 				
 				//If the order is a EvolveTowerOrder one
 				if(order instanceof EvolveTowerOrder){
-					
-					//Tell the engine to make the tower evolve
-					towerManager.evolveTower((order).getId(), ((EvolveTowerOrder) order).getType());
-					
-
-					//Retrieve the range of the tower
-					int range = towerManager.getTower((order).getId()).getRange();
-					
-					//Tell the view that the tower need to be evolve
-					dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType(), range));
-
-					//dispatcher.addOrderToView(new SuppressOrder(((order).getId())));
-					//dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getPosition(), ((EvolveTowerOrder) order).getType(), ((AddTowerOrder) order).getRange()));
-			
-					//++idCount;			
-
+					//Find the tower
+					Tower tower = towerManager.getTower((order).getId());
+					if(((EvolveTowerOrder) order).getType().cost() <= bank.get(tower.getPlayerType())){
+						//Tell the engine to make the tower evolve
+						towerManager.evolveTower((order).getId(), ((EvolveTowerOrder) order).getType());
+						//Update the player's money
+						int amount = bank.get(tower.getPlayerType()) - ((EvolveTowerOrder) order).getType().cost();
+						bank.put(tower.getPlayerType(), amount);
+						dispatcher.addOrderToView(new MoneyOrder(idCount, amount,tower.getPlayerType()));
+						//Tell the view that the tower need to be evolve
+						dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType(), tower.getRange()));
+					}
 				}
 				
 				//If the order is a AddTowerOrder one
@@ -406,7 +402,7 @@ public class GameManager implements Runnable{
 							if(zoneId <6 && ((AddTowerOrder) order).getPlayerType()== playerTypes.get(zoneId-1)){
 								
 								//Test if there's enough money
-								if(((AddTowerOrder) order).getTowerType().cost() < bank.get(((AddTowerOrder) order).getPlayerType()) ){
+								if(((AddTowerOrder) order).getTowerType().cost() <= bank.get(((AddTowerOrder) order).getPlayerType()) ){
 								
 									//Add the Tower
 									towerManager.createTower(idCount, ((AddTowerOrder) order).getPlayerType(), ((AddTowerOrder) order).getTowerType(), ((AddTowerOrder) order).getPosition());
