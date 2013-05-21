@@ -69,7 +69,7 @@ public class DispatcherManager {
 		view.initiateGameView(bases, money);
 		//TODO : AI money
 		for (AIManager ai:aiEnemy)
-			ai.initiateGameView(bases);
+			ai.initiateGameView(bases,money);
 	}
 
 	/**

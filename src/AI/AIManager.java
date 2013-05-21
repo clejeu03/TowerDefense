@@ -16,6 +16,7 @@ import Dispatcher.AddUnitOrder;
 import Dispatcher.ChangeOwnerOrder;
 import Dispatcher.DispatcherManager;
 import Dispatcher.EvolveTowerOrder;
+import Dispatcher.MoneyOrder;
 import Dispatcher.Order;
 import GameEngine.AttackTower;
 import GameEngine.Base;
@@ -67,7 +68,7 @@ public class AIManager implements Runnable {
 	 * Get the initial bases on screen
 	 * @param bases
 	 */
-	public void initiateGameView(ArrayList<Base> bases){
+	public void initiateGameView(ArrayList<Base> bases, int money){
 		for (Base b:bases){
 			if (b.getPlayerType().equals(aiType)){
 				this.bases.add(b);
@@ -82,6 +83,7 @@ public class AIManager implements Runnable {
 			mapWidth = bases.get(0).getTerritoryMap().getWidth();
 		}
 		
+		this.money=money;
 	}
 
 	/**
@@ -97,9 +99,10 @@ public class AIManager implements Runnable {
 				running = false;
 			}
 			refreshInfo();
-			printInfo();
+			//printInfo();
 			attackBehavior();
 			towerBehavior();
+			evolveBehavior();
 		}
 	}
 
@@ -180,6 +183,7 @@ public class AIManager implements Runnable {
 							}
 							index++;
 						}
+						index=0;
 						//if the object is a tower
 						if(notABase){
 							for (Tower t:towers){
@@ -228,33 +232,43 @@ public class AIManager implements Runnable {
 					
 					//Check into what the tower is evolving
 					Tower newTower = null;
-					switch(((EvolveTowerOrder)o).getType()){
-					case BOMBTOWER:
-						newTower = new BombTower(oldTower.getId(), TowerTypes.BOMBTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
-						break;
-					case FROSTTOWER:
-						newTower = new FrostTower(oldTower.getId(), TowerTypes.FROSTTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
-						break;
-					case GUNTOWER:
-						newTower = new GunTower(oldTower.getId(), TowerTypes.GUNTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
-						break;
-					case LAZERTOWER:
-						newTower = new LazerTower(oldTower.getId(), TowerTypes.LAZERTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
-						break;
-					case MEDICALTOWER:
-						newTower = new MedicalTower(oldTower.getId(), TowerTypes.MEDICALTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
-						break;
-					case SHIELDTOWER:
-						newTower = new ShieldTower(oldTower.getId(), TowerTypes.SHIELDTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
-						break;
-					default:
-						System.out.println("AI - Unknown type of evolving tower");
+					try{
+						switch(((EvolveTowerOrder)o).getType()){
+						case BOMBTOWER:
+							newTower = new BombTower(oldTower.getId(), TowerTypes.BOMBTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+							break;
+						case FROSTTOWER:
+							newTower = new FrostTower(oldTower.getId(), TowerTypes.FROSTTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+							break;
+						case GUNTOWER:
+							newTower = new GunTower(oldTower.getId(), TowerTypes.GUNTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+							break;
+						case LAZERTOWER:
+							newTower = new LazerTower(oldTower.getId(), TowerTypes.LAZERTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+							break;
+						case MEDICALTOWER:
+							newTower = new MedicalTower(oldTower.getId(), TowerTypes.MEDICALTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+							break;
+						case SHIELDTOWER:
+							newTower = new ShieldTower(oldTower.getId(), TowerTypes.SHIELDTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+							break;
+						default:
+							System.out.println("AI - Unknown type of evolving tower");
+						}
 					}
+					catch(NullPointerException e){
+						System.out.println("Program interrupted");
+					}
+					
 				
 					//Create a new tower and add it in the right container
 					if(notAAiTower) enemyTowers.add(newTower);
 					else towers.add(newTower);					
 				
+				}
+				
+				if (o instanceof MoneyOrder){
+					if(((MoneyOrder)o).getPlayerType()==aiType) money = ((MoneyOrder)o).getAmount();
 				}
 			}
 		}
@@ -265,7 +279,7 @@ public class AIManager implements Runnable {
 	 */
 	private void printInfo(){
 		if (!bases.isEmpty() || !enemyBases.isEmpty() || !towers.isEmpty()){
-			System.out.println("-----------------AI "+aiType+"--------------------");
+			System.out.println("-----------------AI "+aiType+"---MONEY +"+money+"-----------------");
 			if(!bases.isEmpty()){
 				for(Base b:bases){
 					System.out.println("AI : AIBase ID="+b.getId()+" Amount="+b.getAmount());
@@ -400,15 +414,16 @@ public class AIManager implements Runnable {
 	 * @param amount - troops sent
 	 */
 	private void sendUnit(int idBaseSrc, int idBaseDst, int amount){
-		//TODO Changer constructeur AddUnitOrder
 		dispatcher.addOrderToEngine(new AddUnitOrder(-1, idBaseSrc, idBaseDst, amount));	
 		System.out.println("Order send : attack from="+idBaseSrc+" to="+idBaseDst+" with "+amount+"% of his power");
 	}
 	
+	/**
+	 * How the AI choose to create towers
+	 */
 	private void towerBehavior(){
 		
-		//TODO if MONEY > 200
-		if (towers.size()<3){	
+		if(money>100&&towers.size()<=2){	
 			LinkedList<Point> availablePositions = new LinkedList<Point>();
 			
 			//Get all the available positions for placing tower
@@ -526,11 +541,46 @@ public class AIManager implements Runnable {
 	}
 	
 	/**
-	 * Upgrate an AI Tower 
+	 * How the AI chooses to evolve its towers
+	 */
+	private void evolveBehavior(){
+		if (!towers.isEmpty()){
+			for(Tower t:towers){
+				double random = Math.random();
+				int evolution;
+				if (t.getFirstEvolution()!=TowerTypes.NOTOWER && t.getSecondEvolution()!=TowerTypes.NOTOWER){
+					if (random<0.5) evolution = 0;
+					else evolution = 1;
+					
+					if(t.getEvolutions().get(evolution).cost()<=money){
+						evolveTower(t.getId(),t.getEvolutions().get(evolution));
+					}
+				}
+				else if (t.getFirstEvolution()!=TowerTypes.NOTOWER && t.getSecondEvolution()==TowerTypes.NOTOWER){
+					evolution=0;
+					
+					if(t.getEvolutions().get(evolution).cost()<=money){
+						evolveTower(t.getId(),t.getEvolutions().get(evolution));
+					}
+				}
+				else if (t.getFirstEvolution()==TowerTypes.NOTOWER && t.getSecondEvolution()!=TowerTypes.NOTOWER){
+					evolution=1;
+					
+					if(t.getEvolutions().get(evolution).cost()<=money){
+						evolveTower(t.getId(),t.getEvolutions().get(evolution));
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Evolve an AI Tower 
 	 * @param idTower - ID's tower
 	 */
-	private void upgradeTower(int idTower){
-		//dispatcher.addOrderToEngine(new ......)
+	private void evolveTower(int idTower, TowerTypes newType){
+		System.out.println("AI - ID "+idTower+" newType "+newType);
+		dispatcher.addOrderToEngine(new EvolveTowerOrder(idTower, newType, -1));
 	}
 	
 	/**
@@ -541,6 +591,10 @@ public class AIManager implements Runnable {
 		return running;
 	}
 	
+	/**
+	 * Getter - Return the PlayerType of the AI
+	 * @return
+	 */
 	public PlayerType getPlayerType(){
 		return aiType;
 	}

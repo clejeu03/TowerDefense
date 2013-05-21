@@ -194,7 +194,8 @@ public class GameManager implements Runnable{
         				
         				//Updating the player's money
 						bank.put(unit.getPlayerType(), bank.get(unit.getPlayerType())+unit.getAmount() +10*timeIndex);
-						dispatcher.addOrderToView( new MoneyOrder(idCount, bank.get(unit.getPlayerType())+10*timeIndex, unit.getPlayerType()));
+						dispatcher.addOrderToView( new MoneyOrder(-1, bank.get(unit.getPlayerType())+10*timeIndex, unit.getPlayerType()));
+						dispatcher.addOrderToAI( new MoneyOrder(-1, bank.get(unit.getPlayerType())+10*timeIndex, unit.getPlayerType()));
         				
         				if (state ==2){
         					//Change the owner of the towers in the territory of the base captured
@@ -224,7 +225,8 @@ public class GameManager implements Runnable{
         					
         					//Updating the player's money
     						bank.put(unit.getPlayerType(), bank.get(unit.getPlayerType())+50 );
-    						dispatcher.addOrderToView( new MoneyOrder(idCount, bank.get(unit.getPlayerType())+50, unit.getPlayerType()));
+    						dispatcher.addOrderToView( new MoneyOrder(-1, bank.get(unit.getPlayerType())+50, unit.getPlayerType()));
+    						dispatcher.addOrderToAI( new MoneyOrder(-1, bank.get(unit.getPlayerType())+50, unit.getPlayerType()));
         					
         					dispatcher.addOrderToView(new ChangeOwnerOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType()));
         					dispatcher.addOrderToAI(new ChangeOwnerOrder(unit.getDestination().getId(),unit.getDestination().getPlayerType()));
@@ -254,10 +256,11 @@ public class GameManager implements Runnable{
     		            			unit.setAmount(newAmount);
     		            			//Updating the player's money
     		            			int gain = missile.getDamages()*10 + 10*timeIndex;
-    		            			dispatcher.addOrderToView( new MoneyOrder(idCount, gain, missile.getOrigin().getPlayerType()));
+    		            			dispatcher.addOrderToView( new MoneyOrder(-1, gain, missile.getOrigin().getPlayerType()));
+    		            			dispatcher.addOrderToAI( new MoneyOrder(-1, gain, missile.getOrigin().getPlayerType()));
+    		            			
     		            			//Tell the view that the unit need to update it's amount
     		            			dispatcher.addOrderToView(new ChangeAmountOrder(unit.getId(), newAmount));
-    		            			idCount++;
                 					break;
             					}
             					
@@ -306,10 +309,11 @@ public class GameManager implements Runnable{
 		            				missile.getTarget().setAmount(newAmount);
 		            				//Updating the player's money
     		            			int gain = missile.getDamages()*10+10*timeIndex;
-    		            			dispatcher.addOrderToView( new MoneyOrder(idCount, gain, missile.getOrigin().getPlayerType()));
-		            				//Tell the view that the unit need to update it's amount
+    		            			dispatcher.addOrderToView( new MoneyOrder(-1, gain, missile.getOrigin().getPlayerType()));
+    		            			dispatcher.addOrderToAI( new MoneyOrder(-1, gain, missile.getOrigin().getPlayerType()));
+		            				
+    		            			//Tell the view that the unit need to update it's amount
 		            				dispatcher.addOrderToView(new ChangeAmountOrder(missile.getTarget().getId(), newAmount));
-		            				idCount++;
 		            				break;
 	            				}
 	            				
@@ -390,13 +394,13 @@ public class GameManager implements Runnable{
 					double gain = towerManager.getTower(order.getId()).getCost() - towerManager.getTower(order.getId()).getCost()*0.2 - towerManager.getTower(order.getId()).getCost()*0.1*timeIndex;
 					double total = amount + gain;
 					bank.put(towerManager.getTower(order.getId()).getPlayerType(), (int)Math.abs(total));
-					dispatcher.addOrderToView(new MoneyOrder(idCount, (int)Math.abs(total),towerManager.getTower(order.getId()).getPlayerType()));
+					dispatcher.addOrderToView(new MoneyOrder(-1, (int)Math.abs(total),towerManager.getTower(order.getId()).getPlayerType()));
+					dispatcher.addOrderToAI(new MoneyOrder(-1, (int)Math.abs(total),towerManager.getTower(order.getId()).getPlayerType()));
 					
 					//Remove the tower from the engine list
 					towerManager.suppressTower(order.getId());
 					//Tell the dispatcher that the tower need to be remove from the view
 					dispatcher.addOrderToView(new SuppressOrder(order.getId()));
-					idCount++;
 					
 				}
 				
@@ -405,12 +409,15 @@ public class GameManager implements Runnable{
 					//Find the tower
 					Tower tower = towerManager.getTower((order).getId());
 					if(((EvolveTowerOrder) order).getType().cost() <= bank.get(tower.getPlayerType())){
+						System.out.println("GameEngine - OK for Evolve");
 						//Tell the engine to make the tower evolve
 						towerManager.evolveTower((order).getId(), ((EvolveTowerOrder) order).getType());
 						//Update the player's money
 						int amount = bank.get(tower.getPlayerType()) - ((EvolveTowerOrder) order).getType().cost();
 						bank.put(tower.getPlayerType(), amount);
-						dispatcher.addOrderToView(new MoneyOrder(idCount, amount,tower.getPlayerType()));
+						dispatcher.addOrderToView(new MoneyOrder(-1, amount,tower.getPlayerType()));
+						dispatcher.addOrderToAI(new MoneyOrder(-1, amount,tower.getPlayerType()));
+						
 						//Tell the view that the tower need to be evolve
 						dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType(), towerManager.getTower((order).getId()).getRange()));
 						dispatcher.addOrderToAI(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType(), towerManager.getTower((order).getId()).getRange()));
@@ -451,7 +458,8 @@ public class GameManager implements Runnable{
 									//Update the money
 									int amount = bank.get(((AddTowerOrder) order).getPlayerType()) - ((AddTowerOrder) order).getTowerType().cost();
 									bank.put(((AddTowerOrder) order).getPlayerType(), amount);
-									dispatcher.addOrderToView(new MoneyOrder(idCount, amount,((AddTowerOrder) order).getPlayerType()));
+									dispatcher.addOrderToView(new MoneyOrder(-1, amount,((AddTowerOrder) order).getPlayerType()));
+									dispatcher.addOrderToAI(new MoneyOrder(-1, amount,((AddTowerOrder) order).getPlayerType()));
 									//Search the tower to add it to the view
 									Tower tower = towerManager.getTower(idCount);
 									dispatcher.addOrderToView(new AddTowerOrder(idCount, ((AddTowerOrder) order).getPlayerType(), tower.getPosition(),((AddTowerOrder) order).getTowerType(),tower.getRange()));
