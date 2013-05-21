@@ -15,9 +15,16 @@ import Dispatcher.AddTowerOrder;
 import Dispatcher.AddUnitOrder;
 import Dispatcher.ChangeOwnerOrder;
 import Dispatcher.DispatcherManager;
+import Dispatcher.EvolveTowerOrder;
 import Dispatcher.Order;
 import GameEngine.AttackTower;
 import GameEngine.Base;
+import GameEngine.BombTower;
+import GameEngine.FrostTower;
+import GameEngine.GunTower;
+import GameEngine.LazerTower;
+import GameEngine.MedicalTower;
+import GameEngine.ShieldTower;
 import GameEngine.TerritoryMap;
 import GameEngine.Player.PlayerType;
 import GameEngine.SupportTower;
@@ -33,6 +40,7 @@ public class AIManager implements Runnable {
 	private ArrayList<Base> bases;
 	private ArrayList<Base> enemyBases;
 	private ArrayList<Tower> towers;
+	private ArrayList<Tower> enemyTowers;
 	
 	private LinkedList<Order> orderQueue;
 	
@@ -50,7 +58,7 @@ public class AIManager implements Runnable {
 		bases = new ArrayList<Base>();
 		enemyBases = new ArrayList<Base>();
 		towers = new ArrayList<Tower>();
-		
+		enemyTowers = new ArrayList<Tower>();
 		orderQueue = new LinkedList<Order>();
 		this.aiType = aiType;
 	}
@@ -120,33 +128,133 @@ public class AIManager implements Runnable {
 							towers.add(new SupportTower(((AddTowerOrder) o).getId(), TowerManager.TowerTypes.SUPPORTTOWER.cost(), ((AddTowerOrder) o).getPosition(), aiType));
 						}
 					}
+					//If a tower is created by a player
+					else
+					{
+						if(((AddTowerOrder) o).getTowerType()==TowerTypes.ATTACKTOWER){
+							enemyTowers.add(new AttackTower(((AddTowerOrder) o).getId(), TowerManager.TowerTypes.ATTACKTOWER.cost(), ((AddTowerOrder) o).getPosition(), aiType));
+						}
+						
+						else if (((AddTowerOrder) o).getTowerType()==TowerTypes.SUPPORTTOWER){
+							enemyTowers.add(new SupportTower(((AddTowerOrder) o).getId(), TowerManager.TowerTypes.SUPPORTTOWER.cost(), ((AddTowerOrder) o).getPosition(), aiType));
+						}
+					}
 				}
 				
 				if (o instanceof ChangeOwnerOrder){
+					//if the new owner is the AI
 					if (((ChangeOwnerOrder)o).getNewPlayerType()==aiType){
+						//if the object is a base
 						int index=0;
+						boolean notABase = true;
 						for (Base b:enemyBases){
 							if (b.getId()==o.getId()){
 								bases.add(enemyBases.remove(index));
+								notABase = false;
 								break;
 							}
 							index++;
 						}
+						//if the object is a tower
+						if (notABase){
+							index = 0;
+							for (Tower t:enemyTowers){
+								if (t.getId()==t.getId()){
+									towers.add(enemyTowers.remove(index));
+									break;
+								}
+								index++;
+							}
+						}
 					}
+					//if the new owner is not the ai
 					else{
+						//if the object is a base
 						int index=0;
+						boolean notABase = true;
 						for (Base b:bases){
 							if (b.getId()==o.getId()){
 								enemyBases.add(bases.remove(index));
+								notABase = false;
 								break;
 							}
 							index++;
 						}
+						//if the object is a tower
+						if(notABase){
+							for (Tower t:towers){
+								if (t.getId()==o.getId()){
+									enemyTowers.add(towers.remove(index));
+									notABase = false;
+									break;
+								}
+								index++;
+							}
+						}
+						//if the Ai doesn't have bases anymore
 						if (bases.isEmpty()) {
 							stop();
 							interrupt();
 						}
 					}
+				}
+				
+				if (o instanceof EvolveTowerOrder){
+					Tower oldTower = null;
+					boolean notAAiTower = true;
+					
+					//Check if the tower is owned by the AI and remove the old one if so
+					int index = 0;
+					for(Tower t:towers){
+						if (((EvolveTowerOrder)o).getId()==t.getId()){
+							notAAiTower = false;
+							oldTower = towers.remove(index);
+							break;
+						}
+						index++;
+					}
+					
+					//Check if the tower is owned by a player and remove the old one if so
+					if (notAAiTower){
+						index=0;
+						for(Tower t:enemyTowers){
+							if (((EvolveTowerOrder)o).getId()==t.getId()){
+								oldTower = enemyTowers.remove(index);
+								break;
+							}
+							index++;
+						}
+					}
+					
+					//Check into what the tower is evolving
+					Tower newTower = null;
+					switch(((EvolveTowerOrder)o).getType()){
+					case BOMBTOWER:
+						newTower = new BombTower(oldTower.getId(), TowerTypes.BOMBTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+						break;
+					case FROSTTOWER:
+						newTower = new FrostTower(oldTower.getId(), TowerTypes.FROSTTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+						break;
+					case GUNTOWER:
+						newTower = new GunTower(oldTower.getId(), TowerTypes.GUNTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+						break;
+					case LAZERTOWER:
+						newTower = new LazerTower(oldTower.getId(), TowerTypes.LAZERTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+						break;
+					case MEDICALTOWER:
+						newTower = new MedicalTower(oldTower.getId(), TowerTypes.MEDICALTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+						break;
+					case SHIELDTOWER:
+						newTower = new ShieldTower(oldTower.getId(), TowerTypes.SHIELDTOWER.cost(), oldTower.getPosition(),oldTower.getPlayerType());
+						break;
+					default:
+						System.out.println("AI - Unknown type of evolving tower");
+					}
+				
+					//Create a new tower and add it in the right container
+					if(notAAiTower) enemyTowers.add(newTower);
+					else towers.add(newTower);					
+				
 				}
 			}
 		}
@@ -175,9 +283,43 @@ public class AIManager implements Runnable {
 					TowerTypes type = null;
 					if (t instanceof AttackTower)
 						type = TowerTypes.ATTACKTOWER;
-					if (t instanceof SupportTower)
+					else if (t instanceof SupportTower)
 						type = TowerTypes.SUPPORTTOWER;
+					else if (t instanceof GunTower)
+						type = TowerTypes.GUNTOWER;
+					else if (t instanceof FrostTower)
+						type = TowerTypes.FROSTTOWER;
+					else if (t instanceof LazerTower)
+						type = TowerTypes.LAZERTOWER;
+					else if (t instanceof BombTower)
+						type = TowerTypes.BOMBTOWER;
+					else if (t instanceof MedicalTower)
+						type = TowerTypes.MEDICALTOWER;
+					else if (t instanceof ShieldTower)
+						type = TowerTypes.SHIELDTOWER;
 					System.out.println("AI : Tower ID="+t.getId()+" Position="+t.getPosition() + " Type="+type);
+				}
+			}
+			if(!enemyTowers.isEmpty()){
+				for(Tower t:enemyTowers){
+					TowerTypes type = null;
+					if (t instanceof AttackTower)
+						type = TowerTypes.ATTACKTOWER;
+					else if (t instanceof SupportTower)
+						type = TowerTypes.SUPPORTTOWER;
+					else if (t instanceof GunTower)
+						type = TowerTypes.GUNTOWER;
+					else if (t instanceof FrostTower)
+						type = TowerTypes.FROSTTOWER;
+					else if (t instanceof LazerTower)
+						type = TowerTypes.LAZERTOWER;
+					else if (t instanceof BombTower)
+						type = TowerTypes.BOMBTOWER;
+					else if (t instanceof MedicalTower)
+						type = TowerTypes.MEDICALTOWER;
+					else if (t instanceof ShieldTower)
+						type = TowerTypes.SHIELDTOWER;
+					System.out.println("AI : EnemyTower ID="+t.getId()+" Position="+t.getPosition() + " Type="+type);
 				}
 			}
 			System.out.println("---------------------------------------------");

@@ -413,6 +413,8 @@ public class GameManager implements Runnable{
 						dispatcher.addOrderToView(new MoneyOrder(idCount, amount,tower.getPlayerType()));
 						//Tell the view that the tower need to be evolve
 						dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType(), towerManager.getTower((order).getId()).getRange()));
+						dispatcher.addOrderToAI(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType(), towerManager.getTower((order).getId()).getRange()));
+						
 					}
 				}
 				
