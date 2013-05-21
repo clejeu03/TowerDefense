@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import GameEngine.Tower;
 import GameEngine.TowerManager;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
@@ -36,6 +37,7 @@ public class SceneView extends MainViews implements Runnable{
     private Image territoryMap;
     
     private ArrayList<Sprite> sprites;
+    private ArrayList<Lazer> lazers;
     
     private PlayerType humanType;
     
@@ -72,6 +74,7 @@ public class SceneView extends MainViews implements Runnable{
 		super(view, position, width,height);
 	
 		sprites = new ArrayList<Sprite>();
+		lazers = new ArrayList<Lazer>();
 		towerClicked = false;
 		baseClicked = false;
 		attackBase = false;	
@@ -191,6 +194,13 @@ public class SceneView extends MainViews implements Runnable{
 			Sprite element = it.next();
 			it.remove();
 			remove(element);
+		}
+		
+		//Removing all the lazers
+		Iterator<Lazer> iter = lazers.iterator();
+		while (iter.hasNext()) {
+			Lazer element = iter.next();
+			iter.remove();
 		}
 		
 		//Loading the image map
@@ -478,10 +488,12 @@ public class SceneView extends MainViews implements Runnable{
 	public void addUnit(int id, int srcId, int amount){
 		Point position = null;
 		PlayerType playerType = null;
-		for(Sprite s: sprites){
-			if(s.getId()==srcId){
-				position = s.getPosition();
-				playerType = s.getPlayerType();
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			if(element.getId()==srcId){
+				position = element.getPosition();
+				playerType = element.getPlayerType();
 				break;
 			}
 		}
@@ -499,19 +511,31 @@ public class SceneView extends MainViews implements Runnable{
 	 * @see ViewManager#refresh()
 	 */	
 	public void addMissile(int id, PlayerType playerType, Point position, boolean isArea){
-		//If the missile is an area one, the matching tower need to be activated
-		if(isArea){
-			Iterator<Sprite> it = sprites.iterator();
-			while (it.hasNext()) {
-				Sprite element = it.next();
-				if((element.getPosition().equals(position))&&(element instanceof TowerSprite)){
+		boolean toAdd = true;
+		
+		//Checking the type of the source tower of the missile
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			if((element.getPosition().equals(position))&&(element instanceof TowerSprite)){
+				//If the missile is an area one, the matching tower need to be activated
+				if(isArea) {
 					((TowerSprite) element).setActivated(true);
+				}				
+				//TODO If the tower is a lazer one, we need to add a lazer
+				if(((TowerSprite) element).getTowerType() == TowerTypes.LAZERTOWER){
+					System.out.println("lazer ajouté "+id);
+					toAdd = false;
+					lazers.add(new Lazer(id, position, playerType, ((TowerSprite) element).getPosition()));
 				}
-			}	
+			}
+		}	
+		
+		if(toAdd){
+			System.out.println("View - Add a Missile "+id);
+			MissileSprite missile = new MissileSprite(this,id, position, playerType, isArea);
+			addSprite(missile);
 		}
-		System.out.println("View - Add a Missile "+id);
-		MissileSprite unit = new MissileSprite(this,id, position, playerType, isArea);
-		addSprite(unit);
 	}
 	
 	/**
@@ -681,6 +705,15 @@ public class SceneView extends MainViews implements Runnable{
 	 * @see ViewManager#refresh()
 	 */
 	public void suppressObject(final int id){
+		//if the missile is a lazer one
+		  for(Lazer lazer:lazers){
+			  if(lazer.getId() == id){
+				  System.out.println("Lazer supprimé  "+id);
+				  lazers.remove(lazer);
+				  break;
+			  }
+		  }
+		
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			Iterator<Sprite> it = sprites.iterator();	
@@ -827,6 +860,15 @@ public class SceneView extends MainViews implements Runnable{
 	 * @see ViewManager#refresh()
 	 */
 	public void moveMissile(final int id, final Point newPosition){
+		//if the missile is a lazer one
+		  for(Lazer lazer:lazers){
+			  if(lazer.getId() == id){
+				System.out.println("Lazer bougé "+id);
+				lazer.setPosition(newPosition);
+				revalidate();
+				repaint();
+			  }
+		  }
 		
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
@@ -912,6 +954,29 @@ public class SceneView extends MainViews implements Runnable{
 				g.setColor(towerColor);
 				g.fillOval((((TowerSprite) element).getPosition().x-(((TowerSprite) element).getRange())), element.getPosition().y -(((TowerSprite) element).getRange()), 2*((TowerSprite) element).getRange(), 2*((TowerSprite) element).getRange());
 			}
-		}	
+		}
+		
+		//Drawing the lazers
+		Iterator<Lazer> iterator = lazers.iterator();
+		while (iterator.hasNext()) {
+			Lazer lazer = iterator.next();
+			Color lazerColor = null;
+			if(lazer.getPlayerType() == PlayerType.ELECTRIC){
+				lazerColor = new Color(255,255,0,200);
+			}
+			else if(lazer.getPlayerType()== PlayerType.WATER){
+				lazerColor = new Color(0,0,255,200);
+			}
+			else if(lazer.getPlayerType() == PlayerType.GRASS){
+				lazerColor = new Color(0,255,0,200);
+			}
+			else if(lazer.getPlayerType()== PlayerType.FIRE){
+				lazerColor = new Color(255,0,0,200);
+			}
+			g.setColor(lazerColor);
+			g.drawLine(lazer.getTowerPosition().x,lazer.getTowerPosition().y, lazer.getPosition().x, lazer.getPosition().y);
+				
+		}
+	
 	 }              
 }
