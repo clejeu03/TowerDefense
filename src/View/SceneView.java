@@ -954,6 +954,29 @@ public class SceneView extends MainViews implements Runnable{
 				g.setColor(towerColor);
 				g.fillOval((((TowerSprite) element).getPosition().x-(((TowerSprite) element).getRange())), element.getPosition().y -(((TowerSprite) element).getRange()), 2*((TowerSprite) element).getRange(), 2*((TowerSprite) element).getRange());
 			}
-		}	
+		}
+		
+		//Drawing the lazers
+		Iterator<Lazer> iterator = lazers.iterator();
+		while (iterator.hasNext()) {
+			Lazer lazer = iterator.next();
+			Color lazerColor = null;
+			if(lazer.getPlayerType() == PlayerType.ELECTRIC){
+				lazerColor = new Color(255,255,0,200);
+			}
+			else if(lazer.getPlayerType()== PlayerType.WATER){
+				lazerColor = new Color(0,0,255,200);
+			}
+			else if(lazer.getPlayerType() == PlayerType.GRASS){
+				lazerColor = new Color(0,255,0,200);
+			}
+			else if(lazer.getPlayerType()== PlayerType.FIRE){
+				lazerColor = new Color(255,0,0,200);
+			}
+			g.setColor(lazerColor);
+			g.drawLine(lazer.getTowerPosition().x,lazer.getTowerPosition().y, lazer.getPosition().x, lazer.getPosition().y);
+				
+		}
+	
 	 }              
 }
