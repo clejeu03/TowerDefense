@@ -382,15 +382,22 @@ public class SceneView extends MainViews implements Runnable{
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
 				Sprite element = it.next();
-				//Set the baseSprite amount
+				//Retrieving the tower
 				if((element.getId()==id)&&(element instanceof TowerSprite)){
-					System.out.println(range);
-					((TowerSprite)element).setTowerType(towerType);
-					((TowerSprite)element).setRange(range);
 					
-					//Repaint the panel
-			    	revalidate();
-			    	repaint();
+					if(range == -1){
+						//Displaying an error message
+						view.setInfoText("Evolve Tower failed : You can't afford to make your "+((TowerSprite)element).getTowerType()+" evolve in a "+towerType);
+					}
+					else{
+						System.out.println(range);
+						((TowerSprite)element).setTowerType(towerType);
+						((TowerSprite)element).setRange(range);
+						
+						//Repaint the panel
+				    	revalidate();
+				    	repaint();
+					}
 				}
 			}
 		}});
@@ -476,9 +483,15 @@ public class SceneView extends MainViews implements Runnable{
 			if(errorType == ErrorType.MONEY){
 				view.setInfoText("Add Tower failed : You can't afford to buy a "+towerType);
 			}
-			/*else if(errorType == ErrorType.TERRITORY){
-				view.setInfoText("Add Tower failed :  You can't add a tower here ! This is not your territory);
-			}*/
+			else if(errorType == ErrorType.TERRITORY){
+				view.setInfoText("Add Tower failed :  You can't add a tower here ! This is not your territory.");
+			}
+			else if(errorType == ErrorType.RELIEF){
+				view.setInfoText("Add Tower failed :  You can't add a tower on the plains. You should try on an hilly area.");
+			}
+			else if(errorType == ErrorType.PLACE){
+				view.setInfoText("Add Tower failed :  There isn't enough space here to build a tower.");
+			}
 			
 		}
 		else{

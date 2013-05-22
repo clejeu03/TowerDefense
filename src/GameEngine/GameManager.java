@@ -433,6 +433,12 @@ public class GameManager implements Runnable{
 						dispatcher.addOrderToAI(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType(), towerManager.getTower((order).getId()).getRange()));
 						
 					}
+					else{
+						//Tell the engine that the tower can't be evolved
+						System.out.println("You can't afford to evolve this tower");
+						dispatcher.addOrderToView(new EvolveTowerOrder((order).getId(),((EvolveTowerOrder) order).getType(), -1));
+
+					}
 				}
 				
 				//If the order is a AddTowerOrder one
