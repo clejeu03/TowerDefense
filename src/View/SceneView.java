@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import Dispatcher.AddTowerOrder.ErrorType;
 import GameEngine.Tower;
 import GameEngine.TowerManager;
 import GameEngine.Player.PlayerType;
@@ -466,12 +467,19 @@ public class SceneView extends MainViews implements Runnable{
 	 * @param playerType
 	 * @see ViewManager#refresh()
 	 */
-	public void addTower(int id, PlayerType playerType, Point position, TowerTypes towerType, int range){
+	public void addTower(int id, PlayerType playerType, Point position, TowerTypes towerType, int range, ErrorType errorType){
 		Point test = new Point(-1,-1);
 		
-		//If the position of the tower is (-1,-1), the tower can't be add :
+		//If the position of the tower is (-1,-1), the tower can't be add. A specific error message need to be display
 		if(position.equals(test)){
 			addTowerFailed();
+			if(errorType == ErrorType.MONEY){
+				view.setInfoText("Add Tower failed : You can't afford to buy a "+towerType);
+			}
+			/*else if(errorType == ErrorType.TERRITORY){
+				view.setInfoText("Add Tower failed :  You can't add a tower here ! This is not your territory);
+			}*/
+			
 		}
 		else{
 		

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import Dispatcher.AddTowerOrder;
+import Dispatcher.AddTowerOrder.ErrorType;
 import Dispatcher.AddUnitOrder;
 import Dispatcher.ChangeOwnerOrder;
 import Dispatcher.DispatcherManager;
@@ -537,7 +538,7 @@ public class AIManager implements Runnable {
 	 * @param type - Tower's type
 	 */
 	private void placeTower(Point position, TowerTypes type){
-		dispatcher.addOrderToEngine(new AddTowerOrder(-1, aiType, position, type, -1));
+		dispatcher.addOrderToEngine(new AddTowerOrder(-1, aiType, position, type, -1,ErrorType.NONE));
 	}
 	
 	/**

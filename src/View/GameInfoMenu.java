@@ -88,8 +88,8 @@ public class GameInfoMenu extends MainViews{
 		}
 		
 		//Add the AddTower Attack Sprite on the panel
-		addSprite(new AddTowerSprite(scene, this, new Point(30,40), true, humanType, 64, 64, TowerTypes.ATTACKTOWER));
-		addSprite(new AddTowerSprite(scene, this, new Point(30,100), true, humanType, 64, 64, TowerTypes.SUPPORTTOWER));
+		addSprite(new AddTowerSprite(scene, this, new Point(32,40), true, humanType, 64, 64, TowerTypes.ATTACKTOWER));
+		addSprite(new AddTowerSprite(scene, this, new Point(32,100), true, humanType, 64, 64, TowerTypes.SUPPORTTOWER));
 			
         //Repaint the panel
     	revalidate();

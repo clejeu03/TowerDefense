@@ -4,6 +4,7 @@ import GameEngine.*;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
 import Dispatcher.*; 
+import Dispatcher.AddTowerOrder.ErrorType;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,6 +19,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 
 /**
@@ -89,6 +91,10 @@ public class ViewManager extends JFrame implements Runnable{
 		gameMenuBar = new GameMenuBar(this,new Point(0,0),800, 25);
 		gameInfoPlayer = new GameInfoPlayer(this, new Point(0,425), 185,150);
 		gameInfoMenu = new GameInfoMenu(this, new Point(185,425), 615 ,175);
+		
+		//Creating a border for the gameMenuBar panel
+		gameMenuBar.setBorder(BorderFactory.createLineBorder(Color.darkGray));
+
 
 		
 		//Loading the map icon
@@ -346,7 +352,7 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @see SceneView#myMousePressed()
 	 */
 	public void towerToAdd(Point position, PlayerType playerType, TowerTypes towerTypes) {
-		   dispatcher.addOrderToEngine(new AddTowerOrder(-1, playerType, position, towerTypes, -1));
+		   dispatcher.addOrderToEngine(new AddTowerOrder(-1, playerType, position, towerTypes, -1, ErrorType.NONE));
 	}
 	/**
 	 * Tell the dispatcher a player want to attack an other base
@@ -391,7 +397,7 @@ public class ViewManager extends JFrame implements Runnable{
 				
 				//If the order is an AddTowerOrder one
 				if(o instanceof AddTowerOrder) {
-					sceneView.addTower(o.getId(),((AddTowerOrder) o).getPlayerType(), ((AddTowerOrder) o).getPosition(), ((AddTowerOrder) o).getTowerType(),((AddTowerOrder) o).getRange());
+					sceneView.addTower(o.getId(),((AddTowerOrder) o).getPlayerType(), ((AddTowerOrder) o).getPosition(), ((AddTowerOrder) o).getTowerType(),((AddTowerOrder) o).getRange(), ((AddTowerOrder) o).getErrorType());
 				}
 							
 				//If the order is an EvolveTowerOrder one
@@ -444,6 +450,14 @@ public class ViewManager extends JFrame implements Runnable{
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Tell the gameMenuBar to set it's jInfo label text with the given String
+	 * @param text
+	 */
+	public void setInfoText(String text){
+		gameMenuBar.setInfo(text);
 	}
 	
 	/**

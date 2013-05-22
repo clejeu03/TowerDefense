@@ -25,24 +25,40 @@ import GameEngine.TowerManager.TowerTypes;
  * @author K. Akyurek, A. Beauprez, T. Demenat, C. Lejeune - <b>IMAC</b></br>
  */
 public class AddTowerOrder extends Order{
+	
+	public enum ErrorType{
+		MONEY,
+		TERRITORY,
+		RELIEF,
+		PLACE,
+		NONE
+	}
+	
 	private PlayerType playerType;
 	private TowerTypes towerType;
 	private Point position;
 	private int range;
+	private ErrorType errorType;
 
 	/**
 	 * Constructor of the AddTowerOrder class
 	 * @param idPlayer - player id
 	 * @param position - position of the tower to suppress
 	 */
-	public AddTowerOrder(int id, PlayerType playerType, Point position, TowerTypes towerTypes, int range) {
+	public AddTowerOrder(int id, PlayerType playerType, Point position, TowerTypes towerTypes, int range, ErrorType errorType) {
 		super(id);
 		this.playerType = playerType;
 		this.position = position;
 		this.towerType = towerTypes;
 		this.range = range;
+		this.errorType = errorType;
 	}
 	
+
+	public ErrorType getErrorType() {
+		return errorType;
+	}
+
 
 	public PlayerType getPlayerType() {
 		return playerType;

@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
+import GameEngine.Player.PlayerType;
 
 /**
  * Project - TowerDefense</br>
@@ -24,7 +27,7 @@ import javax.swing.JButton;
 public class GameMenuBar extends MainViews{
     
     private JButton jButtonBack;
-	
+    private JLabel jInfo;
     /**
      * Constructor of the GameMenuBar class
      * @param view
@@ -37,7 +40,9 @@ public class GameMenuBar extends MainViews{
 		
 		//Creating the components
 		jButtonBack = new javax.swing.JButton();
-		 
+		jInfo= new JLabel("Welcome in PokéWars. Let's battle !");
+		jInfo.setForeground(Color.darkGray);
+		
 		//Setting the components parameters and theirs listeners        
 		jButtonBack.setText("Surrender");
 		jButtonBack.addActionListener(new ActionListener() {
@@ -48,9 +53,12 @@ public class GameMenuBar extends MainViews{
 		
 		//Laying the components on the Panel
 		setLayout(null);
-		setBackground(Color.gray); 
+		setBackground(Color.lightGray);
+		
 		jButtonBack.setBounds(0, 0, 125,25);
+		jInfo.setBounds(130, 0, 675,25);
 		add(jButtonBack);
+		add(jInfo);
 	}
 	
 	/**
@@ -60,4 +68,12 @@ public class GameMenuBar extends MainViews{
     private void jButtonBackPerformed(ActionEvent evt) {
     	view.homeMenu();
     }
+    
+	/**
+	 * 
+	 * @param text
+	 */
+	public void setInfo(String text){
+		jInfo.setText(text);	
+	}
 }
