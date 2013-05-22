@@ -105,6 +105,8 @@ public class GameManager implements Runnable{
 	 */
 	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
 		idCount = 0;
+    	//Clear the orders queue 
+    	queue.clear();
 		
 		//Creating the player (human and IA)
 		//Clear the player list
@@ -485,26 +487,26 @@ public class GameManager implements Runnable{
 								}else{
 									//Tell the dispatcher the player hasn't enough money
 									System.out.println("GameEngine says : You can't afford this !");
-									dispatcher.addOrderToView(new AddTowerOrder(-1,((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER, -1, ErrorType.MONEY));
+									dispatcher.addOrderToView(new AddTowerOrder(-1,((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), ((AddTowerOrder) order).getTowerType(), -1, ErrorType.MONEY));
 								}
 								
 							}else{
 								
 								//Tell the dispatcher that the tower CAN'T be add on the view
 								System.out.println("GameEngine says : You try to add a tower but this is not your territory");
-								dispatcher.addOrderToView(new AddTowerOrder(-1,((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER, -1, ErrorType.TERRITORY));
+								dispatcher.addOrderToView(new AddTowerOrder(-1,((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), ((AddTowerOrder) order).getTowerType(), -1, ErrorType.TERRITORY));
 							}
 							
 						}else{
 							//Tell the dispatcher that the tower CAN'T be add on the view
 							System.out.println("GameEngine says : maybe you should try on a hill...");
-							dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER, -1, ErrorType.RELIEF));
+							dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), ((AddTowerOrder) order).getTowerType(), -1, ErrorType.RELIEF));
 						}
 						
 					//The required part of the sprite is not on the same territory	
 					}else{
 						//Tell the dispatcher that the tower CAN'T be add on the view
-						dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), TowerTypes.SUPPORTTOWER, -1, ErrorType.PLACE));
+						dispatcher.addOrderToView(new AddTowerOrder(-1, ((AddTowerOrder) order).getPlayerType(), new Point(-1, -1), ((AddTowerOrder) order).getTowerType(), -1, ErrorType.PLACE));
 					}
 					
 				}

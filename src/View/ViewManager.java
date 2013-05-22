@@ -220,11 +220,16 @@ public class ViewManager extends JFrame implements Runnable{
 	 * @see Dispatcher.DispatcherManager#initiateGameView(ArrayList)
 	 */	
     public void initiateGameView(ArrayList<Base> bases, int money){
+    	
+    	//Clear the orders queue 
+    	queue.clear();
 
 		//Clear the Sprites list of the scene
 		sceneView.initiate(money);
 		gameInfoMenu.initiate(sceneView);
 		gameInfoPlayer.initiate(sceneView, money);
+		gameMenuBar.setInfo("Welcome in PokéWars. Let's battle !");
+		
 		
 		Iterator<Base> iter = bases.iterator();
 		while (iter.hasNext()) {

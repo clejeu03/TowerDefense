@@ -40,7 +40,7 @@ public class GameMenuBar extends MainViews{
 		
 		//Creating the components
 		jButtonBack = new javax.swing.JButton();
-		jInfo= new JLabel("Welcome in PokéWars. Let's battle !");
+		jInfo= new JLabel();
 		jInfo.setForeground(Color.darkGray);
 		
 		//Setting the components parameters and theirs listeners        
