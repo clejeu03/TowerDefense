@@ -249,6 +249,7 @@ public class GameManager implements Runnable{
             					if(missile.getTarget().isProtected()){
             						System.out.println("Attack failed.");
             						missile.getTarget().setProtected(false);
+            						//TODO suppress the shield effect ?
             						break;
             					}else{
             						//Change the target's amount
@@ -266,12 +267,20 @@ public class GameManager implements Runnable{
             					
 	            			case SHIELD :
 	            				//TODO symbolize in the view ?
-	            				armyManager.createEffect(missile.getTarget(), missile.getAttackType(), getTime(),5000);
+	            				int currentId = idCount;
+	            				if(armyManager.createEffect(currentId, missile.getTarget(), missile.getAttackType(), getTime(),5000)){
+	            					dispatcher.addOrderToView(new AddEffectOrder(currentId,missile.getAttackType(),missile.getTarget().getId()));
+	            					idCount++;
+	            				}
 	            				break;
 	            			case FROST :
 	            				//TODO symbolize in the view ?
 	            				//Apply a frost effect that reduce unit's speed by 0.2 for 5000 ms
-	            				armyManager.createEffect(missile.getTarget(), missile.getAttackType(), getTime(),5000, 0.2);
+	            				int current = idCount;
+	            				if(armyManager.createEffect(current, missile.getTarget(), missile.getAttackType(), getTime(),5000, 0.2)){
+	            					dispatcher.addOrderToView(new AddEffectOrder(current,missile.getAttackType(),missile.getTarget().getId()));
+	            					idCount ++;
+	            				}
 	            				break;
 	            			default :
 	            				break;

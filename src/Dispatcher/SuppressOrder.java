@@ -11,7 +11,8 @@ package Dispatcher;
 /**
  * Project - TowerDefense</br>
  * <b>Class - SuppressTowerOrder</b></br>
- * <p>The SuppressTowerOrder class represents the "suppress tower" tasks adding to the engine and view queues by the dispatcher</p>
+ * <p>The SuppressTowerOrder class represents the "suppress tower, unit or missile" tasks
+ *  adding to the engine and view queues by the dispatcher</p>
  * <ul>
  * <li>View → Engine : A player want to suppress on of his tower</li>
  * <li>Engine → View : A tower need to be remove from the view</li>

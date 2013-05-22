@@ -258,8 +258,13 @@ public class SceneView extends MainViews implements Runnable{
 			while (it.hasNext()) {
 				Sprite element = it.next();
 				if(element.getPosition().equals(addTowerPosition)){
+					System.out.println(addTowerPosition.x+" "+addTowerPosition.y);
 					//Tell the engine to check if the tower can be add there
-					view.towerToAdd(element.getPosition(), humanType,((TowerSprite) element).getTowerType());
+					if((addTowerPosition.y<15)||(addTowerPosition.y>384)){
+						System.out.println("FUCK");
+						addTowerFailed();
+					}
+					else view.towerToAdd(element.getPosition(), humanType,((TowerSprite) element).getTowerType());
 				}
 			}		
 		}
@@ -381,6 +386,10 @@ public class SceneView extends MainViews implements Runnable{
 					System.out.println(range);
 					((TowerSprite)element).setTowerType(towerType);
 					((TowerSprite)element).setRange(range);
+					
+					//Repaint the panel
+			    	revalidate();
+			    	repaint();
 				}
 			}
 		}});
@@ -501,6 +510,34 @@ public class SceneView extends MainViews implements Runnable{
 			UnitSprite unit = new UnitSprite(this,id, position, playerType, amount);
 			addSprite(unit);
 			addSprite(unit.getTextAmount());
+		}
+	}
+	
+	/**
+	 * Add an effect on the SceneView
+	 * @param position
+	 * @param playerType
+	 * @see ViewManager#refresh()
+	 */
+	public void addEffect(int id, TowerManager.AttackTypes type, int idUnit){
+		//retrieving the position and the playerType of the Unit
+		Point position = null;
+		PlayerType playerType = null;
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			if(element.getId()==idUnit){
+				position = element.getPosition();
+				playerType = element.getPlayerType();
+				break;
+			}
+		}
+		//Determinating the position of the Effectaround the unitSprite
+		if(position!=null){
+			if(type == TowerManager.AttackTypes.SHIELD) position.translate(-((32/2)+16/2), 0);
+			else if (type == TowerManager.AttackTypes.FROST) position.translate(((32/2)+16/2), 0);
+			EffectSprite effect = new EffectSprite(this,id, position, playerType,type, idUnit);
+			addSprite(effect);
 		}
 	}
 	
@@ -819,7 +856,7 @@ public class SceneView extends MainViews implements Runnable{
 			while (it.hasNext()) {
 				Sprite element = it.next();
 				//Set the baseSprite amount
-				if(element.getId()==id){
+				if((element.getId()==id)||((element instanceof EffectSprite)&&(((EffectSprite)element).getIdUnit()==id))){
 					if(element instanceof UnitSprite){
 						
 						//If the Sprite have to move to the right, the image need to be flipped
@@ -827,25 +864,32 @@ public class SceneView extends MainViews implements Runnable{
 						else {((UnitSprite)element).setFlipped(false);}
 						
 						((UnitSprite)element).setPosition(newPosition);
-									
-						remove(element);
-						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()), element.getWidth(),element.getHeight());
-						add(element);
+					}
 					
-						revalidate();
-						repaint();
+					if(element instanceof EffectSprite){
+						Point effectPosition = new Point(newPosition.x, newPosition.y);
+						if(((EffectSprite)element).getType() == TowerManager.AttackTypes.SHIELD) {
+							 effectPosition.translate(-((32/2)+16/2), 0);
+						}
+						else if (((EffectSprite)element).getType()== TowerManager.AttackTypes.FROST) {
+							 effectPosition.translate(+((32/2)+16/2), 0);
+						}
+						((EffectSprite)element).setPosition(effectPosition);
+						
 					}
 					
 					if(element instanceof TextInfoSprite){
 						Point textPosition = new Point(newPosition.x, newPosition.y - 20);
 						
 						((TextInfoSprite)element).setPosition(textPosition);
-						remove(element);
-						element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()), element.getWidth(),element.getHeight());
-						add(element);
-						revalidate();
-						repaint();
-					}
+
+					}					
+					remove(element);
+					element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()), element.getWidth(),element.getHeight());
+					add(element);
+				
+					revalidate();
+					repaint();
 				}		
 			}
 		}});
