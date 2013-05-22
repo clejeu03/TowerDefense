@@ -61,7 +61,7 @@ public class GameInfoPlayer extends MainViews{
 	
 		//Laying the components on the Panel
 		setLayout(null);
-		jMoney.setBounds(10, 10, 50,15);
+		jMoney.setBounds(10, 10, 100,15);
 		add(jMoney);
 		
 		setBackground(Color.gray); 

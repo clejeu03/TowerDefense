@@ -385,9 +385,9 @@ public class SceneView extends MainViews implements Runnable{
 				//Retrieving the tower
 				if((element.getId()==id)&&(element instanceof TowerSprite)){
 					
-					if(range == -1){
+					if((range == -1)&&(((TowerSprite)element).getPlayerType() == humanType)){
 						//Displaying an error message
-						view.setInfoText("Evolve Tower failed : You can't afford to make your "+((TowerSprite)element).getTowerType()+" evolve in a "+towerType);
+						view.setInfoText("Prof. Chen : You can't afford to make your "+((TowerSprite)element).getTowerType()+" evolve in a "+towerType);
 					}
 					else{
 						System.out.println(range);
@@ -478,19 +478,19 @@ public class SceneView extends MainViews implements Runnable{
 		Point test = new Point(-1,-1);
 		
 		//If the position of the tower is (-1,-1), the tower can't be add. A specific error message need to be display
-		if(position.equals(test)){
+		if((position.equals(test))&&(playerType == humanType)){
 			addTowerFailed();
 			if(errorType == ErrorType.MONEY){
-				view.setInfoText("Add Tower failed : You can't afford to buy a "+towerType);
+				view.setInfoText("Prof. Chen : You can't afford to buy a "+towerType);
 			}
 			else if(errorType == ErrorType.TERRITORY){
-				view.setInfoText("Add Tower failed :  You can't add a tower here ! This is not your territory.");
+				view.setInfoText("Prof. Chen :  You can't add a tower here ! This is not your territory.");
 			}
 			else if(errorType == ErrorType.RELIEF){
-				view.setInfoText("Add Tower failed :  You can't add a tower on the plains. You should try on an hilly area.");
+				view.setInfoText("Prof. Chen :  You can't add a tower on the plains. You should try on an hilly area.");
 			}
 			else if(errorType == ErrorType.PLACE){
-				view.setInfoText("Add Tower failed :  There isn't enough space here to build a tower.");
+				view.setInfoText("Prof. Chen :  There isn't enough space here to build a tower.");
 			}
 			
 		}
