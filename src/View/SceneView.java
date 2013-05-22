@@ -381,6 +381,10 @@ public class SceneView extends MainViews implements Runnable{
 					System.out.println(range);
 					((TowerSprite)element).setTowerType(towerType);
 					((TowerSprite)element).setRange(range);
+					
+					//Repaint the panel
+			    	revalidate();
+			    	repaint();
 				}
 			}
 		}});
@@ -526,7 +530,7 @@ public class SceneView extends MainViews implements Runnable{
 		//Determinating the position of the Effectaround the unitSprite
 		if(position!=null){
 			if(type == TowerManager.AttackTypes.SHIELD) position.translate(-((32/2)+16/2), 0);
-			else if (type == TowerManager.AttackTypes.FROST) position.translate(+((32/2)+16/2), 0);
+			else if (type == TowerManager.AttackTypes.FROST) position.translate(((32/2)+16/2), 0);
 			EffectSprite effect = new EffectSprite(this,id, position, playerType,type, idUnit);
 			addSprite(effect);
 		}
