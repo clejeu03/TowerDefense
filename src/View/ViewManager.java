@@ -405,6 +405,10 @@ public class ViewManager extends JFrame implements Runnable{
 					sceneView.addUnit(((AddUnitOrder) o).getId(), ((AddUnitOrder) o).getSrcId(),((AddUnitOrder) o).getAmount());
 					//System.out.println("View - TODO : Add  "+((AddUnitOrder) o).getAmount()+" units from "+((AddUnitOrder) o).getSrcId());
 				}
+				//if the order is an AddEffectOrder
+				if(o instanceof AddEffectOrder){
+					sceneView.addEffect(o.getId(),((AddEffectOrder) o).getType(), ((AddEffectOrder) o).getIdUnit() );
+				}
 				
 				if(o instanceof AddMissileOrder){
 					//int id, PlayerType playerType, Point position, boolean isArea

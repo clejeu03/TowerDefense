@@ -36,7 +36,7 @@ public class WarManager {
    */
   public void war(ArmyManager armyManager, TowerManager towerManager, DispatcherManager dispatcher, Long playingTime){
 	  beginEncounters(armyManager, towerManager, dispatcher, playingTime);
-	  applyModifiers(armyManager);
+	  applyModifiers(armyManager, dispatcher);
 	  terminateEncounters(armyManager, towerManager);
 	  cleanUpBattlefield(armyManager, towerManager, dispatcher);
   }
@@ -118,14 +118,16 @@ public void terminateEncounters(ArmyManager armyManager, TowerManager towerManag
 /**
  * Apply modifiers to their target for the time defined
  * @param armyManager
+ * @see WarManager#war(ArmyManager, TowerManager, DispatcherManager, Long)
  */
-public void applyModifiers(ArmyManager armyManager){
+public void applyModifiers(ArmyManager armyManager, DispatcherManager dispatcher){
 	long currentTime = GameManager.getTime();
 	//Browse all the current effects
 	for(Effect effect:armyManager.getEffects()){
 		if(currentTime >= effect.getBeginTime()+effect.getDuration()){
 			effect.desactive(effect.getTarget());
 			System.out.println("Stop applying effect");
+			dispatcher.addOrderToView(new SuppressOrder(effect.getId()));
 			armyManager.suppressEffect(effect);
 			break;
 		}
