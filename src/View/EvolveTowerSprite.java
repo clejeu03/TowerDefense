@@ -8,6 +8,7 @@
 package View;
 
 import java.awt.Cursor;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -34,6 +35,7 @@ import GameEngine.TowerManager.TowerTypes;
 @SuppressWarnings("serial")
 public class EvolveTowerSprite extends Sprite{
 	private TowerTypes towerType;
+	private MouseAdapter m ;
 	/**
 	 * 
 	 */
@@ -41,6 +43,18 @@ public class EvolveTowerSprite extends Sprite{
 		super(info,id, position, clickable, playerType, width, height);
 		
 		this.towerType = towerType;
+		
+		m = new MouseAdapter() {
+			public void mousePressed(MouseEvent me) { 
+	             myMousePressed(me);
+	            } 
+	       public void mouseEntered(MouseEvent me) { 
+	    	   myMouseEntered(me);
+          }
+	       public void mouseExited(MouseEvent me) { 
+	    	   myMouseExited(me);
+          } 
+        };
 		
 		String fileName ="img/";
 		
@@ -93,21 +107,15 @@ public class EvolveTowerSprite extends Sprite{
 		      e.printStackTrace();
 		}
 		
-		if(clickable){
-		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent me) { 
-	             myMousePressed(me);
-	            } 
-	       public void mouseEntered(MouseEvent me) { 
-	    	   myMouseEntered(me);
-           }
-	       public void mouseExited(MouseEvent me) { 
-	    	   myMouseExited(me);
-           } 
-         });
-		}
+		setClickable(clickable);
 	}
 	
+	public TowerTypes getTowerType() {
+		return towerType;
+	}
+	
+	
+
 	/**
 	 *  Event "the mouse has been pressed in the zone" handler
 	 * @param me - MouseEvent
@@ -135,4 +143,24 @@ public class EvolveTowerSprite extends Sprite{
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
+    /**
+     * Draw the Sprite
+     */
+    @Override
+	public void paintComponent(Graphics g){
+		//super.paintComponent(g);
+	    g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
+	  }
+
+
+	public void setClickable(boolean clickable){
+		this.clickable = clickable;
+		
+		if(clickable){
+			addMouseListener(m);
+		}
+		else {
+			removeMouseListener(m);
+		}
+	}
 }

@@ -377,7 +377,9 @@ public class SceneView extends MainViews implements Runnable{
 	}
 	
 	public void evolveTower(final int id, final TowerTypes towerType, final int range){
+
 		SwingUtilities.invokeLater(new Runnable(){
+		boolean hide = false;
 		public void run() {
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
@@ -385,11 +387,14 @@ public class SceneView extends MainViews implements Runnable{
 				//Retrieving the tower
 				if((element.getId()==id)&&(element instanceof TowerSprite)){
 					
-					if((range == -1)&&(((TowerSprite)element).getPlayerType() == humanType)){
-						//Displaying an error message
-						view.setInfoText("Prof. Chen : You can't afford to make your "+((TowerSprite)element).getTowerType()+" evolve in a "+towerType);
+					if(((TowerSprite)element).getPlayerType() == humanType){
+						if(range == -1){
+							//Displaying an error message
+							view.setInfoText("Prof. Chen : You can't afford to make your "+((TowerSprite)element).getTowerType()+" evolve in a "+towerType);
+						}
+						else hide = true;
 					}
-					else{
+					if(range != -1){
 						System.out.println(range);
 						((TowerSprite)element).setTowerType(towerType);
 						((TowerSprite)element).setRange(range);
@@ -400,11 +405,12 @@ public class SceneView extends MainViews implements Runnable{
 					}
 				}
 			}
+			//If the tower was clicked
+			if(towerClicked && hide){
+				hideTowerInfo();
+			}
 		}});
-		//If the tower was clicked
-		if(towerClicked){
-			hideTowerInfo();
-		}
+
 	}
 	
 	/**

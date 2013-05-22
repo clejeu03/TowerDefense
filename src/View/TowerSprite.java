@@ -136,9 +136,7 @@ public class TowerSprite extends Sprite implements Runnable{
 			fileName += "shieldTower.png";		
 			this.setEvolutions(TowerTypes.NOTOWER, TowerTypes.NOTOWER);
 		}
-
-		
-		
+	
 		try {	
 		      image = ImageIO.read(new File(fileName));
 		  
