@@ -53,9 +53,15 @@ public class AIManager implements Runnable {
 	private int mapHeight;
 	private int mapWidth;
 
+	/**
+	 * Constructor of the AIManager
+	 * @param dispatcher - Dispatcher linked to the AIManager
+	 * @param aiType - PlayerType of the AIManager
+	 * @see DispatcherManager#initiateGame()
+	 */
 	public AIManager(DispatcherManager dispatcher, PlayerType aiType) {
 		this.dispatcher = dispatcher;
-		this.timeToSleep = 2000;
+		this.timeToSleep = (int)(2000+(Math.random()*1000));
 		
 		bases = new ArrayList<Base>();
 		enemyBases = new ArrayList<Base>();
@@ -68,6 +74,7 @@ public class AIManager implements Runnable {
 	/**
 	 * Get the initial bases on screen
 	 * @param bases
+	 * @see DispatcherManager#initiateGameView(ArrayList, int)
 	 */
 	public void initiateGameView(ArrayList<Base> bases, int money){
 		for (Base b:bases){
@@ -105,10 +112,14 @@ public class AIManager implements Runnable {
 			towerBehavior();
 			evolveBehavior();
 		}
+		bases.clear();
+		towers.clear();
+		enemyBases.clear();
 	}
 
 	/**
 	 * Refresh the new infos emited by the GameManager
+	 * @see #run()
 	 */
 	private void refreshInfo(){
 		//Retrieve the current size of the queue
@@ -277,6 +288,7 @@ public class AIManager implements Runnable {
 	
 	/**
 	 * Print the infos of the GameEngine the AI can access
+	 * @see #run()
 	 */
 	private void printInfo(){
 		if (!bases.isEmpty() || !enemyBases.isEmpty() || !towers.isEmpty()){
@@ -343,6 +355,7 @@ public class AIManager implements Runnable {
 	
 	/**
 	 * How the AI choose who to attack 
+	 * @see #run()
 	 */
 	private void attackBehavior(){
 		//Search which ai base have the most amount of units
@@ -378,6 +391,7 @@ public class AIManager implements Runnable {
 	 * @param b1 - First base
 	 * @param b2 - Second base
 	 * @return distance between them in int
+	 * @see #attackBehavior()
 	 */
 	private int distanceBetween(Base b1, Base b2){
 		return b1.getProximityMap().getPixel(b2.getPosition().x, b2.getPosition().y);
@@ -389,12 +403,13 @@ public class AIManager implements Runnable {
 	 */
 	public void stop(){
 		System.out.println("AI "+aiType+" IS NOW DEAD");
-		bases.clear();
-		towers.clear();
-		enemyBases.clear();
 		this.running = false;
 	}
 	
+	/**
+	 * Interrupt the AI Thread in the DispatcherManager
+	 * @see #refreshInfo()
+	 */
 	private void interrupt(){
 		dispatcher.interruptAiThread(aiType);
 	}
@@ -402,7 +417,7 @@ public class AIManager implements Runnable {
 	/**
 	 * Add a new order in the LinkedList of the AIManager
 	 * @param order
-	 * @see Dispatcher#DispatcherManager
+	 * @see DispatcherManager#addOrderToAI(Order)
 	 */
 	public void addOrder(Order order){
 		orderQueue.add(order);
@@ -413,6 +428,7 @@ public class AIManager implements Runnable {
 	 * @param idBaseSrc - unit's starting point
 	 * @param idBaseDst - unit's destination
 	 * @param amount - troops sent
+	 * @see #attackBehavior()
 	 */
 	private void sendUnit(int idBaseSrc, int idBaseDst, int amount){
 		dispatcher.addOrderToEngine(new AddUnitOrder(-1, idBaseSrc, idBaseDst, amount));	
@@ -421,6 +437,7 @@ public class AIManager implements Runnable {
 	
 	/**
 	 * How the AI choose to create towers
+	 * @see #run()
 	 */
 	private void towerBehavior(){
 		
@@ -463,6 +480,7 @@ public class AIManager implements Runnable {
 	 * Check if the AI can place a tower at a given position
 	 * @param position - position checked
 	 * @return true if it can, false otherwise
+	 * @see #towerBehavior()
 	 */
 	private boolean canPlaceTowerAt(Point position){
 		
@@ -504,6 +522,7 @@ public class AIManager implements Runnable {
 	 * @param x - position x of the pixel
 	 * @param y - position y of the pixel
 	 * @return value of the pixel at position (x,y)
+	 * @see #towerBehavior()
 	 */
 	private int getTerritoryMapValue(int x, int y){
 		for (Base b:bases){
@@ -519,6 +538,7 @@ public class AIManager implements Runnable {
 	 * @param t1 - position of tower t1
 	 * @param t2 - position of tower t2
 	 * @return true if they collide, false otherwise
+	 * @see #towerBehavior()
 	 */
 	private boolean towersCollide(Point t1, Point t2){
 		int spriteHalf = 32;
@@ -536,6 +556,7 @@ public class AIManager implements Runnable {
 	 * Create an AI Tower at a specific position
 	 * @param position - Tower's position
 	 * @param type - Tower's type
+	 * @see #towerBehavior()
 	 */
 	private void placeTower(Point position, TowerTypes type){
 		dispatcher.addOrderToEngine(new AddTowerOrder(-1, aiType, position, type, -1,ErrorType.NONE));
@@ -543,6 +564,7 @@ public class AIManager implements Runnable {
 	
 	/**
 	 * How the AI chooses to evolve its towers
+	 * @see #run()
 	 */
 	private void evolveBehavior(){
 		if (!towers.isEmpty()){
@@ -578,6 +600,7 @@ public class AIManager implements Runnable {
 	/**
 	 * Evolve an AI Tower 
 	 * @param idTower - ID's tower
+	 * @see #evolveBehavior()
 	 */
 	private void evolveTower(int idTower, TowerTypes newType){
 		System.out.println("AI - ID "+idTower+" newType "+newType);
@@ -587,6 +610,8 @@ public class AIManager implements Runnable {
 	/**
 	 * Check if the Ai is still active
 	 * @return boolean
+	 * @see DispatcherManager#addOrderToAI(Order)
+	 * @see DispatcherManager#stop()
 	 */
 	public boolean isRunning(){
 		return running;
@@ -595,6 +620,7 @@ public class AIManager implements Runnable {
 	/**
 	 * Getter - Return the PlayerType of the AI
 	 * @return
+	 * @see DispatcherManager#interruptAiThread(PlayerType)
 	 */
 	public PlayerType getPlayerType(){
 		return aiType;
