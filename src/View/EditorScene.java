@@ -48,6 +48,7 @@ public class EditorScene extends MainViews{
 	private int playerBaseCount;
 	private int neutralBaseCount;
 	
+	private int nbCaseInGrid;
 	private boolean heightGrid[];
 	
     private ArrayList<Sprite> sprites;
@@ -71,10 +72,10 @@ public class EditorScene extends MainViews{
 		
 		sprites = new ArrayList<Sprite>();
 		
-		int nb = (width/16)*(height/16);
-		heightGrid = new boolean[nb];
+		nbCaseInGrid = (width/16)*(height/16);
+		heightGrid = new boolean[nbCaseInGrid];
 		
-		for(int i=0;i<nb;i++){
+		for(int i=0;i<nbCaseInGrid;i++){
 			heightGrid[i] = false;
 		}
 		
@@ -480,7 +481,30 @@ public class EditorScene extends MainViews{
 		    		}
 		    	}
 		    }
-		    
 		}
     }
+    
+    
+
+	public int getNbCaseInGrid() {
+		return nbCaseInGrid;
+	}
+
+	public int getPlayerBaseCount() {
+		return playerBaseCount;
+	}
+	
+
+	public int getNeutralBaseCount() {
+		return neutralBaseCount;
+	}
+	
+
+	public boolean[] getHeightGrid() {
+		return heightGrid;
+	}
+
+	public ArrayList<Sprite> getSprites() {
+		return sprites;
+	}
 }
