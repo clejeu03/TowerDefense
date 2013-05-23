@@ -381,6 +381,18 @@ public class ViewManager extends JFrame implements Runnable{
 		   dispatcher.addOrderToEngine(new EvolveTowerOrder(id, towerType,-1));
 	}
 	
+    
+	/**
+	 * Tell the dispatcher a player want to suppress one of his tower
+	 * @param position
+	 * @param humanType
+	 * @param towerType
+	 * @see SceneView#myMousePressed()
+	 */
+	public void suppressTower(int id){
+		   dispatcher.addOrderToEngine(new SuppressOrder(id));
+	}
+	
 	/**
 	 * Refresh the graphic component of the view
 	 * @see #run()

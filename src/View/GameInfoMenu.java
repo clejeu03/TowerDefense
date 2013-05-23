@@ -11,12 +11,15 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import GameEngine.Missile;
@@ -49,6 +52,13 @@ public class GameInfoMenu extends MainViews{
     
     private boolean showAttackTree;
     private boolean showSupportTree;
+    
+    private TowerTypes towerClickedType;
+    private TowerTypes newTowerType;
+    private int idTower;
+    
+    private JButton jButton;
+    private boolean sell;
 	/**
 	 * Constructor of the GameInfoMenu class
 	 * @param view
@@ -67,6 +77,15 @@ public class GameInfoMenu extends MainViews{
 		showAttackTree = false;
 		showSupportTree = false;
 		
+		jButton = new javax.swing.JButton();
+		sell = false;
+		
+		jButton.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent evt) {
+		        jButtonPerformed(evt);
+		    }
+		});
+		
 		//Loading the background
 		try {
 			 img = ImageIO.read(new File("img/gameInfo.png"));
@@ -77,8 +96,19 @@ public class GameInfoMenu extends MainViews{
 		
 		//Laying the components on the Panel
 		setLayout(null);
+		jButton.setBounds(340, 100, 100,25);
 		setBackground(Color.gray); 		
 	}
+	
+	/**
+	 * jButtonPlay Event handler - Time to launch the game!
+	 * @param evt - ActionEvent performed by the player
+	 */
+    private void jButtonPerformed(ActionEvent evt) {
+    	////Tell the engine that the player want to evolve or sell his tower
+    	if(sell)view.suppressTower(idTower);
+    	else view.evolveTower(idTower, newTowerType);
+    }
 	
 	/**
 	 * Add a Sprite in the GameInfoMenu ArrayList
@@ -161,17 +191,12 @@ public class GameInfoMenu extends MainViews{
 	 * @param towerType
 	 */
 	public void towerClicked(int id, PlayerType playerType, TowerTypes towerType, ArrayList<TowerManager.TowerTypes> evolutions){
-		
-		for(TowerTypes type:evolutions){
-			System.out.println(type);
-			System.out.println(evolutions.indexOf(TowerTypes.BOMBTOWER));
-		}
-  		//TODO Displaying some information and a supressbouton..
+		towerClickedType = towerType;
 		
 		//Displaying the evolution tree of the tower
 		if((towerType == TowerTypes.SUPPORTTOWER)||(towerType == TowerTypes.SHIELDTOWER)||(towerType == TowerTypes.MEDICALTOWER)){
 			for(Sprite evolve:supportTree){
-				if(evolutions.indexOf(((EvolveTowerSprite) evolve).getTowerType())!= -1){
+				if((evolutions.indexOf(((EvolveTowerSprite) evolve).getTowerType())!= -1)||(((EvolveTowerSprite) evolve).getTowerType() == towerType)){
 					((EvolveTowerSprite) evolve).setId(id);
 					((EvolveTowerSprite) evolve).setClickable(true);
 				}
@@ -185,7 +210,7 @@ public class GameInfoMenu extends MainViews{
 		}
 		else{
 			for(Sprite evolve:attackTree){
-				if(evolutions.indexOf(((EvolveTowerSprite) evolve).getTowerType())!= -1){
+				if((evolutions.indexOf(((EvolveTowerSprite) evolve).getTowerType())!= -1)||(((EvolveTowerSprite) evolve).getTowerType() == towerType)){
 					((EvolveTowerSprite) evolve).setId(id);
 					((EvolveTowerSprite) evolve).setClickable(true);
 				}
@@ -198,6 +223,11 @@ public class GameInfoMenu extends MainViews{
 			showAttackTree = true;
 		}
 		
+		//Adding the selling button
+		jButton.setText("Sell");
+		sell = true;
+		add(jButton);
+		
         //Repaint the panel
     	revalidate();
     	repaint();
@@ -209,6 +239,7 @@ public class GameInfoMenu extends MainViews{
 	public void hideTowerInfo(){
 		if(showAttackTree) showAttackTree = false;
 		if(showSupportTree) showSupportTree = false;
+		remove(jButton);
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			//Removing the EvolveTowerSprite			
@@ -226,9 +257,18 @@ public class GameInfoMenu extends MainViews{
 		}});
 	}
 	
-	public void evolveTower(int id, TowerTypes towerType){
-		//Tell the engine that the player want to evolve his tower
-		view.evolveTower(id, towerType);
+	public void evolveTowerClicked(int id, TowerTypes towerType){
+		newTowerType = towerType;
+		idTower = id;
+		
+		if(towerType == towerClickedType){
+			jButton.setText("Sell");
+			sell = true;
+		}
+		else{
+			jButton.setText("Evolve");
+			if(sell) sell = false;
+		}
 	}
 	
     /**

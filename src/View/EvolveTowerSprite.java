@@ -121,7 +121,7 @@ public class EvolveTowerSprite extends Sprite{
 	 * @param me - MouseEvent
 	 */
 	private void myMousePressed(MouseEvent me) {
-		((GameInfoMenu) view).evolveTower(id, towerType);
+		((GameInfoMenu) view).evolveTowerClicked(id, towerType);
 		//TODO display the towerToAdd information in the GameInfoMenu ((GameInfoMenu) info).addTowerClicked(towerType)
 	}
 	
