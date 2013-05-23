@@ -85,6 +85,7 @@ public class ViewManager extends JFrame implements Runnable{
 		
 		editorScene = new EditorScene(this, new Point(0,0), 800, 400);
 		editorToolBar = new EditorToolBar(this, new Point(0,400), 800, 200, editorScene);
+		editorScene.setEditorToolBar(editorToolBar);
 
 		
 		sceneView = new SceneView(this,new Point(0,25), 800,400);

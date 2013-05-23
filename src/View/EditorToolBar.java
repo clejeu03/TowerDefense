@@ -167,7 +167,14 @@ public class EditorToolBar extends MainViews{
 	 */
     private void jButtonOpenPerformed(ActionEvent evt) {
     	if(!mapChosen) showChooseFile();
-    	//TODO else reinitialiser tout ! : Nouvelle map remettre  mapChosen à false et le texte  à Open
+    	else {
+        	mapChosen = false;
+    		jButtonOpen.setText("Open");
+    		
+    		showChooseFile();
+    		
+    		//TODO else reinitialiser tout ! : Nouvelle map remettre  mapChosen à false et le texte  à Open
+    	}
     }
     
 	/**
@@ -194,15 +201,27 @@ public class EditorToolBar extends MainViews{
 	 * jButtonPaint Event handler - Tell the EditorScene that the user want to paint the relief !
 	 * @see #openImage(String, String)
 	 */
-    private void paintRelief() {
+    public void paintRelief() {
     	if(mapChosen){
 	    	editorScene.setEditHeight(true);
 			log.append("_________________________________________________"+newline);
 			log.append("PAINT INSTRUCTIONS : "+newline);
-			log.append("Drag the mouse to paint the relief (mouse left button) or erase it  (mouse right button) "+newline);
+			log.append("Drag the mouse to paint the relief (mouse left button) or erase it (mouse right button) "+newline);
+			log.append("_________________________________________________"+newline);
     	}
     }
     
+    public void addBaseClicked(){
+    	log.append("_________________________________________________"+newline);
+		log.append("BASES INSTRUCTIONS : "+newline);
+		log.append("Left click on the map to add a base. Click on a base to delete it."+newline);
+		log.append("You can only add 4 player bases (red) and 5 neutral bases (gray)."+newline);
+		log.append("_________________________________________________"+newline);
+    }
+    
+    public void displayError(String error){
+    	log.append(error+newline);
+    }
 
 	/**
 	 * Launch a file chooser to let the user choose a map

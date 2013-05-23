@@ -72,6 +72,7 @@ public class EditorAddBaseSprite extends Sprite{
 	private void myMousePressed(MouseEvent me) {
 		Point position = toolBar.getPosition();
 		position.translate(this.getPosition().x, this.getPosition().y);
+		((EditorToolBar) toolBar).addBaseClicked();
 		((EditorScene) view).addBaseClicked(position, playerType);
 	}
 	

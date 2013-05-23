@@ -66,7 +66,7 @@ public class EditorBaseSprite extends Sprite{
 		if(clickable){
 			addMouseListener(new MouseAdapter() {
 				public void mousePressed(MouseEvent me) { 
-		             //myMousePressed(me);
+		             myMousePressed(me);
 		            } 
 		       public void mouseEntered(MouseEvent me) { 
 		    	   myMouseEntered(me);
@@ -85,6 +85,14 @@ public class EditorBaseSprite extends Sprite{
 	private void myMouseEntered(MouseEvent me) {
 		//Change the cursor aspect
 		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	}
+	
+	/**
+	 *  Event "the mouse has been pressed in the zone" handler
+	 * @param me - MouseEvent
+	 */
+	private void myMousePressed(MouseEvent me) {
+		((EditorScene) view).baseClicked(position, playerType);
 	}
 	
 	/**

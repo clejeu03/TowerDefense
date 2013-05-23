@@ -38,6 +38,8 @@ import GameEngine.Player.PlayerType;
 public class EditorScene extends MainViews{
 	private BufferedImage mapView;
 	
+	private EditorToolBar editorToolBar;
+	
 	private boolean edit;
 	private boolean editHeight;
 	private boolean addBaseClicked;
@@ -96,7 +98,7 @@ public class EditorScene extends MainViews{
     	 });
 		
 		setLayout(null);
-		setBackground(Color.white); 
+		setBackground(Color.gray); 
 	}
 	
 	/**
@@ -105,14 +107,36 @@ public class EditorScene extends MainViews{
 	 */
 	private void myMousePressed(MouseEvent me) {
 		
-		//Click on the map to add the tower
+		//Click on the map to add the base
 		if (addBaseClicked) {
-			//Retrieve the add tower Sprite
+			//Retrieve the add base Sprite
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
 				Sprite element = it.next();
 				if(element.getPosition().equals(addBasePosition)){
-					addBaseSuccess();
+					
+					//Checking if the position is on a plain or on a hilly area 
+					Point squarePosition = new Point(addBasePosition.x/16,addBasePosition.y/16);
+					
+		    		if(!heightGrid[squarePosition.x+(squarePosition.y*50)]){
+						if((((EditorBaseSprite)element).getPlayerType() == PlayerType.NEUTRAL) &&(neutralBaseCount<5)){
+							++neutralBaseCount;
+							addBaseSuccess();
+						}
+						else if((((EditorBaseSprite)element).getPlayerType() != PlayerType.NEUTRAL) &&(playerBaseCount<4)){
+							++playerBaseCount;
+							addBaseSuccess();
+						}
+						else{
+							addBaseFailed();
+							editorToolBar.displayError("ERROR : You can't add more than 4 player bases and 5 neutral bases ! ");
+						}
+		    		}
+		    		else{
+		    			addBaseFailed();
+						editorToolBar.displayError("ERROR : You can't add a base on an hilly area ! ");
+		    		}
+					
 				}
 			}		
 		
@@ -124,6 +148,11 @@ public class EditorScene extends MainViews{
 	    	//Repaint the Panel
 
 		}
+	}
+	
+
+	public void setEditorToolBar(EditorToolBar editorToolBar) {
+		this.editorToolBar = editorToolBar;
 	}
 
 	/**
@@ -199,6 +228,7 @@ public class EditorScene extends MainViews{
 		        if ((modifiers & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
 					if(!heightGrid[squarePosition.x+(squarePosition.y*50)]){
 						heightGrid[squarePosition.x+(squarePosition.y*50)] = true;
+						baseOnRelief(squarePosition);
 					}
 		        }
 		        
@@ -216,6 +246,32 @@ public class EditorScene extends MainViews{
 		}});
 	}
 	
+	/**
+	 * Removing a base if it's on a hilly area while painting the relief
+	 */
+	public void baseOnRelief(Point squarePosition){
+		//Retrieve the base Sprite
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			
+			//If the base position is in the newly painting square (+the 8 square around) the base need to be removed
+			if(
+					((element.getPosition().x >= (squarePosition.x -1)*16) && (element.getPosition().x <= (squarePosition.x +1)*16))
+				&&  ((element.getPosition().y >= (squarePosition.y -1)*16) && (element.getPosition().y <= (squarePosition.y +1)*16))
+			){
+				if(((EditorBaseSprite)element).getPlayerType() == PlayerType.NEUTRAL){
+					--neutralBaseCount;
+				}
+				else{
+					--playerBaseCount;
+				}
+				it.remove();
+				remove(element);
+				break;
+			}
+		}
+	}
 	
 	/**
 	 * Initiate the EditorScene
@@ -228,6 +284,26 @@ public class EditorScene extends MainViews{
 		
 		//Reseting the boolean
 		edit = true;
+		
+		editHeight = true;
+		addBaseClicked = false;
+		
+		int nb = (width/16)*(height/16);	
+		for(int i=0;i<nb;i++){
+			heightGrid[i] = false;
+		}
+		
+		//clearing the sprites list
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			remove(element);
+		}
+		sprites.clear();
+		
+		//Reseting the base count
+		neutralBaseCount = 0;
+		playerBaseCount = 0;
 
 		revalidate();
 		repaint();
@@ -240,6 +316,11 @@ public class EditorScene extends MainViews{
 	public void quitEditor() {
 		//Reseting
 		edit = false;
+		
+		//Reseting the base count
+		neutralBaseCount = 0;
+		playerBaseCount = 0;
+		
 		if (addBaseClicked) {
 			addBaseFailed();
 		}
@@ -249,6 +330,14 @@ public class EditorScene extends MainViews{
 		for(int i=0;i<nb;i++){
 			heightGrid[i] = false;
 		}
+		
+		//clearing the sprites list
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			remove(element);
+		}
+		sprites.clear();
 	}
 	
 	/**
@@ -274,11 +363,8 @@ public class EditorScene extends MainViews{
 			editHeight = false;
 			addBaseClicked = true;
 			
-			System.out.println("Add base clicked");
-			
 			addBasePosition = new Point(position.x+1, position.y+1);
 			
-			//TODO : change the id of the tower if it's add by the engine...
 			EditorBaseSprite bs = new EditorBaseSprite(this, -1, false, addBasePosition, playerType, 36, 36);
 			
 			//Add the baseSprite in the EditorScene list of Sprites
@@ -289,6 +375,32 @@ public class EditorScene extends MainViews{
 		}
 		
 		//if (baseClicked) baseClicked = false;	
+	}
+	
+	/**
+	 * Suppress the clicked base
+	 * @param position
+	 * @param playerType
+	 */	
+	public void baseClicked(Point position, PlayerType playerType){
+		//Retrieve the base Sprite
+		Iterator<Sprite> it = sprites.iterator();
+		while (it.hasNext()) {
+			Sprite element = it.next();
+			if(element.getPosition().equals(position)){
+				if(((EditorBaseSprite)element).getPlayerType() == PlayerType.NEUTRAL){
+					--neutralBaseCount;
+				}
+				else{
+					--playerBaseCount;
+				}
+				it.remove();
+				remove(element);
+				break;
+			}
+		}
+		revalidate();
+		repaint();
 	}
 	
 	/**
