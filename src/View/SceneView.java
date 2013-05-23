@@ -262,7 +262,6 @@ public class SceneView extends MainViews implements Runnable{
 					System.out.println(addTowerPosition.x+" "+addTowerPosition.y);
 					//Tell the engine to check if the tower can be add there
 					if((addTowerPosition.y<15)||(addTowerPosition.y>384)){
-						System.out.println("FUCK");
 						addTowerFailed();
 					}
 					else view.towerToAdd(element.getPosition(), humanType,((TowerSprite) element).getTowerType());

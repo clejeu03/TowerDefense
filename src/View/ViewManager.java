@@ -89,8 +89,8 @@ public class ViewManager extends JFrame implements Runnable{
 		
 		sceneView = new SceneView(this,new Point(0,25), 800,400);
 		gameMenuBar = new GameMenuBar(this,new Point(0,0),800, 25);
-		gameInfoPlayer = new GameInfoPlayer(this, new Point(0,425), 185,150);
-		gameInfoMenu = new GameInfoMenu(this, new Point(185,425), 615 ,150);
+		gameInfoPlayer = new GameInfoPlayer(this, new Point(0,425), 185,148);
+		gameInfoMenu = new GameInfoMenu(this, new Point(185,425), 615 ,148);
 		
 		//Creating a border for the gameMenuBar panel
 		gameMenuBar.setBorder(BorderFactory.createLineBorder(Color.darkGray));

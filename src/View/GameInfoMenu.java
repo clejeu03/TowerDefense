@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import GameEngine.Missile;
@@ -46,6 +47,7 @@ public class GameInfoMenu extends MainViews{
     private PlayerType humanType;
     
     private Image img;
+    private Image img2;
 
     private ArrayList<Sprite> attackTree;
     private ArrayList<Sprite> supportTree;
@@ -59,6 +61,9 @@ public class GameInfoMenu extends MainViews{
     
     private JButton jButton;
     private boolean sell;
+    private JLabel jTowerName;
+    private JLabel jTowerCost;
+    
 	/**
 	 * Constructor of the GameInfoMenu class
 	 * @param view
@@ -79,6 +84,10 @@ public class GameInfoMenu extends MainViews{
 		
 		jButton = new javax.swing.JButton();
 		sell = false;
+		jTowerName = new JLabel();
+		jTowerCost = new JLabel();
+		jTowerName.setForeground(Color.BLACK);
+		jTowerCost.setForeground(Color.BLACK);
 		
 		jButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent evt) {
@@ -88,7 +97,8 @@ public class GameInfoMenu extends MainViews{
 		
 		//Loading the background
 		try {
-			 img = ImageIO.read(new File("img/gameInfo.png"));
+			 img = ImageIO.read(new File("img/towerMenuInactive.png"));
+			 img2 = ImageIO.read(new File("img/towerMenuActive.png"));
 		  
 		} catch (IOException e) {
 		      e.printStackTrace();
@@ -96,8 +106,10 @@ public class GameInfoMenu extends MainViews{
 		
 		//Laying the components on the Panel
 		setLayout(null);
-		jButton.setBounds(340, 100, 100,25);
-		setBackground(Color.gray); 		
+		jButton.setBounds(430, 110, 100,25);
+		jTowerName.setBounds(372, 35, 200,25);
+		jTowerCost.setBounds(372, 50, 200,25);
+		setBackground(Color.white); 		
 	}
 	
 	/**
@@ -161,18 +173,18 @@ public class GameInfoMenu extends MainViews{
 	
 	public void setAttackTree(){
 		attackTree.clear();
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(86,95), false, humanType, 44, 44, TowerTypes.ATTACKTOWER));
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(152,62), false, humanType, 44, 44, TowerTypes.GUNTOWER));
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(152,128), false, humanType, 44, 44, TowerTypes.FROSTTOWER));
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(218,29), false, humanType, 44, 44, TowerTypes.BOMBTOWER));
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(218,95), false, humanType, 44, 44, TowerTypes.LAZERTOWER));
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(90,95), false, humanType, 44, 44, TowerTypes.ATTACKTOWER));
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(156,62), false, humanType, 44, 44, TowerTypes.GUNTOWER));
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(156,124), false, humanType, 44, 44, TowerTypes.FROSTTOWER));
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(222,29), false, humanType, 44, 44, TowerTypes.BOMBTOWER));
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(222,95), false, humanType, 44, 44, TowerTypes.LAZERTOWER));
 	}
 	
 	public void setSupportTree(){
 		supportTree.clear();
-		supportTree.add(new EvolveTowerSprite(this,-1, new Point(86,95), false, humanType, 44, 44, TowerTypes.SUPPORTTOWER));
-		supportTree.add(new EvolveTowerSprite(this,-1, new Point(152,62), false, humanType, 44, 44, TowerTypes.MEDICALTOWER));
-		supportTree.add(new EvolveTowerSprite(this,-1, new Point(152,128), false, humanType, 44, 44, TowerTypes.SHIELDTOWER));
+		supportTree.add(new EvolveTowerSprite(this,-1, new Point(90,95), false, humanType, 44, 44, TowerTypes.SUPPORTTOWER));
+		supportTree.add(new EvolveTowerSprite(this,-1, new Point(156,62), false, humanType, 44, 44, TowerTypes.MEDICALTOWER));
+		supportTree.add(new EvolveTowerSprite(this,-1, new Point(156,124), false, humanType, 44, 44, TowerTypes.SHIELDTOWER));
 	}
 	
 	/**
@@ -191,6 +203,7 @@ public class GameInfoMenu extends MainViews{
 	 * @param towerType
 	 */
 	public void towerClicked(int id, PlayerType playerType, TowerTypes towerType, ArrayList<TowerManager.TowerTypes> evolutions){
+		
 		towerClickedType = towerType;
 		
 		//Displaying the evolution tree of the tower
@@ -223,6 +236,12 @@ public class GameInfoMenu extends MainViews{
 			showAttackTree = true;
 		}
 		
+		//Displaying the tower informations 
+		jTowerName.setText(towerType+"");
+		jTowerCost.setText("Purchase price : "+towerType.cost()+" P$");
+		add(jTowerName);
+		add(jTowerCost);
+		
 		//Adding the selling button
 		jButton.setText("Sell");
 		sell = true;
@@ -239,7 +258,11 @@ public class GameInfoMenu extends MainViews{
 	public void hideTowerInfo(){
 		if(showAttackTree) showAttackTree = false;
 		if(showSupportTree) showSupportTree = false;
+		
 		remove(jButton);
+		remove(jTowerName);
+		remove(jTowerCost);
+		
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
 			//Removing the EvolveTowerSprite			
@@ -269,6 +292,11 @@ public class GameInfoMenu extends MainViews{
 			jButton.setText("Evolve");
 			if(sell) sell = false;
 		}
+		
+		jTowerName.setText(towerType+"");
+		jTowerCost.setText("Purchase price : "+towerType.cost()+" P$");
+		add(jTowerName);
+		add(jTowerCost);
 	}
 	
     /**
@@ -278,7 +306,8 @@ public class GameInfoMenu extends MainViews{
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		g.setColor(Color.darkGray);
-		if((! showAttackTree)&&(!showSupportTree)) g.drawImage(img, 64, 0, 551, this.getHeight(), this);
+		if((! showAttackTree)&&(!showSupportTree)) g.drawImage(img, 64, 0, 545, this.getHeight(), this);
+		else g.drawImage(img2, 64, 0, 545, this.getHeight(), this);
 		if((showAttackTree)||(showSupportTree)){
 			g.drawLine(86,95, 152,62);
 			g.drawLine(86,95, 152,128);

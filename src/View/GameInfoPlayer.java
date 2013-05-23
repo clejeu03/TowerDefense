@@ -61,10 +61,10 @@ public class GameInfoPlayer extends MainViews{
 	
 		//Laying the components on the Panel
 		setLayout(null);
-		jMoney.setBounds(10, 10, 100,15);
+		jMoney.setBounds(30, 131, 100,15);
 		add(jMoney);
 		
-		setBackground(Color.gray); 
+		setBackground(Color.white); 
 	}
 	
 	/**
@@ -108,7 +108,7 @@ public class GameInfoPlayer extends MainViews{
 			      e.printStackTrace();
 			}
 		
-			jMoney.setText(money+" P$");
+			jMoney.setText(": "+money);
 	        //Repaint the panel
 	    	revalidate();
 	    	repaint();	
@@ -132,7 +132,7 @@ public class GameInfoPlayer extends MainViews{
 	public void setMoney(int money, PlayerType playerType){
 		if(playerType == humanType){
 			this.money = money;
-			jMoney.setText(money+" P$");
+			jMoney.setText(": "+money);
 		}	
 	}
 	
