@@ -43,10 +43,12 @@ public class GameInfoMenu extends MainViews{
     private PlayerType humanType;
     
     private Image img;
-    private boolean towerClicked;
 
     private ArrayList<Sprite> attackTree;
     private ArrayList<Sprite> supportTree;
+    
+    private boolean showAttackTree;
+    private boolean showSupportTree;
 	/**
 	 * Constructor of the GameInfoMenu class
 	 * @param view
@@ -58,10 +60,12 @@ public class GameInfoMenu extends MainViews{
 		super(view, position, width,height);
 		
 		sprites = new ArrayList<Sprite>();
-		towerClicked = false;
-	
+		
 		attackTree = new ArrayList<Sprite>();
 		supportTree = new ArrayList<Sprite>();
+		
+		showAttackTree = false;
+		showSupportTree = false;
 		
 		//Loading the background
 		try {
@@ -90,11 +94,7 @@ public class GameInfoMenu extends MainViews{
 			Sprite element = it.next();
 			element.setBounds(element.getPosition().x -(element.getWidth()/2), element.getPosition().y -(element.getHeight()/2), element.getWidth(),element.getHeight());
 			add(element);
-		}
-		
-        //Repaint the panel
-    	revalidate();
-    	repaint();	
+		}	
 	}
 	
 	/**
@@ -113,21 +113,36 @@ public class GameInfoMenu extends MainViews{
 		
 		//Removing all the attackTree Sprites	
 		attackTree.clear();
+		//Removing all the supportTree Sprites
+		supportTree.clear();
 		
 		//Add the AddTower Attack Sprite on the panel
 		addSprite(new AddTowerSprite(scene, this, new Point(32,40), true, humanType, 64, 64, TowerTypes.ATTACKTOWER));
 		addSprite(new AddTowerSprite(scene, this, new Point(32,100), true, humanType, 64, 64, TowerTypes.SUPPORTTOWER));
 		
 		//Initiating the attackTree
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(88,90), false, humanType, 48, 48, TowerTypes.ATTACKTOWER));
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(160,54), false, humanType, 48, 48, TowerTypes.GUNTOWER));
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(160,126), false, humanType, 48, 48, TowerTypes.FROSTTOWER));
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(232,18), false, humanType, 48, 48, TowerTypes.BOMBTOWER));
-		attackTree.add(new EvolveTowerSprite(this,-1, new Point(232,90), false, humanType, 48, 48, TowerTypes.LAZERTOWER));
+		setAttackTree();
+		setSupportTree();
 			
         //Repaint the panel
     	revalidate();
     	repaint();	
+	}
+	
+	public void setAttackTree(){
+		attackTree.clear();
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(86,95), false, humanType, 44, 44, TowerTypes.ATTACKTOWER));
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(152,62), false, humanType, 44, 44, TowerTypes.GUNTOWER));
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(152,128), false, humanType, 44, 44, TowerTypes.FROSTTOWER));
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(218,29), false, humanType, 44, 44, TowerTypes.BOMBTOWER));
+		attackTree.add(new EvolveTowerSprite(this,-1, new Point(218,95), false, humanType, 44, 44, TowerTypes.LAZERTOWER));
+	}
+	
+	public void setSupportTree(){
+		supportTree.clear();
+		supportTree.add(new EvolveTowerSprite(this,-1, new Point(86,95), false, humanType, 44, 44, TowerTypes.SUPPORTTOWER));
+		supportTree.add(new EvolveTowerSprite(this,-1, new Point(152,62), false, humanType, 44, 44, TowerTypes.MEDICALTOWER));
+		supportTree.add(new EvolveTowerSprite(this,-1, new Point(152,128), false, humanType, 44, 44, TowerTypes.SHIELDTOWER));
 	}
 	
 	/**
@@ -146,50 +161,57 @@ public class GameInfoMenu extends MainViews{
 	 * @param towerType
 	 */
 	public void towerClicked(int id, PlayerType playerType, TowerTypes towerType, ArrayList<TowerManager.TowerTypes> evolutions){
-		towerClicked= true;
 		
 		for(TowerTypes type:evolutions){
 			System.out.println(type);
+			System.out.println(evolutions.indexOf(TowerTypes.BOMBTOWER));
 		}
   		//TODO Displaying some information and a supressbouton..
 		
 		//Displaying the evolution tree of the tower
 		if((towerType == TowerTypes.SUPPORTTOWER)||(towerType == TowerTypes.SHIELDTOWER)||(towerType == TowerTypes.MEDICALTOWER)){
-			System.out.println("Support");
-		}
-		else{
-			for(Sprite evolve:attackTree){
-				if((((EvolveTowerSprite) evolve).getTowerType() == evolutions.get(0))||(((EvolveTowerSprite) evolve).getTowerType() == evolutions.get(1))){
+			for(Sprite evolve:supportTree){
+				if(evolutions.indexOf(((EvolveTowerSprite) evolve).getTowerType())!= -1){
 					((EvolveTowerSprite) evolve).setId(id);
 					((EvolveTowerSprite) evolve).setClickable(true);
-				}
-				else{
-					((EvolveTowerSprite) evolve).setId(-1);
-					((EvolveTowerSprite) evolve).setClickable(false);
 				}
 				addSprite(evolve);
 			}
 			
+			//Resetting the attackTree
+			setSupportTree();
+			
+			showSupportTree = true;
 		}
-		/*addSprite(new EvolveTowerSprite(this, id, new Point(100,80), false, humanType, 48, 48, towerType));
-		int i=0;
-		for(TowerTypes type:evolutions){
-			System.out.println(type);
-			if(type != TowerTypes.NOTOWER){
-				addSprite(new EvolveTowerSprite(this,id, new Point(150,40+i*80), true, humanType, 48, 48, type));
-				++i;
+		else{
+			for(Sprite evolve:attackTree){
+				if(evolutions.indexOf(((EvolveTowerSprite) evolve).getTowerType())!= -1){
+					((EvolveTowerSprite) evolve).setId(id);
+					((EvolveTowerSprite) evolve).setClickable(true);
+				}
+				addSprite(evolve);
 			}
-		}*/
+			
+			//Resetting the attackTree
+			setAttackTree();
+			
+			showAttackTree = true;
+		}
+		
+        //Repaint the panel
+    	revalidate();
+    	repaint();
 	}
 	
 	/**
 	 * Hide the information of the tower
 	 */
 	public void hideTowerInfo(){
-		towerClicked = false;
+		if(showAttackTree) showAttackTree = false;
+		if(showSupportTree) showSupportTree = false;
 		SwingUtilities.invokeLater(new Runnable(){
 		public void run() {
-			//Removing the towerInfoSprite			
+			//Removing the EvolveTowerSprite			
 			Iterator<Sprite> it = sprites.iterator();
 			while (it.hasNext()) {
 				Sprite element = it.next();
@@ -215,6 +237,16 @@ public class GameInfoMenu extends MainViews{
     @Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		if(! towerClicked) g.drawImage(img, 64, 0, 551, this.getHeight(), this);
+		g.setColor(Color.darkGray);
+		if((! showAttackTree)&&(!showSupportTree)) g.drawImage(img, 64, 0, 551, this.getHeight(), this);
+		if((showAttackTree)||(showSupportTree)){
+			g.drawLine(86,95, 152,62);
+			g.drawLine(86,95, 152,128);
+
+			if(showAttackTree){
+				g.drawLine(152,62, 218,29);
+				g.drawLine(152,62, 218, 95);
+			}
+		}
 	 }   
 }
