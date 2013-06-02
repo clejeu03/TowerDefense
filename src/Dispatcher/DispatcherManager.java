@@ -110,6 +110,17 @@ public class DispatcherManager {
 	}
 	
 	/**
+	 * The human player has won or loosed the game !
+	 * @see GameManager ??
+	 */
+	public void endOfGame(boolean win){
+		//Stop the game threads
+		stop();		
+		//Tell the view to display the endGame panel
+		view.endOfGame(win);	
+	}
+	
+	/**
 	 * Add an Order to the engine ConcurrentLinkedQueue.
 	 * @param order - Order
 	 * @see  View.ViewManager#towerSuppressed(java.awt.Point, int)

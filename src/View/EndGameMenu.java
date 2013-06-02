@@ -1,6 +1,16 @@
 package View;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
 
 /**
  * Project - TowerDefense</br>
@@ -19,6 +29,9 @@ import java.awt.Point;
 @SuppressWarnings("serial")
 public class EndGameMenu extends MainViews{
 	
+    private Image background;
+    private JButton jButtonHome;
+    
 	/**
 	 * Constructor of the EndGameMenu class
 	 * @param view
@@ -28,18 +41,55 @@ public class EndGameMenu extends MainViews{
 	 */
 	public EndGameMenu(ViewManager view, Point position, int width, int height){
 		super(view, position, width,height);
+		
+		try {
+		      background = ImageIO.read(new File("img/win.png"));
+		  
+		} catch (IOException e) {
+		      e.printStackTrace();
+		}
+		
+		jButtonHome = new javax.swing.JButton("Main Menu");
+		jButtonHome.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent evt) {
+		        jButtonHomePerformed(evt);
+		    }
+		});
+		
+		
+		//Laying the components on the Panel
+		setLayout(null);
+		setBackground(Color.gray); 
+		jButtonHome.setBounds(340, 500, 120,25);
+		add(jButtonHome);
+	}
+	
+	public void setBackground(boolean win){
+		String filename = "img/";
+		if(win) filename += "win.png";
+		else filename += "gameover.png";
+		
+		try {
+		      background = ImageIO.read(new File(filename));
+		  
+		} catch (IOException e) {
+		      e.printStackTrace();
+		}	
+        //Repaint the window
+    	validate();
+    	repaint();
 	}
 	
 	/**
-	 * Allow the player to quit the game
-   	*/
-	public void quit() {
-	}
-	
-	/**
-	 * Lead the player back to the AccueilMenu
-	 * @see HomeMenu
+	 * jButtonQuit Event handler - Back to the main menu
+	 * @param evt - ActionEvent performed by the player
 	 */
-	public void goMenu() {
-	}
+    private void jButtonHomePerformed(ActionEvent evt) {
+    	view.homeMenu();
+    }
+    
+    public void paintComponent(Graphics g){
+		super.paintComponent(g);
+	    g.drawImage(background, 0, 0, this.getWidth(), this.getHeight(), this);
+    }  
 }
