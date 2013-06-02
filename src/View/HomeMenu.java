@@ -59,7 +59,7 @@ public class HomeMenu extends MainViews{
 		
 		//Loading the home background
 		try {
-		      background = ImageIO.read(new File("img/home.jpg"));
+		      background = ImageIO.read(new File("img/home.png"));
 		  
 		} catch (IOException e) {
 		      e.printStackTrace();
@@ -85,9 +85,9 @@ public class HomeMenu extends MainViews{
 		//Laying the components on the Panel
 		setLayout(null);
 		setBackground(Color.gray); 
-		jButtonPlay.setBounds(340, 100, 120,25);
-		jButtonEditor.setBounds(340,150,120,25);
-		jButtonQuit.setBounds(340, 200, 120,25);
+		jButtonPlay.setBounds(160, 255, 120,25);
+		jButtonEditor.setBounds(160,305,120,25);
+		jButtonQuit.setBounds(160, 355, 120,25);
 		add(jButtonPlay);
 		add(jButtonEditor);
 		add(jButtonQuit);
