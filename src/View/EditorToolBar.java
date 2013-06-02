@@ -244,7 +244,7 @@ public class EditorToolBar extends MainViews{
     		}
     	}
     	else{
-    		displayError("Error : You have to place the 4 player bases in order to save the Map !");
+    		displayError("ERROR : You have to place the 4 player bases in order to save the Map !");
     	}
     }
 	
@@ -293,7 +293,8 @@ public class EditorToolBar extends MainViews{
 	 * @see ViewManager#launchMapEditor()
 	 */
 	public void showChooseFile() {
-		log.append("Open a 800x400 jpg or png map"+newline);
+		//clearing the log contains
+		log.setText(newline+"Open a 800x400 jpg or png map"+newline);
 		fileChooser = new JFileChooser();
 		
 		//Create a filter to show png or jpg file only
