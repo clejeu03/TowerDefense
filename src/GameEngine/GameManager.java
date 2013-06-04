@@ -251,7 +251,9 @@ public class GameManager implements Runnable{
             					if(missile.getTarget().isProtected()){
             						System.out.println("Attack failed.");
             						missile.getTarget().setProtected(false);
-            						//TODO suppress the shield effect ?
+            						//Tell the view to suppress the effect
+            						dispatcher.addOrderToView( new SuppressOrder(armyManager.getEffect(missile.getTarget()).getId()));
+            						armyManager.suppressEffect(armyManager.getEffect(missile.getTarget()));
             						break;
             					}else{
             						//Change the target's amount

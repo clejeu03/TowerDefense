@@ -173,6 +173,9 @@ public class ArmyManager {
 	 }
 	 return false;
   }
+  
+  
+  
   /**
    * Prevent from applying twice the same effect to the same unit
    * @param unit
@@ -287,6 +290,22 @@ public class ArmyManager {
 	  }
 	  
   }
+  
+  /**
+   * Find the Effect currently applied to a unit
+   * @param unit
+   * @return
+   */
+  public Effect getEffect(Unit unit){
+	  Effect returnEffect = null;
+	  for(Effect effect:effects){
+		  if(effect.getTarget().equals(unit)){
+			  returnEffect = effect;
+		  }
+	  }
+	  return returnEffect;
+  }
+  
   /**
    * Function that suppress the given effect
    * @param toSuppressEffect
