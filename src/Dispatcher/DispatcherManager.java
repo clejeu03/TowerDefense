@@ -121,6 +121,20 @@ public class DispatcherManager {
 	}
 	
 	/**
+	 * Test if there is enemies in game or no more
+	 * @return true or false
+	 * @see GameManager ??
+	 */
+	public boolean areEnemiesAlive(){
+		//Test if there are AI running or not
+		if(threadAI.isEmpty()){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	/**
 	 * Add an Order to the engine ConcurrentLinkedQueue.
 	 * @param order - Order
 	 * @see  View.ViewManager#towerSuppressed(java.awt.Point, int)

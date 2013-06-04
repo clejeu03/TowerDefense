@@ -3,7 +3,6 @@ package GameEngine;
 import Dispatcher.*;
 import Dispatcher.AddTowerOrder.ErrorType;
 import GameEngine.Player.PlayerType;
-import GameEngine.TowerManager.TowerTypes;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -349,6 +348,18 @@ public class GameManager implements Runnable{
             	}
             	//Battles
             	warManager.war(armyManager, towerManager, dispatcher, playingTime);
+            	
+            	//End of Game - Case enemies are all dead
+            	if(dispatcher.areEnemiesAlive()==false){
+            		dispatcher.endOfGame(true);
+            	}
+            	
+            	//End of Game - Case the player is dead
+            	if(!armyManager.gotBase(playerTypes.get(1)) && !armyManager.gotUnit(playerTypes.get(1))){
+            		dispatcher.endOfGame(false);
+            	}
+            	
+            	
             }
         };
 		

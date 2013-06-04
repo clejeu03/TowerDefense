@@ -1,6 +1,5 @@
 package GameEngine;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 import Dispatcher.*;

@@ -115,6 +115,47 @@ public class ArmyManager {
 	  return unit;
 
   }
+  
+  /**
+   * Return true if the player has got one base at least
+   * @param playerType
+   * @return true or false
+   */
+  public boolean gotBase(PlayerType playerType){
+	  int i=0;
+	  for(Base base:bases){
+		  if(base.getPlayerType().equals(playerType)){
+			  break;
+		  }
+		  i+=1;
+	  }
+	  if(i==0){
+		  return true;
+	  }else{
+		  return false;
+	  }
+  }
+  
+  /**
+   * Return true if the player has got one unit at least
+   * @param playerType
+   * @return true or false
+   */
+  public boolean gotUnit(PlayerType playerType){
+	  int i=0;
+	  for(Unit unit:units){
+		  if(unit.getPlayerType().equals(playerType)){
+			  break;
+		  }
+		  i+=1;
+	  }
+	  if(i==0){
+		  return true;
+	  }else{
+		  return false;
+	  }
+  }
+  
   /**
    * Associate an effect with an unit
    * @param unit
