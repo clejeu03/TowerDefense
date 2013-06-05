@@ -15,12 +15,14 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -57,6 +59,8 @@ public class EditorToolBar extends MainViews{
     
     private JFileChooser fileChooser;
     private FileNameExtensionFilter fileFilter;
+    
+    private File imageView;
     
     private ArrayList<Sprite> sprites;
 
@@ -183,65 +187,74 @@ public class EditorToolBar extends MainViews{
 	 */
     private void jButtonSavePerformed(ActionEvent evt) {
     	if (editorScene.getPlayerBaseCount()==4){
-    		//Default place and name for the new map
-    		File file = new File("img/map/Map.png");
-    		fileChooser.setSelectedFile(file);
+    		//Ask the name of the newly created map
+    		String fileName = JOptionPane.showInputDialog("How would you like to name your map ?");
+    		if (fileName == null) return;
     		
-    		int retrival = fileChooser.showSaveDialog(null);
-    		if (retrival==JFileChooser.APPROVE_OPTION){
-    			//Get the selected emplacement and name for the new map
-    			file = fileChooser.getSelectedFile();
-    			
-    			//Paint all the data on a image
-    			BufferedImage newMap = new BufferedImage(800, 400, BufferedImage.TYPE_INT_RGB);
-    			
-    			//Paint Height infos
-    			boolean heightGrid[] = editorScene.getHeightGrid();
-    			for(int i=0;i<editorScene.getNbCaseInGrid();i++){
-    				if (heightGrid[i]==false){
-    					for(int y=((i-i%50)/50)*16;y<(16+((i-i%50)/50)*16);y++){
-    						for (int x=(i%50)*16;x<(16+(i%50)*16);x++){
-        						newMap.setRGB(x, y, Color.white.getRGB());
-        					}
-    					}
-    				}
-    			}
-    			
-    			//Paint Base infos
-    			int nbPlayerBase=0;
-    			for(Sprite sp:editorScene.getSprites()){
-    				if (sp.getPlayerType()!=PlayerType.NEUTRAL){
-    					Color colorPlayerBase = null;
-    					switch(nbPlayerBase){
-    					case 0:
-    						colorPlayerBase=new Color(46,46,46);
-    						break;
-    					case 1:
-    						colorPlayerBase=new Color(83,83,83);
-    						break;
-    					case 2:
-    						colorPlayerBase=new Color(124,124,124);
-    						break;
-    					case 3:
-    						colorPlayerBase=new Color(166,166,166);
-    						break;
-    					}
-    					newMap.setRGB(sp.getPosition().x,sp.getPosition().y,colorPlayerBase.getRGB());
-    					nbPlayerBase++;
-    				}
-    				else{
-    					Color colorNeutralBase = new Color(208,208,208);
-    					newMap.setRGB(sp.getPosition().x,sp.getPosition().y,colorNeutralBase.getRGB());
-    				}
-    			}
-    			
-    			try {
-					ImageIO.write(newMap, "png", file);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-    			
+    		while(fileName.length()<1){
+    			fileName = JOptionPane.showInputDialog("Error : You have to give a name to your map");
+    			if (fileName==null) return;
     		}
+    			
+    		File file = new File("img/map/"+fileName+"_hm.png");
+    		
+    		//Paint all the data on a image
+			BufferedImage newMap = new BufferedImage(800, 400, BufferedImage.TYPE_INT_RGB);
+			
+			//Paint Height infos
+			boolean heightGrid[] = editorScene.getHeightGrid();
+			for(int i=0;i<editorScene.getNbCaseInGrid();i++){
+				if (heightGrid[i]==false){
+					for(int y=((i-i%50)/50)*16;y<(16+((i-i%50)/50)*16);y++){
+						for (int x=(i%50)*16;x<(16+(i%50)*16);x++){
+    						newMap.setRGB(x, y, Color.white.getRGB());
+    					}
+					}
+				}
+			}
+			
+			//Paint Base infos
+			int nbPlayerBase=0;
+			for(Sprite sp:editorScene.getSprites()){
+				if (sp.getPlayerType()!=PlayerType.NEUTRAL){
+					Color colorPlayerBase = null;
+					switch(nbPlayerBase){
+					case 0:
+						colorPlayerBase=new Color(46,46,46);
+						break;
+					case 1:
+						colorPlayerBase=new Color(83,83,83);
+						break;
+					case 2:
+						colorPlayerBase=new Color(124,124,124);
+						break;
+					case 3:
+						colorPlayerBase=new Color(166,166,166);
+						break;
+					}
+					newMap.setRGB(sp.getPosition().x,sp.getPosition().y,colorPlayerBase.getRGB());
+					nbPlayerBase++;
+				}
+				else{
+					Color colorNeutralBase = new Color(208,208,208);
+					newMap.setRGB(sp.getPosition().x,sp.getPosition().y,colorNeutralBase.getRGB());
+				}
+			}
+			
+			try {
+				ImageIO.write(newMap, "png", file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			//Copy the view image to the folder
+			File newImageView = new File("img/map/"+fileName+"_view.png");
+			
+			try {
+				Files.copy(imageView.toPath(), newImageView.toPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
     	}
     	else{
     		displayError("ERROR : You have to place the 4 player bases in order to save the Map !");
@@ -305,6 +318,7 @@ public class EditorToolBar extends MainViews{
 		int choice=fileChooser.showOpenDialog(view);
 		//If a file have been choose 
 		if(choice==JFileChooser.APPROVE_OPTION){
+			imageView = fileChooser.getSelectedFile();
 			openImage(fileChooser.getSelectedFile().getName(),fileChooser.getSelectedFile().getAbsolutePath() );
 		}
 		else log.append("Open a damn map ! "+newline);
