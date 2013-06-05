@@ -266,6 +266,12 @@ public class EditorToolBar extends MainViews{
 				File f = new File("tmp/"+s);
 				f.delete();
 			}
+			
+			//Maps have been successfully saved : quit the editor
+			JOptionPane.showMessageDialog(view,
+				    "Your map has been saved !");
+			view.homeMenu();
+			
     	}
     	else{
     		displayError("ERROR : You have to place the 4 player bases in order to save the Map !");

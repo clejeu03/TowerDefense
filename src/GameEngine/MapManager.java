@@ -122,7 +122,7 @@ public class MapManager implements Serializable{
 	MapManager(String i_imageName, ArrayList<PlayerType> playersType){
 		super();
 		imageName = i_imageName;
-		imagePath = "img/map/"+i_imageName+".jpg";
+		imagePath = "img/map/"+i_imageName+"_hm.png";
 		numberOfPlayer = playersType.size();
 		numberOfNeutralBases = 0;
 		this.playersType = playersType;

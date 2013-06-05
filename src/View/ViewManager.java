@@ -221,15 +221,16 @@ public class ViewManager extends JFrame implements Runnable{
 	 * Initialize the view when the game is launched
 	 * @param towers - ArrayList of towers created by the engine during the game initialization
 	 * @param bases 
+	 * @param mapName 
 	 * @see Dispatcher.DispatcherManager#initiateGameView(ArrayList)
 	 */	
-    public void initiateGameView(ArrayList<Base> bases, int money){
+    public void initiateGameView(ArrayList<Base> bases, int money, String mapName){
     	
     	//Clear the orders queue 
     	queue.clear();
 
 		//Clear the Sprites list of the scene
-		sceneView.initiate(money);
+		sceneView.initiate(money, mapName);
 		gameInfoMenu.initiate(sceneView);
 		gameInfoPlayer.initiate(sceneView, money);
 		gameMenuBar.setInfo("Welcome in PokéWars. Let's battle !");
@@ -265,10 +266,13 @@ public class ViewManager extends JFrame implements Runnable{
     	
     	//Add the play panels on the window
     	add(playMenu);
-        
+        	
         //Repaint the window
     	validate();
-    	repaint();	  	
+    	repaint();	
+    	
+    	//Checking is there's at least one map to display
+    	playMenu.checkMapNumber();
     }
     
     /**
@@ -286,9 +290,10 @@ public class ViewManager extends JFrame implements Runnable{
     
 	/**
 	 * Launch the game
+	 * @param mapName 
 	 * @see HomeMenu#jButtonPlayPesrformed(ActionEvent)
 	 */	
-    public void play(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
+    public void play(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType, String mapName){
     	
 		//tell the scene and the gameInfoMenu the id of the human player
 		sceneView.setHumanType(humanType);
@@ -296,7 +301,7 @@ public class ViewManager extends JFrame implements Runnable{
 		gameInfoPlayer.setHumanType(humanType);
     	
     	//Tell the engine (via the dispatcher) to initiate the game
-    	dispatcher.initiateGame(humanType,nbEnemies, enemiesType);
+    	dispatcher.initiateGame(humanType,nbEnemies, enemiesType, mapName);
 
     	//Remove the homeMenu panel from the window
     	remove(playMenu);

@@ -1,12 +1,15 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +19,9 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import GameEngine.Player.PlayerType;
 
@@ -52,6 +57,9 @@ public class PlayMenu extends MainViews{
 	private EnemySprite firstEnemySprite;
 	private EnemySprite secondEnemySprite;
 	private EnemySprite thirdEnemySprite;
+	
+	private JLabel jMap;
+	private JComboBox<String> mapList;
 	
 	private JButton jButtonStart;
     private JButton jButtonHome;
@@ -100,6 +108,9 @@ public class PlayMenu extends MainViews{
 		secondEnemySprite = new EnemySprite(this, new Point(425,110), false, secondEnemyType, 50,50);		
 		thirdEnemySprite = new EnemySprite(this, new Point(475,110), false, thirdEnemyType, 50,50);
 		
+		jMap = new javax.swing.JLabel("Choose your battlefield : ");
+		mapList = new JComboBox<String>();
+		
 		jButtonStart = new javax.swing.JButton();
 		jButtonHome = new javax.swing.JButton();
 
@@ -135,6 +146,12 @@ public class PlayMenu extends MainViews{
 		    }
 		});
 		
+		mapList.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent evt) {
+		      
+		    }
+		});
+		
 		//Laying the components on the Panel
 		setLayout(null);
 		setBackground(Color.gray); 
@@ -148,6 +165,7 @@ public class PlayMenu extends MainViews{
 		
 		jStarter.setBounds(120, 60, 250,15);
 		jEnemies.setBounds(180, 135, 250,15);
+		jMap.setBounds(180,180, 250, 15);
 		
 		jCheck1.setMargin(new Insets(0, 0, 0, 0));
 		jCheck1.setBounds(365, 135, 15, 15);
@@ -159,8 +177,11 @@ public class PlayMenu extends MainViews{
 		secondEnemySprite.setBounds(secondEnemySprite.getPosition().x -(secondEnemySprite.getWidth()/2), secondEnemySprite.getPosition().y -(secondEnemySprite.getHeight()/2),secondEnemySprite.getWidth(),secondEnemySprite.getHeight());
 		thirdEnemySprite.setBounds(thirdEnemySprite.getPosition().x -(thirdEnemySprite.getWidth()/2), thirdEnemySprite.getPosition().y -(thirdEnemySprite.getHeight()/2),thirdEnemySprite.getWidth(),thirdEnemySprite.getHeight());
 
-		jButtonStart.setBounds(340, 180, 120,25);
-		jButtonHome.setBounds(340, 220, 120,25);
+		//mapList.setPreferredSize(new Dimension(100, 20));
+		mapList.setBounds(370, 170, 110, 25);
+		
+		jButtonStart.setBounds(340, 220, 120,25);
+		jButtonHome.setBounds(340, 260, 120,25);
 		
 		add(jStarter);
 		add(jButtonHome);	
@@ -176,7 +197,7 @@ public class PlayMenu extends MainViews{
     	if (jCheck2.isSelected()) enemiesType.add(secondEnemyType);
     	if (jCheck3.isSelected()) enemiesType.add(thirdEnemyType); 	
     	
-    	view.play(starterType, nbEnemies, enemiesType);
+    	view.play(starterType, nbEnemies, enemiesType, (String)mapList.getSelectedItem());
     }
     
 	/**
@@ -230,13 +251,19 @@ public class PlayMenu extends MainViews{
     	
     	showHideStart();
     }
-    
+ 
     private void showHideStart(){
-    	//If the player has chosen at least one enemy, the button start can appear
+    	//If the player has chosen at least one enemy, the button start and the map choser can appear
     	if(nbEnemies>0){
     		add(jButtonStart);
+    		add(jMap);
+    		add(mapList);
     	}
-    	else remove(jButtonStart);
+    	else {
+    		remove(jButtonStart);
+    		remove(jMap);
+    		remove(mapList);
+    	}
         //Repaint the panel
     	revalidate();
     	repaint();
@@ -258,6 +285,36 @@ public class PlayMenu extends MainViews{
 		jCheck2.setSelected(false);
 		jCheck3.setSelected(false);
 		
+		//Resetting the map list
+		mapList.removeAllItems();
+		
+		File tmpFolder = new File("img/map");
+		String[] files = tmpFolder.list();
+		for(int i=0; i<files.length;i++){
+			if (files[i].endsWith("_hm.png")){
+				for(int k=0;k<files.length;k++){
+					if(files[k].endsWith("_view.png")){
+						String nameOfHmMap = files[i].split("_")[0];
+						String nameOfViewMap = files[k].split("_")[0];
+						if(nameOfHmMap.equals(nameOfViewMap)) mapList.addItem(nameOfHmMap);
+					}
+				}
+			}
+		}
+		//TODO Checking if there's a least one item in the list of map 
+		//If not : back to Home and errorDialog
+		
+		if(mapList.getItemCount() != 0){
+			mapList.setSelectedIndex(0);
+			for(int i=0; i<mapList.getItemCount(); i++){
+				if(mapList.getItemAt(i).equals("DefaultMap")){
+					mapList.setSelectedIndex(i);
+					break;
+				}
+			}
+		}
+
+		
 		nbEnemies = 0;
 		remove(jEnemies);
 		remove(jCheck1);
@@ -266,13 +323,26 @@ public class PlayMenu extends MainViews{
 		remove(firstEnemySprite);
 		remove(secondEnemySprite);
 		remove(thirdEnemySprite);
+		remove(jMap);
+		remove(mapList);
 		remove(jButtonStart);
+
 		
         //Repaint the panel
     	revalidate();
     	repaint();	
 	}
     
+	
+	public void checkMapNumber(){
+		if(mapList.getItemCount() == 0){
+			JOptionPane.showMessageDialog(this,
+				    "There's no existing battlefield ! Create a map with the MapEditor first. ",
+				    "NoExistingMap warning",
+				    JOptionPane.WARNING_MESSAGE);
+			view.homeMenu();
+		}
+	}
     /**
 	 * Set starterType
 	 * @param playerType

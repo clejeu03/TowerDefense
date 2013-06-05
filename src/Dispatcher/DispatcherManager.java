@@ -47,14 +47,15 @@ public class DispatcherManager {
 	
 	/**
 	 * Tell the engine that the game objects have to be created and initialized (according to the player choices).
+	 * @param mapName 
 	 * @see View.ViewManager#play()
 	 */	
-	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
+	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType, String mapName){
 		for (PlayerType pt:enemiesType){
 			aiEnemy.add(new AIManager(this,pt));
 		}
 		
-		engine.initiateGame(humanType, nbEnemies, enemiesType);	
+		engine.initiateGame(humanType, nbEnemies, enemiesType, mapName);	
 		
 	}
 	
@@ -62,10 +63,11 @@ public class DispatcherManager {
 	 * Tell the View that the SceneView components have to be created and initialized (according the game objects initialized by the engine). 
 	 * @param towerList - ArrayList of towers created by the engine
 	 * @param bases 
+	 * @param mapName 
 	 * @see GameEngine.GameManager#initiateGame()
 	 */	
-	public void initiateGameView(ArrayList<Base> bases, int money){
-		view.initiateGameView(bases, money);
+	public void initiateGameView(ArrayList<Base> bases, int money, String mapName){
+		view.initiateGameView(bases, money, mapName);
 		for (AIManager ai:aiEnemy)
 			ai.initiateGameView(bases,money);
 	}

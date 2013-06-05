@@ -100,9 +100,10 @@ public class GameManager implements Runnable{
 			
 	/**
 	 * Initiate the game according to the player choices
+	 * @param mapName 
 	 * @see Dispatcher.DispatcherManager#initiateGame()
 	 */
-	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType){
+	public void initiateGame(PlayerType humanType, int nbEnemies, ArrayList<PlayerType> enemiesType, String mapName){
 		idCount = 0;
     	//Clear the orders queue 
     	queue.clear();
@@ -126,7 +127,7 @@ public class GameManager implements Runnable{
 		}	
 		
 		//Adding a mapManager
-		mapManager = new MapManager("Map", playerTypes);
+		mapManager = new MapManager(mapName, playerTypes);
 		
 		//Adding the Tower and Army managers
 		armyManager = new ArmyManager();
@@ -162,7 +163,7 @@ public class GameManager implements Runnable{
 		}
 		
 		//Tells the dispatcher that the View need to be initialized : (bases, player's money)
-		dispatcher.initiateGameView(bases, 300);
+		dispatcher.initiateGameView(bases, 300, mapName);
 		
 		//Start the timer
 		timer = new Timer();

@@ -159,9 +159,10 @@ public class SceneView extends MainViews implements Runnable{
 	
 	/**
 	 * Reset the SceneView
+	 * @param mapName 
 	 * @see ViewManager#initiateGameView(ArrayList)
 	 */
-	public void initiate(int money){
+	public void initiate(int money, final String mapName){
 		
 		//resetting the money
 		this.money = money;
@@ -206,7 +207,7 @@ public class SceneView extends MainViews implements Runnable{
 		
 		//Loading the image map
 		try {
-		      map = ImageIO.read(new File("img/map/MapView.png"));
+		      map = ImageIO.read(new File("img/map/"+mapName+"_view.png"));
 		      territoryMap = ImageIO.read(new File("tmp/tm.png"));
 		  
 		} catch (IOException e) {
