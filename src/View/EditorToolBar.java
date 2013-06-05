@@ -251,9 +251,20 @@ public class EditorToolBar extends MainViews{
 			File newImageView = new File("img/map/"+fileName+"_view.png");
 			
 			try {
-				Files.copy(imageView.toPath(), newImageView.toPath());
+				if (newImageView!=imageView){
+					if (newImageView.exists()) newImageView.delete();
+					Files.copy(imageView.toPath(), newImageView.toPath());
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			
+			//Delete all tmp files
+			File tmpFolder = new File("tmp");
+			String[] files = tmpFolder.list();
+			for(String s:files){
+				File f = new File("tmp/"+s);
+				f.delete();
 			}
     	}
     	else{
