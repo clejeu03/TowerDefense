@@ -251,7 +251,7 @@ public class EditorToolBar extends MainViews{
 			File newImageView = new File("img/map/"+fileName+"_view.png");
 			
 			try {
-				if (newImageView!=imageView){
+				if (!newImageView.getAbsoluteFile().equals(imageView.getAbsoluteFile())){
 					if (newImageView.exists()) newImageView.delete();
 					Files.copy(imageView.toPath(), newImageView.toPath());
 				}
