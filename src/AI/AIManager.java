@@ -27,7 +27,6 @@ import GameEngine.GunTower;
 import GameEngine.LazerTower;
 import GameEngine.MedicalTower;
 import GameEngine.ShieldTower;
-import GameEngine.TerritoryMap;
 import GameEngine.Player.PlayerType;
 import GameEngine.SupportTower;
 import GameEngine.Tower;
@@ -290,7 +289,7 @@ public class AIManager implements Runnable {
 	 * Print the infos of the GameEngine the AI can access
 	 * @see #run()
 	 */
-	private void printInfo(){
+	/*private void printInfo(){
 		if (!bases.isEmpty() || !enemyBases.isEmpty() || !towers.isEmpty()){
 			System.out.println("-----------------AI "+aiType+"---MONEY +"+money+"-----------------");
 			if(!bases.isEmpty()){
@@ -351,7 +350,7 @@ public class AIManager implements Runnable {
 			}
 			System.out.println("---------------------------------------------");
 		}
-	}
+	}*/
 	
 	/**
 	 * How the AI choose who to attack 
@@ -441,7 +440,7 @@ public class AIManager implements Runnable {
 	 */
 	private void towerBehavior(){
 		
-		if(money>100&&towers.size()<=2){	
+		if(money>100){	
 			LinkedList<Point> availablePositions = new LinkedList<Point>();
 			
 			//Get all the available positions for placing tower
