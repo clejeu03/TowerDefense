@@ -40,7 +40,8 @@ public class GameInfoPlayer extends MainViews{
     private JLabel jMoney;
     
     private PlayerType humanType;
-    private int money;
+    @SuppressWarnings("unused")
+	private int money;
    
     private Image img;
 	

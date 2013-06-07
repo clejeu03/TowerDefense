@@ -8,8 +8,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-import GameEngine.Player.PlayerType;
-
 /**
  * Project - TowerDefense</br>
  * <b>Class - GameMenubar</b></br>

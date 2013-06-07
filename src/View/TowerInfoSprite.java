@@ -34,7 +34,9 @@ import GameEngine.Player.PlayerType;
 
 @SuppressWarnings("serial")
 public class TowerInfoSprite extends Sprite{
-	private  int type;
+	@SuppressWarnings("unused")
+	private int type;
+	@SuppressWarnings("unused")
 	private Point positionElt;
 	
 	/**
@@ -53,7 +55,7 @@ public class TowerInfoSprite extends Sprite{
 		this.type = type;
 		this.positionElt = positionElt;
 		
-		//Loading the image according to the type (TODO)
+		//Loading the image according to the type
 		try {
 		      image = ImageIO.read(new File("img/delete.png"));
 		  

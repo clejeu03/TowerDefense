@@ -16,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import Dispatcher.AddTowerOrder.ErrorType;
-import GameEngine.Tower;
 import GameEngine.TowerManager;
 import GameEngine.Player.PlayerType;
 import GameEngine.TowerManager.TowerTypes;
@@ -61,6 +60,7 @@ public class SceneView extends MainViews implements Runnable{
     private Point mousePosition;
 	private Thread thread;
 	
+	@SuppressWarnings("unused")
 	private int money;
 	
     
@@ -201,7 +201,7 @@ public class SceneView extends MainViews implements Runnable{
 		//Removing all the lazers
 		Iterator<Lazer> iter = lazers.iterator();
 		while (iter.hasNext()) {
-			Lazer element = iter.next();
+			iter.next();
 			iter.remove();
 		}
 		

@@ -16,10 +16,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.imageio.ImageIO;
-import javax.swing.SwingUtilities;
 
 import GameEngine.GameManager;
 import GameEngine.TowerManager;

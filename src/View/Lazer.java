@@ -7,7 +7,6 @@
  */
 package View;
 
-import java.awt.Image;
 import java.awt.Point;
 
 import GameEngine.Player.PlayerType;

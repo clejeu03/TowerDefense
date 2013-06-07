@@ -7,12 +7,10 @@
  */
 package View;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 

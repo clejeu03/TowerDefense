@@ -127,7 +127,7 @@ public class MapManager implements Serializable{
 		numberOfNeutralBases = 0;
 		this.playersType = playersType;
 		if (!existingMapManager()){
-			System.out.println("Creating Maps !");
+			//System.out.println("Creating Maps !");
 			
 			playerBasePosition = new Point[numberOfPlayer];
 			playerProximityMap = new ProximityMap[numberOfPlayer];
@@ -144,9 +144,9 @@ public class MapManager implements Serializable{
 			saveAllTerritoryMap(playersType);
 			saveAsTMP();
 		}
-		else{
+		/*else{
 			System.out.println("Reading Maps!");
-		}
+		}*/
 
 		saveTerritoryMap(playersType);
 	}

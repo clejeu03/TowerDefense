@@ -92,6 +92,7 @@ public class DispatcherManager {
 	 * Stop the game threads.
 	 * @see View.ViewManager#mainMenu()
 	 */	
+	@SuppressWarnings("static-access")
 	public void stop(){
 		view.setRunning(false);
 		engine.setRunning(false);
